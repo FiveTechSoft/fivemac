@@ -25,6 +25,7 @@ HB_FUNC( QTCAPTUREVIEWCREATE )
     hb_retnl( ( HB_LONG ) mview );
 }
 
+
 HB_FUNC( CAPTURECAM )
 {
     
