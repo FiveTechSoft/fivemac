@@ -121,7 +121,6 @@ HB_FUNC( AVCREATE )
     AVPlayerView * mview = [ [ AVPlayerView alloc ] initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), 
                  hb_parnl( 3 ), hb_parnl( 4 ) ) ];
    
-    
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
   [ GetView( window ) addSubview : mview ];
  
@@ -160,12 +159,7 @@ HB_FUNC( AVOPENPANEL )
    }
    else
        MsgAlert( @"Movie format not supported" , @"Stop") ;
-
-   //   NSRunAlertPanel( @"Stop", @"Movie format not supported", @"OK", NULL, NULL );
-   
 }
-
-
 
  HB_FUNC( AVPLAY )
 {
@@ -285,9 +279,7 @@ HB_FUNC( AVTRIMMMOVIE )
                     
                       [exportSession setTimeRange:timeRange];
                     
-                     NSRunAlertPanel( @"Alert", @"2", @"OK", NULL, NULL );
-
-                    [exportSession exportAsynchronouslyWithCompletionHandler:^() {
+                      [exportSession exportAsynchronouslyWithCompletionHandler:^() {
                         switch (exportSession.status) {
                             case AVAssetExportSessionStatusCompleted:
                                 NSLog(@"It's done...hallelujah");
@@ -299,42 +291,9 @@ HB_FUNC( AVTRIMMMOVIE )
                     }];
                     
                     
-                                          
-                 /*   [exportSession exportAsynchronouslyWithCompletionHandler:^(void)
-                     {
-                           NSRunAlertPanel( @"Alert",string, @"OK", NULL, NULL );
-                         switch (exportSession.status) {
-                             case AVAssetExportSessionStatusCompleted:
-                                 
-                                // [self writeVideoToPhotoLibrary:[NSURL fileURLWithPath:outputURL]];
-                                  NSRunAlertPanel( @"Alert", @"finalizado", @"OK", NULL, NULL );
-                                 break;
-                             case AVAssetExportSessionStatusFailed:
-                                 NSLog(@"Failed:%@",exportSession.error);
-                                  NSRunAlertPanel( @"Alert", @"fallado", @"OK", NULL, NULL );
-                                 break;
-                             case AVAssetExportSessionStatusCancelled:
-                                 NSRunAlertPanel( @"Alert", @"cancelado", @"OK", NULL, NULL );
-
-                                 NSLog(@"Canceled:%@",exportSession.error);
-                                 break;
-                             default:
-                                   NSRunAlertPanel( @"Alert", @"default2", @"OK", NULL, NULL );
-                                 break;
-                         }
-                         
-                         //[exportSession release];
-                     }];
-                   */
-                    
-                    
-                    
-                    
                 }
                 else
                     MsgAlert( @"3", @"Alert" ) ;
-                //NSRunAlertPanel( @"Alert", @"3", @"OK", NULL, NULL );
-    
                 
             }
             else if (result == AVPlayerViewTrimCancelButton)
