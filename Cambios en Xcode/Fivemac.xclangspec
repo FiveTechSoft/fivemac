@@ -1,0 +1,872 @@
+(
+
+/****************************************************************************/
+// MARK: fivemac Preprocessor
+/****************************************************************************/
+	{
+		Identifier = "xcode.lang.fivemac.preprocessor";
+		Syntax = {
+			Start = "#";
+			EscapeChar = "\\";
+			End = "\n";
+			StartAtBOL = YES;
+			Tokenizer = "xcode.lang.fivemac.preprocessor.lexer";
+			IncludeRules = (
+				"xcode.lang.fivemac.preprocessor.mark",
+				"xcode.lang.fivemac.preprocessor.include",
+ 				"xcode.lang.fivemac.preprocessor.systeminclude",
+ 				"xcode.lang.fivemac.preprocessor.define",	
+			);
+			Type = "xcode.syntax.preprocessor";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.preprocessor.lexer";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.comment.degenerate",
+				"xcode.lang.comment.headerdoc",
+				"xcode.lang.comment.headerdoc.star",
+				"xcode.lang.comment.headerdoc.singleline.bang",
+				"xcode.lang.comment.headerdoc.singleline.slash",
+				"xcode.lang.comment",
+				"xcode.lang.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.character",
+				"xcode.lang.number",
+				"xcode.lang.fivemac.preprocessor.identifier",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.preprocessor.systemIncludeString";
+		Syntax = {
+			Start = "<";
+			End = ">";
+			AltEnd = "\n";
+			Type = "xcode.syntax.string";
+		};
+	},
+	
+	{
+		Identifier = "xcode.lang.fivemac.preprocessor.identifier";
+		Syntax = {
+			StartChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+			Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+			Words = (
+				assert,
+				define,
+				elif,
+				else,
+				endif,
+				error,
+				if,
+				ifdef,
+				ifndef,
+				import,
+				include,
+				"include_next",
+				line,
+				pragma,
+				unassert,
+				undef,
+				warning,
+			);
+			Type = "xcode.syntax.preprocessor.keyword";
+			AltType = "xcode.syntax.preprocessor.identifier";
+		};
+	},
+	{	
+        Identifier = "xcode.lang.fivemac.preprocessor.mark";
+        Syntax = {
+            Tokenizer = "xcode.lang.fivemac.preprocessor.lexer";
+            Rules = (
+                "pragma",
+                "xcode.lang.fivemac.preprocessor.mark.therest",
+            );
+            Type = "xcode.syntax.preprocessor";
+        };
+    },	
+{
+        Identifier = "xcode.lang.fivemac.preprocessor.mark.therest";
+        Syntax = {
+            Match = (
+                "^[ \t]*mark[ \t]*\(.*\)$"
+            );
+            CaptureTypes = (
+                "xcode.syntax.mark"
+            );
+            Type = "xcode.syntax.preprocessor";
+        };
+    },
+{
+        Identifier = "xcode.lang.fivemac.preprocessor.define";
+        Syntax = {
+            Tokenizer = "xcode.lang.fivemac.preprocessor.lexer";
+            Rules = (
+                "define",
+                "xcode.lang.fivemac.preprocessor.define.name",
+            );
+            Type = "xcode.syntax.preprocessor";
+        };
+    },
+{
+        Identifier = "xcode.lang.fivemac.preprocessor.define.name";
+        Syntax = {
+            Tokenizer = "xcode.lang.fivemac.preprocessor.lexer";
+            Rules = (
+                "xcode.lang.fivemac.preprocessor.identifier",
+            );
+            Type = "xcode.syntax.definition.macro";
+        };
+    },
+   {
+
+		Identifier = "xcode.lang.fivemac.preprocessor.include.lexer";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.comment.degenerate",
+				"xcode.lang.comment.headerdoc",
+				"xcode.lang.comment.headerdoc.star",
+				"xcode.lang.comment.headerdoc.singleline.bang",
+				"xcode.lang.comment.headerdoc.singleline.slash",
+				"xcode.lang.comment",
+				"xcode.lang.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.fivemac.preprocessor.systemIncludeString",
+				"xcode.lang.character",
+				"xcode.lang.number",
+				"xcode.lang.fivemac.preprocessor.identifier",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.preprocessor.include";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.preprocessor.include.lexer";
+			Rules = (
+				"include",
+				"xcode.lang.string",
+			);
+			Type = "xcode.syntax.preprocessor.include";
+		};
+	},
+{
+        Identifier = "xcode.lang.fivemac.preprocessor.systeminclude";
+        Syntax = {
+            Tokenizer = "xcode.lang.fivemac.preprocessor.include.lexer";
+            Rules = (
+                "include",
+                "xcode.lang.fivemac.preprocessor.systemIncludeString",
+            );
+            Type = "xcode.syntax.preprocessor.include";
+        };
+    },
+
+ 
+/****************************************************************************/
+// MARK: fivemac works
+/****************************************************************************/
+
+ 
+{
+		Identifier = "xcode.lang.fivemac.identifier";
+		Syntax = {
+			CaseSensitive = NO;
+			StartChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_[";
+			Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_?[]";
+			Words = (
+				and,
+				break,
+				case,
+				do,
+				docase,
+				dowhile,
+				"else",
+				"elseif",
+				end,
+				"endcase",
+				"enddo",
+				"endif",
+				"for",
+				"function",
+				"if",
+				in,
+				inline,
+				"local",
+				"not",
+				or,
+				"class",
+				"endclass",
+				repeat,
+				return,
+				then,
+				until,
+				while,
+				assert,
+				collectgarbage,
+				dofile,
+				error,
+				from,
+				getfenv,
+				getmetatable,
+				ipairs,
+				load,
+				loadfile,
+				loadstring,
+				"method",
+				module,
+				next,
+				pairs,
+				pcall,
+				print,
+				rawequal,
+				rawget,
+				rawset,
+				require,
+				select,
+				setfenv,
+				setmetatable,
+				tonumber,
+				tostring,
+				type,
+				unpack,
+				xpcall,
+				"_G",
+				"_VERSION",
+				"__add",
+				"__concat",
+				"__div",
+				"__eq",
+				"__gc",
+				"__index",
+				"__le",
+				"__lt",
+				"__metatable",
+				"__mode",
+				"__mul",
+				"__newindex",
+				"__pow",
+				"__sub",
+				"__tostring",
+				"__unm",
+				package,
+				"package.cpath",
+				"package.loaded",
+				"package.loadlib",
+				"package.path",
+				"package.preload",
+				"package.seeall",
+				coroutine,
+				"coroutine.create",
+				"coroutine.resume",
+				"coroutine.running",
+				"coroutine.status",
+				"coroutine.wrap",
+				"coroutine.yield",
+				str,
+				"string.byte",
+				"string.char",
+				"string.dump",
+				"string.find",
+				"string.format",
+				"string.gmatch",
+				"string.gsub",
+				len,
+				"string.lower",
+				"string.match",
+				"string.rep",
+				"string.sub",
+				upper,
+				table,
+				"table.concat",
+				"table.insert",
+				"table.maxn",
+				"table.remove",
+				"table.sort",
+				math,
+				abs,
+				"math.acos",
+				"math.asin",
+				"math.atan",
+				"math.atan2",
+				"math.ceil",
+				"math.cos",
+				"math.cosh",
+				"math.deg",
+				"math.exp",
+				"math.floor",
+				"math.fmod",
+				"math.frexp",
+				"math.huge",
+				"math.ldexp",
+				"math.log",
+				"math.log10",
+				"math.max",
+				"math.min",
+				"math.modf",
+				"math.pi",
+				"math.pow",
+				"math.rad",
+				"math.random",
+				"math.randomseed",
+				"math.sin",
+				"math.sinh",
+				"math.sqrt",
+				"math.tan",
+				"math.tanh",
+				fclose,
+				"file:flush",
+				"file:lines",
+				fread,
+				"file:seek",
+				"file:setvbuf",
+				fwrite,
+				os,
+				"os.clock",
+				date,
+				"os.difftime",
+				"os.execute",
+				"os.exit",
+				"os.getenv",
+				"os.remove",
+				"os.rename",
+				"os.setlocale",
+				"os.time",
+				"os.tmpname",
+				default,
+				);
+			Type = "xcode.syntax.keyword";
+			AltType = "xcode.syntax.identifier";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.interestingOperators";
+		Syntax = {
+			Words = (
+				"::",
+				"->",
+				":",
+			);
+			Type = "xcode.syntax.plain";
+		};
+	},
+
+
+	{
+		Identifier = "xcode.lang.fivemac";
+		Description = "Fivemac Coloring";
+		BasedOn = "xcode.lang.simpleColoring";
+		IncludeInMenu = YES;
+		Name = Fivemac;
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer.toplevel";
+			IncludeRules = (
+				"xcode.lang.fivemac.module",
+				"xcode.lang.fivemac.class",
+				"xcode.lang.fivemac.function",
+				"xcode.lang.fivemac.method",
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+				"xcode.lang.fivemac.logicals",
+			);
+			Type = "xcode.syntax.plain";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.lexer";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.fivemac.comment",
+				"xcode.lang.fivemac.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.string.fivemac0",
+				"xcode.lang.string.fivemac1",
+				"xcode.lang.string.fivemac2",
+				"xcode.lang.string.fivemac3",
+				"xcode.lang.string.fivemac4",
+				"xcode.lang.string.fivemac5",
+				"xcode.lang.character",
+				"xcode.lang.fivemac.identifier",
+				"xcode.lang.number",
+				"xcode.lang.fivemac.interestingOperators",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.lexer.toplevel";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.fivemac.comment",
+				"xcode.lang.fivemac.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.string.fivemac0",
+				"xcode.lang.string.fivemac1",
+				"xcode.lang.string.fivemac2",
+				"xcode.lang.string.fivemac3",
+				"xcode.lang.string.fivemac4",
+				"xcode.lang.string.fivemac5",
+				"xcode.lang.character",
+				"xcode.lang.fivemac.module.declarator",
+				"xcode.lang.fivemac.class.declarator",
+				"xcode.lang.fivemac.function.declarator",
+				"xcode.lang.fivemac.method.declarator",
+				"xcode.lang.fivemac.identifier",
+				"xcode.lang.number",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.fivemac0";
+		Syntax = {
+			Start = "[[";
+			End = "]]";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.fivemac1";
+		Syntax = {
+			Start = "\"";
+			End = "\"";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.fivemac2";
+		Syntax = {
+			Start = "'";
+			End = "'";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.fivemac3";
+		Syntax = {
+			Start = "[===[";
+			End = "]===]";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.fivemac4";
+		Syntax = {
+			Start = "[====[";
+			End = "]====]";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.fivemac5";
+		Syntax = {
+			Start = "[=====[";
+			End = "]=====]";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.logicals";
+		Syntax = {
+			StartChars = "=*-+/:,.";
+			CaseSensitive = NO;
+			Chars = "=*-+/:,.notadrf";
+			Words = (
+				"=",
+				"+",
+				"-",
+				"*",
+				"/",
+				"==",
+				"<",
+				">",
+				"=>",
+				"<=",
+				".not.",
+				".and.",
+				".or.",
+				".t.",
+				".f.",
+			);
+			Type = "xcode.syntax.character";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.module";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer.toplevel";
+			Start = "xcode.lang.fivemac.module.declarator";
+			"CaseSensitive " = NO;	
+			End = return; 
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.class",
+				"xcode.lang.fivemac.function",
+				"xcode.lang.fivemac.method",
+			);
+			Type = "xcode.syntax.definition.class";
+		};
+	},
+
+	{
+		Identifier = "xcode.lang.fivemac.module.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				modulo,
+				"xcode.lang.fivemac.identifier",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.class";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer.toplevel";
+			"CaseSensitive " = NO;
+			Start = "xcode.lang.fivemac.class.declarator";
+			End =  "endclass" ; 
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.function",
+			);
+			Type = "xcode.syntax.definition.class";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.class.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				class ,
+				"xcode.lang.fivemac.identifier",
+				"xcode.lang.fivemac.superclass?",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.superclass";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				"->",
+				"xcode.lang.fivemac.identifier",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.function";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer.toplevel";
+			"CaseSensitive " = NO;
+			Start = "xcode.lang.fivemac.function.declarator";
+			End = return;
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+			Type = "xcode.syntax.definition.function";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.function.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				function,
+				"xcode.lang.fivemac.function.name",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.function.name";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				"xcode.lang.fivemac.identifier",
+				"xcode.lang.fivemac.function.name.more?",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.function.name.more";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				".",
+				"xcode.lang.fivemac.identifier",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.method";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer.toplevel";
+			"CaseSensitive " = NO;
+			Start = "xcode.lang.fivemac.method.declarator";
+			End = "return";
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+			Type = "xcode.syntax.definition.function";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.method.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				method,
+				"xcode.lang.fivemac.method.name",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.method.name";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				"xcode.lang.fivemac.identifier",
+				"xcode.lang.fivemac.method.name.more?",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.method.name.more";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Rules = (
+				":",
+				"xcode.lang.fivemac.identifier",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.block";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = "{";
+			End = "}";
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.block.if";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = "if";
+			End = "endif";
+			Foldable = YES;
+			CaseSensitive = NO;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.block.while";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = dowhile;
+			End = "enddo";
+			Foldable = YES;
+			CaseSensitive = NO;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.block.case";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = docase ;
+			End = "endcase";
+			Foldable = YES;
+			CaseSensitive = NO;
+			Recursive = NO;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.block.repeat";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = repeat;
+			End = until;
+			Foldable = YES;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.for",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.block.for";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = for;
+			End = next;
+			Foldable = YES;
+			CaseSensitive = NO;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.block",
+				"xcode.lang.fivemac.block.if",
+				"xcode.lang.fivemac.block.while",
+				"xcode.lang.fivemac.block.case",
+				"xcode.lang.fivemac.block.repeat",
+				"xcode.lang.fivemac.bracketexpr",
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Name = {
+			Identifier = "xcode.lang.fivemac.default";
+			Syntax = {
+				Tokenizer = "xcode.lang.fivemac.lexer";
+				Rules = (
+					default,
+					"xcode.lang.fivemac.block",
+				);
+				Type = "xcode.syntax.preprocessor";
+			};
+		};
+		Identifier = "xcode.lang.fivemac.parenexpr";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = "(";
+			End = ")";
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.bracketexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.bracketexpr";
+		Syntax = {
+			Tokenizer = "xcode.lang.fivemac.lexer";
+			Start = "[";
+			End = "]";
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.fivemac.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.comment";
+		Syntax = {
+			Start = "/*";
+			End = "*/";
+			Foldable = YES;
+			IncludeRules = (
+				"xcode.lang.url",
+				"xcode.lang.url.mail",
+				"xcode.lang.comment.mark",
+			);
+			Type = "xcode.syntax.comment";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.comment.singleline";
+		Syntax = {
+			Start = "//";
+			End = "\n";
+			IncludeRules = (
+				"xcode.lang.url",
+				"xcode.lang.url.mail",
+				"xcode.lang.comment.mark",
+			);
+			Type = "xcode.syntax.comment";
+		};
+	},
+	{
+		Identifier = "xcode.lang.fivemac.comment1";
+		Syntax = {
+			Start = "--[=[";
+			End = "]=]";
+			Foldable = YES;
+			IncludeRules = (
+				"xcode.lang.url",
+				"xcode.lang.url.mail",
+				"xcode.lang.comment.mark",
+			);
+			Type = "xcode.syntax.comment";
+		};
+	},
+)

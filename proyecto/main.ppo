@@ -1,0 +1,447 @@
+#line 209 "/Users/manuel/harbour/include/hbclass.ch"
+DECLARE HBClass  New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS HBClass  Create() AS OBJECT  Instance() AS OBJECT  AddClsMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC )  AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING )  AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING, x AS LOGICAL, lPer AS LOGICAL )  AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC )  AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC )  AddVirtual( cName AS STRING )
+#line 16 "/Users/manuel/fivemac/include/FiveMac.ch"
+EXTERNAL HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
+#line 3 "main.prg"
+static oWnd
+
+extern dbfcdx, DBCloseArea, DbUseArea, DbGoTo , ordsetfocus
+
+
+
+
+
+
+
+
+
+
+
+
+EXTERNAL HB_LANG_ES
+EXTERNAL HB_CODEPAGE_ESWIN
+
+function Main()
+
+   local oBar
+   PUBLIC respath:=respath()+"/"
+   PUBLIC cDbfpath:= apppath()+"/dbf/"
+
+Set( 5, 1990 )
+__SetCentury( "ON" )
+Set( 4, if(__SetCentury(), "dd-mm-yyyy", "dd-mm-yy") )
+SET( 114, "ESWIN" )
+
+
+
+
+   BuildMenu()
+
+   oWnd := TWindow():New(,,,, "Applicatión login test",,,,,,,,, "oWnd" )
+
+   ownd:fullscreen()
+
+
+   if Logon()
+
+      oBar := TToolBar():New( oWnd ,)
+
+
+
+
+      oBar:AddButton( "Indices", "Crear nuevos indices", {||(indices())}, respath+"PrefApp.tiff",.F. )
+
+
+
+
+       oBar:AddButton( "Familias", "Open a file", {||(Familias())}, "Folder",.F. )
+
+
+
+
+       oBar:AddButton( "Provincias", "Open a file", {||(provincias())}, "Folder",.F. )
+
+      oBar:AddSeparator()
+
+
+
+
+
+      oBar:AddButton( "Exit", "Exit from the application", {||(oWnd:End())}, respath+"exit.png",.F. )
+
+
+       oWnd:SetMsgBar( , )
+
+      oWnd:Maximize()
+
+
+
+      oWnd:Activate(, {||(MsgYesNo( "Want to end ?" ))}, .F.,, .F.,,, )
+   else
+      MsgInfo( "non authorized user" )
+   endif
+
+return nil
+
+
+
+function BuildMenu()
+
+   local oMenu
+
+   oMenu := MenuBegin()
+      MenuAddItem( "MyAppName",,, )
+      MenuBegin()
+         MenuAddItem( "About", {|oMenuItem|(MsgInfo( "Application developed with FiveMac", "Your application name" ))},, )
+         MenuAddSeparator()
+          MenuAddItem( "Exit", {|oMenuItem|(oWnd:End())}, "e", )
+
+      MenuEnd()
+
+      MenuAddItem( "Maestros",,, )
+         MenuBegin()
+            MenuAddItem( "Crear indices", {|oMenuItem|(Indices())},, )
+            MenuAddSeparator()
+              MenuAddItem( "Familias", {|oMenuItem|(Familias())},, )
+              MenuAddItem( "Provincias", {|oMenuItem|(provincias())},, )
+        MenuEnd()
+
+      MenuAddItem( "Reports",,, )
+      MenuBegin()
+         MenuAddItem( "Search",,, )
+           MenuAddItem( "Replace",,, )
+      MenuEnd()
+
+      MenuAddItem( "Utilities",,, )
+      MenuBegin()
+         MenuAddItem( "Editor", {|oMenuItem|(Editor())},, )
+         MenuAddItem( "Help", {|oMenuItem|(MsgInfo( "Help" ))},, )
+         MenuAddItem( "Topic Help",,, )
+         MenuAddSeparator()
+         MenuAddItem( "Calculator", {|oMenuItem|(MacExec( "calculator" ))},, )
+         MenuAddItem( "TextEdit", {|oMenuItem|(MacExec( "textedit" ))},, )
+      MenuEnd()
+
+MenuEnd()
+
+return nil
+
+
+
+function Logon()
+
+   local oDlg, lSuccess := .T.
+   local cLogin := UserName(), cPassw := ""
+   local respath:= respath()+"/"
+   local oimg
+   local oget1
+   local oget2
+
+
+   oDlg := TDialog():New( 0, 0, 200, 450, "Please Logon",,,,, )
+
+   oImg := TImage():New( 76, 30, 107, 91, oDlg, respath+"Pass.png",,, "oImg" )
+
+   TSay():New( 130, 190, 80, 20, oDlg, "Login:", .F.,,,,, )
+
+   oget1 := TGet():New( 130, 240, 160, 20, oDlg, { | u | If( PCount()==0, cLogin, cLogin := u ) }, {||(( MsgInfo("sale") ,.T. ))}, .F., .F. ,.F.,, .T., ,, "oget1" )
+
+   TSay():New( 90, 170, 100, 20, oDlg, "Password:", .F.,,,,, )
+
+   oGet2 := TGet():New( 90, 240, 160, 20, oDlg, { | u | If( PCount()==0, cPassw, cPassw := u ) },, .F., .T. ,.F.,, .T., ,, "oGet2" )
+
+   TButton():New( 20, 200,,, "OK", oDlg, {| self |(oDlg:End())},,,,,, )
+
+   TButton():New( 20, 320,,, "Cancel", oDlg, {| self |(( lSuccess := .F., oDlg:End() ))},,,,,, )
+
+   oDlg:Activate(,,, .T.,,, )
+
+   if lSuccess
+      if CPassw <> "000"
+          MsgInfo( "Acceso no permitido" )
+          lSuccess := .F.
+      endif
+   endif
+
+return lSuccess
+
+
+
+function Familias()
+
+   local oWnd
+   local oGet, cText := "Hello world", oBtn
+   local oChk, lTest := .T.
+   local obtn3,obtn2,obtn4
+   local osplit,obrw,oDlg
+   local respath:=respath()+"/"
+   local cAlias:=Abrimos("Familias")
+    local oget1, oget2,oget3,oget4
+    local ctext2:= "yo"
+    local orden
+    local csay,osay1
+
+   local bchanged:= {|oGet| Busqueda(oGet,oBrw,calias ) }
+
+   dbSelectArea( (calias) )
+   orden:=(calias)->(ordsetfocus(2))
+   (cAlias)->(dbgotop())
+
+
+
+ oDlg := TWindow():New( 470, 650, 880, 1280, "Gestion de Familias",,,,,,,,, "oDlg" )
+
+ odlg:fullscreen()
+
+
+
+
+
+ oBar := TToolBar():New( oDlg ,)
+
+
+
+
+      oBar:AddButton( "Indices", "Crear nuevos indices", {||(indices())}, respath+"PrefApp.tiff",.F. )
+
+
+
+
+       oBar:AddButton( "Familias", "Open a file", {||(Familias())}, "Folder",.F. )
+
+      oBar:AddSeparator()
+
+
+
+
+
+      oBar:AddButton( "Exit", "Salir de Familias", {||(oDlg:End())}, respath+"exit.png",.F. )
+
+
+       oBar:AddSpaceFlex()
+       obar:Addsearch( "busca", "Buscar",bchanged )
+
+
+  oDlg:SetMsgBar( 32 , )
+
+
+
+
+
+ oBrw := TWBrowse():New( 33, 0, 280, (oDlg:nHeight-110), oDlg, {|| { str((calias)->familia,3,0) ,(calias)->descripcio } }, { "Codigo", "Archivos" },, cAlias, 16,{ 40,200 },,, "oBrw" )
+
+      WITH OBJECT oBrw
+
+         :SetColEditable( 1, .F. )
+         :SetColEditable( 2, .F. )
+         :SetRowHeight( 20 )
+         :SetSelectorStyle( 1 )
+         :SetGridLines( 1 )
+         :bAction := {|| ( FamEdit((calias)->(Recno())) ) }
+         :bHeadclick:={|o, nhead| orden(nHead,obrw) }
+
+      END
+
+     obrw:SetIndicatorDescent(2)
+
+
+      obrw:bchange:= {|| (calias)->(ORDKEYGOTO(obrw:nrowPos())),  oget2:setText((calias)->descripcio) ,oget1:setText(str((calias)->familia,3,0)) }
+
+
+
+   oget3 := TSay():New( 324, 340,,, oDlg, "Codigo:", .F.,,,,, "oget3" )
+
+    oGet3:SetTextColor(50,50,50)
+
+
+   oget1 := TSay():New( 300, 340, 200, 26, oDlg, cText, .T.,,,,, "oget1" )
+
+   oGet1:setText(str((calias)->familia,3,0))
+
+   oGet1:SetSizeFont(16)
+   oGet1:Enabled()
+
+   oget4 := TSay():New( 274, 340,,, oDlg, "Descripcion:", .F.,,,,, "oget4" )
+
+   oGet4:SetTextColor(50,50,50)
+
+
+   oget2 := TSay():New( 250, 340, 200, 26, oDlg, cText2, .T.,,,,, "oget2" )
+
+     oget2:setText((calias)->descripcio)
+
+     oGet2:SetSizeFont(16)
+
+
+
+   obtn3 := TButton():New( 4, 4, 24, 24, "+", oDlg, {| self |(( oGet1:Disabled(), Msginfo("alta")   ))}, 11,,,,, "obtn3" )
+
+
+   obtn4 := TButton():New( 4, 250, 60, 24, "Editar", oDlg, {| self |(( FamEdit((calias)->(Recno())) ))}, 11,,, 1,, "obtn4" )
+
+
+
+   obtn := TButton():New( 4, 350, 24, 24, "1", oDlg, {| self |((orden(1,obrw)))}, 11,,, 1,, "obtn" )
+
+
+
+   obtn2 := TButton():New( 4, 380, 24, 24, "2", oDlg, {| self |((orden(2,obrw)))}, 11,,, 1,, "obtn2" )
+
+
+
+   osay1 := TSay():New( 2, 420, 100, 20, oDlg, ( str((calias)->(Reccount()),5,0)+ " Registros" ), .T.,, 1,,, "osay1" )
+
+
+      oDlg:bValid:={|| (calias)->(dbclosearea()),.T. }
+
+   oDlg:Activate(,, .F.,, .F.,,, )
+
+
+
+
+return nil
+
+
+
+function orden(norden,obrw)
+local bakorden:= (obrw:calias)->(ordNumber())
+ (obrw:cAlias)->(ordsetfocus(norden))
+ if bakorden <> nOrden
+  oBrw:SetIndicatorDescent( nOrden )
+    oBrw:DelIndicator( bakorden )
+    obrw:refresh()
+endif
+Return nil
+
+
+
+Function Busqueda(oGet,oBrw,calias )
+local nOrden := (obrw:calias)->(ordNumber())
+if nOrden == 2
+(calias)->(dbseek(UPPER(oGet:assign() )))
+   oBrw:SetRowPos((obrw:calias)->(ORDKEYNO()))
+else
+  (calias)->(dbseek(Val(oGet:assign() )))
+   obrw:Gotop()
+   oBrw:SetRowPos((obrw:calias)->(ORDKEYNO()))
+endif
+
+Return nil
+
+
+
+function FamEdit(nrec)
+
+
+   local oWnd
+   local oGet, cText := "Hello world", oBtn
+   local oChk, lTest := .T.
+   local oCbx, cVar  := "One"
+   local osplit,obrw
+   local ncod,cDescrip
+   local oget1, oget2
+   local oBtn1,oBtn2
+   local cAlias:=Abrimos("Familias")
+  local  oSay1, oSay2
+
+
+     dbSelectArea( (calias) )
+   (calias)->(dbgotop())
+   (calias)->(ordsetfocus(1))
+   (cAlias)->(dbgotop())
+   (calias)->(dbgoto(nrec))
+   nCod:=str((calias)->familia,3,0)
+   cDescrip := (calias)->descripcio
+
+
+
+
+
+oWnd := TWindow():New(,,,, "Familias",,,,,, 430, 213, .T., "oWnd" )
+
+
+
+
+
+oSay1 := TSay():New( 27, 26, 90, 20, oWnd, "código", .F.,, 0,,, "oSay1" )
+
+
+
+oSay2 := TSay():New( 86, 29, 90, 20, oWnd, "Familia", .F.,, 0,,, "oSay2" )
+
+
+
+oGet1 := TGet():New( 49, 27, 120, 20, oWnd, { | u | If( PCount()==0, nCod, nCod := u ) },, .F., .F. ,.F.,, .F., ,, "oGet1" )
+
+
+oGet2 := TGet():New( 108, 27, 369, 20, oWnd, { | u | If( PCount()==0, cDescrip, cDescrip := u ) },, .F., .F. ,.F.,, .F., ,, "oGet2" )
+
+
+
+oBtn1 := TButton():New( 153, 331, 90, 30, "Salir", oWnd, {| self |((oWnd:end() ))},,,,,, "oBtn1" )
+
+
+oBtn2 := TButton():New( 153, 240, 90, 30, "Grabar", oWnd, {| self |(grabafam(cAlias,oGet1,oGet2))},,,,,, "oBtn2" )
+
+ oWnd:bValid:={|| (calias)->(dbclosearea()),.T. }
+
+oWnd:Activate(,, .F.,, .T.,,, )
+
+oWnd:setfocus()
+
+oGet1:SetFocus()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+return nil
+
+
+
+Function  grabafam(cAlias,oGet1,oGet2)
+if (calias)->(rlock())
+
+(cAlias)->descripcio := Upper(oGet2:Assign() )
+    (cAlias)->familia  := val(oGet1:Assign())
+  (cAlias)->(dbunlock())
+    oget1:settext(str((calias)->familia,3,0))
+    oGet2:settext((cAlias)->descripcio, .T.)
+else
+   msginfo( "no se ha podido grabar el registro")
+
+endif
+
+
+Return nil
+
+
+
+
+
+
+Function Busquedapobla(oGet,oBrw,calias,nCod )
+local nOrden := (obrw:calias)->(ordNumber())
+
+(calias)->(dbseek(ncod+UPPER(oGet:assign() )))
+ BRWSETROWPOS(obrw:hwnd, (obrw:calias)->(ORDKEYNO()))
+
+
+Return nil

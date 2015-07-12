@@ -1,0 +1,151 @@
+* Enhancement: Class TGroup can be used as a container for controls:
+  @ ..., ... OF oGroup. Please review samples/TestGrp.prg
+
+* Enhancement: Minor changes in Class TSay
+
+* Fixed samples/TestGrp.prg, broken due to recent changes in window/dialog
+  dimensions.
+
+* Fixed samples/TestGet.prg, broken due to recent changes in windows/dialog
+  dimensions.
+
+* New: Class TCoverFlow and @ ..., ... COVERFLOW ...
+  Please review samples/TestCovf.prg. Thanks to Manuel Alvarez!
+
+* New: Class TMovie and @ ..., ... MOVIE ...
+   Please review samples/TestMov.prg. Thanks to Manuel Alvarez!
+
+* New: Class TWebView and @ ..., ... WEBVIEW ... URL ... 
+  Please review samples/TestWeb.prg. Thanks to Manuel Alvarez!
+
+* New: REDEFINE COMBOBOX [ oCbx VAR ] cVar ID nId OF oWnd is already
+  available. Please review samples/TestNib.prg
+
+* New: REDEFINE CHECKBOX [ oChk VAR ] lVar ID nId OF oWnd is working!
+  Please revew samples/TestNib.prg
+
+* New: REDEFINE GET [ oGet VAR ] cVar ID nId OF oWnd is working!
+  Please review samples/TestNib.prg
+
+* New: REDEFINE BUTTON oBtn ID nId OF oWnd is working! Please review
+  samples/TestNib.prg
+
+* New: First implementation for: DEFINE WINDOW oWnd RESOURCE cNibName
+  Please review samples/TestNib.prg
+
+* New: First tests using NIB files!!! Thanks to Manuel Alvarez.
+  Please review samples/TestNib.prg
+
+* Fix: Coordinates were also messed in Class TDialog. Now they are fine.
+
+* Fix: Coordinates were messed in Class TWindow. Now the specified coordinates
+  are right:
+
+  DEFINE WINDOW oWnd FROM nTop, nLeft TO nBottom, nRight
+
+  Please keep in mind that nBottom is closer to the top of the screen. OSX uses
+  0, 0 in left, bottom position of the screen.
+
+* New: functions ScreenWidth() and ScreenHeight() returns the width and height
+  of the entire desktop.
+
+* New: Class TWBrowse Methods SetIndicatorDescent(), SetIndicatorAscend(),
+  SetSelectorStyle().
+
+* Enhancement: GETs are now assigned on each change.
+
+* New: GROUPs implementation. Please review samples/TestGrp.prg
+
+* New: Class TWBrowse Methods SetColEditable( nColumn, lEdit ) and
+  SetHeadTooltip( nColumn, cText ). Thanks to Manuel!
+
+* Enhancement: The broken console problem seems to be fixed. Now build.sh does not
+  need to reset the console. Solved with a Harbour request from FiveMac.ch :-)
+
+* New: Class TWBrowse METHOD SetGridLines( nType ), thanks to Manuel. Revised by FiveTech.
+
+* New: DATEPICKER implementation. Please review samples/TestDPik.prg, thanks
+  to Dino. Revised by FiveTech.
+
+* New: function SaveFile(), lets you select the name of the file to save.
+  Thanks to Manuel!
+
+* New: Class TWBrowse Methods SetRowHeight( nHeight ), GetRowHeight() and
+  SetArternateColor( lOnOff ). Thanks to Manuel!
+
+* Enhancement: samples/build.sh generates the Resources folder inside the created app,
+  creates an Info.plist and set a default icon! :-)
+
+* New: Class TWBrowse() Method GetColWidth( nColumn )
+
+* New: functions MsgAlertSheet( uValue, hWindow ) and BrwColSetWidth( hTableView, nColumn, nWidth ),
+  Thanks to Manuel!
+
+* Enhancement: Improved function AppPath(). New function Path(). Thanks to Manuel Alvarez!
+
+* Enhancement: GETs now support the clause PASSWORD. Please review samples\login.prg.
+  Thanks to Manuel Alvarez!
+
+* Enhancement: DialogBoxes are non reasizable, same behavior as in Windows.
+
+* Fix: Slider messages were not being processed. Now it is fine. Thanks to Dino!
+  Please review samples\TestSlid.prg
+
+* New: function AppExec( cAppName ), executes an external application. Please
+  review samples\TestExec.prg
+
+* New: Class TImage new Method SetResFile( cFileName ) and support for cResName from Method
+  New(). Thanks to Manuel Alvarez!
+
+* New: function IMGSETRESFILE( hImage, cFileName ) --> nil // Read image from the app
+  resources folder and assign it to an existing NSImage handle. Thanks to Manuel Alvarez!
+
+* New: functions AppPath() and ResPath(). They return the application folder path
+  and the resources folder path respectively. Many thanks to Manuel Alvarez!
+  Please review samples\TestDir.prg
+
+* Enhancement: make/makefile example updated with the new Harbour libraries names
+
+* Fix: ToolBars buttons are properly working again, many thanks to Dino Alessandri!
+
+* New: MsgLogo() example by Dino Alessandri, please review samples\msglogo.prg
+
+* New: Class TSplash for splash windows. Please review samples\TestSpla.prg
+  Thanks to Dino Alessandri!
+
+* New: Added new transparent dupport module. Please review samples\transp.prg
+  Thanks to Dino Alessandri!
+
+* New: Class TProgress added to the library. It was missing in the makefile.
+
+* Fix: Browses are properly working on Snow Leopard (64 bits).
+
+* Fix: ToolBars buttons are enabled again. Due to recent OSX versions, they
+  became disabled.
+
+* Fix: samples\osxpro.prg modified to support current Harbour syntax.
+
+* New: Class TSlider, please review samples\TestSlid.prg. Thanks to Dino Alessandri!
+
+* New: started the implementation of colors.
+
+* Enhancement: We are already printing from samples\TestPrn.prg !
+
+* New: started the implementation of fonts.
+
+* New: started the implementation of the printer management. Please review samples\TestPrn.prg
+
+* New: Class TProgress, please review samples\TestProg.prg. Many thanks to Dino Alessandri!
+
+* New: Started timers implementation. New functions TimerCreate() and TimerEnd().
+  Added new Method OnTimerEvent to cocoa class View (windows.m)
+
+* New: make folder contains a make for multiple PRGs. Simply type make to
+  build the sample
+
+* New: Class TControl Method Refresh()
+
+* New: Clause UPDATE for Gets and CheckBoxes.
+
+* New: VALID support for GETs. The user has to type something on the GET in
+  order to evaluate the VALID

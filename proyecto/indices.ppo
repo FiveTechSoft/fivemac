@@ -1,0 +1,263 @@
+#line 209 "/Users/manuel/harbour/include/hbclass.ch"
+DECLARE HBClass  New( cName AS STRING, OPTIONAL SuperParams ) AS CLASS HBClass  Create() AS OBJECT  Instance() AS OBJECT  AddClsMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC, n2 AS NUMERIC, n3 AS NUMERIC )  AddMultiClsData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING )  AddMultiData( cType AS STRING, uVal, nScope AS NUMERIC, aDatas AS ARRAY OF STRING, x AS LOGICAL, lPer AS LOGICAL )  AddMethod( cName AS STRING, @MethodName(), nScope AS NUMERIC )  AddInLine( cName AS STRING, bBlock AS CODEBLOCK, nScope AS NUMERIC )  AddVirtual( cName AS STRING )
+#line 16 "/Users/manuel/fivemac/include/Fivemac.ch"
+EXTERNAL HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
+#line 5 "indices.prg"
+extern dbfcdx, DBCloseArea, DbUseArea, DbGoTo
+
+
+
+
+Function indices(nOpcion)
+
+local indice:=tindices():new():MsgSelect()
+
+     return nil
+
+
+
+_HB_CLASS Tindices ; function Tindices ( ... ) ; static s_oClass ; local nScope, oClass, oInstance ; if s_oClass == NIL .AND. __clsLockDef( @s_oClass ) ; begin sequence ; nScope := 1 ; ( ( nScope ) ) ; oClass := IIF(.F.,, HBClass():new( "Tindices" , iif( .F., { }, { @HBObject() } ), @Tindices() ) ) ;
+
+; _HB_MEMBER { nIndice } ; oClass:AddMultiData(,, nScope + iif( .F., 16, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ), {"nIndice"}, .F. )
+; _HB_MEMBER { bItems } ; oClass:AddMultiData(,, nScope + iif( .F., 16, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ), {"bItems"}, .F. )
+ ; ;; _HB_MEMBER { ODlg, oSayind,obrw } ; oClass:AddMultiData(,, nScope + iif( .F., 16, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ), {"ODlg", "oSayind","obrw"}, .F. )
+ ; ;; _HB_MEMBER { cAlias,osaytime,oMeter } ; oClass:AddMultiData(,, nScope + iif( .F., 16, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ), {"cAlias","osaytime","oMeter"}, .F. )
+; _HB_MEMBER { nrecord } ; oClass:AddMultiData(,, nScope + iif( .F., 16, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ), {"nrecord"}, .F. )
+; _HB_MEMBER { cDbfPath } ; oClass:AddMultiData(,, nScope + iif( .F., 16, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ), {"cDbfPath"}, .F. )
+
+   _HB_MEMBER New() AS CLASS Tindices; oClass:AddMethod( "New", @Tindices_New(), nScope + iif( .T., 8, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ) )
+   _HB_MEMBER Proceso(); oClass:AddMethod( "Proceso", @Tindices_Proceso(), nScope + iif( .F., 8, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ) )
+   _HB_MEMBER CreaIndices(); oClass:AddMethod( "CreaIndices", @Tindices_CreaIndices(), nScope + iif( .F., 8, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ) )
+   _HB_MEMBER MsgSelect( cTitle); oClass:AddMethod( "MsgSelect", @Tindices_MsgSelect(), nScope + iif( .F., 8, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ) )
+   _HB_MEMBER ponproceso( opcion,aDatos); oClass:AddMethod( "ponproceso", @Tindices_ponproceso(), nScope + iif( .F., 8, 0 ) + iif( .F., 256, 0 ) + iif( .F., 2048, 0 ) )
+
+
+
+
+
+
+oClass:Create() ; ; always ; __clsUnlockDef( @s_oClass, oClass ) ; end ; oInstance := oClass:Instance() ; if __ObjHasMsg( oInstance, "InitClass" ) ; oInstance:InitClass( ... ) ; end ; return oInstance ; end ; return s_oClass:Instance() AS CLASS Tindices ;
+
+
+
+static FUNCTION Tindices_New( nIndice ) ; local Self AS CLASS Tindices := QSelf() AS CLASS Tindices
+  ::cDbfpath := cDbfPath
+  ::cAlias := SoloAbre("indices")
+   if Empty(::cAlias)
+       Return .F.
+   endif
+  ::nIndice=nIndice
+  dbSelectArea( (::calias) )
+
+return Self
+
+
+
+static FUNCTION Tindices_CreaIndices( ) ; local Self AS CLASS Tindices := QSelf() AS CLASS Tindices
+local indi,aj,t_var,camp
+local aux,lunico
+local cadavez
+local contador:=1
+local nindi,cBase,cVia
+local cCampo,ctag
+local i
+local at,att,atblock
+local nalias
+local n:=1
+LOCAL DBNUM,cfor,bfor
+
+dbSelectArea( (::calias) )
+nalias:=select()
+DBNUM := (::calias)->numero
+nindi:=(::calias)->num_ind
+
+cBase:=::cDbfpath+alltrim((::cAlias)->base)
+CVia:=trim((::calias)->via)
+if upper(alltrim((::cAlias)->base)) == "CAMINO"
+   RETURN NIL
+endif
+
+ ::oSayind:SetText("Organizando Archivo de "+ alltrim((::cAlias)->base))
+
+ Ferase(cBase+".cdx")
+   dbusearea(.T.,,cbase)
+   if netErr()
+      pausa("error en bloqueo"+cbase)
+      Return .F.
+   endif
+   __dbPack()
+   dbclosearea()
+
+cadavez:=reccount()/100*(nindi)
+
+::oMeter:setRange(0,Indi)
+n:= 0
+::oMeter:Update( n )
+
+::oSayind:setText("Creando indices de "+ alltrim((::cAlias)->base))
+  dbusearea(.T.,cVia,cBase)
+
+  for i=1 to nindi
+      cCampo:="campo"+str(i,1,0)
+      at:=trim(eval(fieldwblock(cCampo,nalias)) )
+      ctag:="tag"+str(i,1,0)
+      att:=trim(eval(fieldwblock(ctag,nalias) ) )
+      atblock:= compila(at)
+      lunico:= .F.
+
+
+      cFor := "!deleted()"
+
+      bFor := {|| !deleted() }
+
+       ordCondSet(cFor,bFor,,,,, RECNO(),,,, )
+       ordCreate(cbase, att, at, atblock,lunico )
+
+      ::oMeter:Update( n++ )
+      next
+
+  ::nrecord:=reccount()
+   dbclosearea()
+ ::oSayind:setText(  "Finalizado creación indices ")
+
+
+return NIL
+
+
+
+static FUNCTION Tindices_MsgSelect( cTitle ) ; local Self AS CLASS Tindices := QSelf() AS CLASS Tindices
+local cValue
+local ofont,oFontHeader,oFontSele
+local obmp
+local nval:= 0
+local auxn
+local osay1
+local aDatos:={}
+local oHeaderDlg, oViaBitmap1
+local obtn,oprog
+local respath:=respath()+"/"
+local obox,oColor1, oColor2,oGrad
+::bItems:={}
+
+dbSelectArea( (::calias) )
+(::calias)->(dbgotop())
+
+DBEVAL({|| aadd(::bItems,(::calias)->tiempo ) } )
+DBEVAL({|| aadd(aDatos,{.F. , substr( (::calias)->nombre,1,18)  })} )
+
+cValue:= aDatos[1,2]
+
+
+
+
+
+::oDlg := TDialog():New( 470, 650, 880, 1280, "Creación de indices",,,,, )
+
+
+
+   ::osayind := TSay():New( 110, 270, 320, 50, ::oDlg, "Escoja un archivo", .F., Upper("TEXTCENTER"),,,, "::osayind" )
+
+   ::osaytime := TSay():New( 85, 270, 320, 50, ::oDlg, " ", .F., Upper("TEXTCENTER"),,,, "::osaytime" )
+
+
+   oImg := TImage():New( 180, 330, 200, 200, ::oDlg, respath+"PrefApp.tiff",,, "oImg" )
+
+   ::oBrw := TWBrowse():New( -16, 0, 240, (::oDlg:nHeight-6), ::oDlg, {|| { "","" } }, { "P", "Archivos" },,,,,,, "::oBrw" )
+
+
+     ::oBrw:setArray( aDatos )
+     ::oBrw:bLine = { | nRow | { If( aDatos[ nRow ][ 1 ], respath+"online.tiff", respath+"offline.tiff" ), aDatos[ nRow ][ 2 ] , } }
+
+   WITH OBJECT ::oBrw
+
+     :SetColEditable( 2, .F. )
+
+     :SetNoHead()
+
+     :SetColWidth( 1,20 )
+     :SetColWidth( 2,170 )
+     :SetRowHeight( 20 )
+     :bAction := {|| ::ponproceso( ::obrw:nRowPos,aDatos) }
+     :SetGridLines( 1 )
+     :SetSelectorStyle( 1 )
+
+     :SetHeadTooltip( 2, "Hola" )
+     :SetColBmp( 1 )
+     :bChange := {|obrw| ::oMeter:Update(0)  }
+
+   END
+
+
+   ::oSaytime:setText("Tiempo del proceso : "+str(::bItems[::obrw:nRowPos],6,3)+" segundos" )
+
+   ::oMeter := TProgress():New( 74, 280, 300, 30, ::oDlg, 0,, "::oMeter" )
+
+
+   TButton():New( 20, 450,,, "Cancel", ::oDlg, {| self |(((::calias)->(dbclosearea()) , ::oDlg:End()))},,,,,, )
+   obtn := TButton():New( 20, 320,,, "OK", ::oDlg, {| self |(( ::ponproceso( ::obrw:nRowPos,aDatos)   ))},,,,,, "obtn" )
+
+
+   ::oDlg:Activate(,,, .T.,,, )
+
+
+return cValue
+
+
+
+static FUNCTION Tindices_ponproceso( opcion,aDatos ) ; local Self AS CLASS Tindices := QSelf() AS CLASS Tindices
+   local n
+   local aa, bb
+
+if opcion <>0
+     if opcion=len(aDatos)
+
+        ::oBrw:gotop()
+        aa:=seconds()
+        FOR n=1 TO ( len(aDatos) -1 )
+            ::nIndice:=n
+            ::proceso()
+             aDatos[n,1]:= .T.
+             ::oBrw:GoDown()
+        NEXT
+        bb:=seconds()
+        dbSelectArea( (::calias) )
+       (::calias)->(dbgoto( len(aDatos)) )
+        IF (::calias)->(Rlock())
+            _FIELD->(::calias)->TIEMPO := BB-AA
+            (::calias)->(dbunlock())
+         ENDIF
+             ::oSayTime:setText("Proceso : "+alltrim(Str(len(aDatos)-1,5,0))+" Archivos en " +str(::bItems[::obrw:nRowPos],6,3)+" segundos." )
+         else
+
+        ::nIndice:=opcion
+        ::proceso()
+
+        aDatos[opcion,1]:= .T.
+        ::oBrw:GoDown()
+
+
+   endif
+
+   endif
+
+RETURN NIL
+
+
+
+
+static FUNCTION Tindices_Proceso( ) ; local Self AS CLASS Tindices := QSelf() AS CLASS Tindices
+
+local aa,bb
+(::calias)->(dbgoto(::nIndice))
+AA:=seconds()
+::Creaindices()
+bb:=seconds()
+dbSelectArea( (::calias) )
+(::calias)->(dbgoto(::nIndice))
+IF (::cAlias)->(RLOCK())
+   _FIELD->(::calias)->TIEMPO := BB-AA
+   (::calias)->(dbunlock())
+ENDIF
+::oSayTime:SetText("Proceso : "+ alltrim(Str(::nrecord,10,0))+" Registros en " +str(::bItems[::obrw:nRowPos],6,3)+" segundos." )
+
+return NIL
