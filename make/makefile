@@ -1,4 +1,4 @@
-# FiveMac makefile sample (c) FiveTech Software 2007-2010
+# FiveMac makefile sample (c) FiveTech Software 2007-2015
 # Use TABs instead of spaces
 # just type make to build it
 
