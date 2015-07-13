@@ -1,4 +1,4 @@
-# ./build.sh - (c) FiveTech Software 2007-2012
+# ./build.sh - (c) FiveTech Software 2007-2015
 
 clear
 
