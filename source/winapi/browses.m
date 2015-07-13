@@ -334,9 +334,11 @@ HB_FUNC( BRWADDCOLUMN )
    NSString * string = hb_NSSTRING_par( 2 );
    NSTableColumn * column = [ [ NSTableColumn alloc ] init ];
   
-   // column->id = [ browse numberOfColumns ]; 
+   // column->id = [ browse numberOfColumns ];
     
-   [ column setIdentifier: [ NSString stringWithFormat:@"%i", [ browse numberOfColumns ] ] ] ; 
+    int nCol = [ browse numberOfColumns ] ;
+    
+   [ column setIdentifier: [ NSString stringWithFormat:@"%i", nCol ] ] ;
    [ column setWidth: 100 ];
    [ [ column headerCell ] setStringValue: string ];
 
