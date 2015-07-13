@@ -220,7 +220,7 @@ static function TrimZero( c )
 return c
 
 //----------------------------------------------------------------------------//
-
+/*
 function ArrayToText( aItems )
 
   local cText := ""
@@ -228,5 +228,5 @@ function ArrayToText( aItems )
   AEval( aItems, { | u | cText += '"' + cValToChar( u ) + '", ' } )
 
 return SubStr( cText, 1, Len( cText ) - 2 )
-
+*/
 //----------------------------------------------------------------------------//

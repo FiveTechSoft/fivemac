@@ -231,7 +231,27 @@ REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
              [ <oGet> := ] TMultiGet():New( <nRow>, <nCol>, [<nWidth>], [<nHeight>],;
 			                                      [<oWnd>], bSETGET( <uVar> ), <.update.> )			       
         
-//----------------------------------------------------------------------------//		 								   
+//----------------------------------------------------------------------------//
+#xcommand @ <nRow>, <nCol> TEXTBOX [ <oGet> VAR ] <uVar> ;
+[ OF <oWnd> ] ;
+[ SIZE <nWidth>, <nHeight> ] ;
+[ VALID <uValid> ] ;
+[ <update: UPDATE> ] ;
+[ <password: PASSWORD> ] ;
+[ <lsearch: SEARCH> ] ;
+[ <lrounded: ROUNDED> ] ;
+[ ON CHANGE <uChange> ] ;
+[ TOOLTIP <cToolTip> ] ;
+[ AUTORESIZE <nAutoResize> ] ;
+[ PICTURE <cPicture> ] ;
+[ PIXEL ] ;
+=> ;
+[ <oGet> := ] TTextBox():New( <nRow>, <nCol>, <nWidth>, <nHeight>,;
+<oWnd>, bSETGET(<uVar>), [\{||(<uValid>)\}],;
+<.update.>, <.password.> ,<.lsearch.>, [{|Self|<uChange>}],;
+<.lrounded.>, [<cToolTip>], [<nAutoResize>], [<(oGet)>], [<cPicture>] )
+
+
 
 #xcommand @ <nRow>, <nCol> GET [ <oGet> VAR ] <uVar> ;
            [ OF <oWnd> ] ;

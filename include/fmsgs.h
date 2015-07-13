@@ -38,4 +38,7 @@
 #define WM_NOTICLICK      35
 #define WM_GETPARTEVALUE  36 
 #define WM_GETLOSTFOCUS  37
+#define WM_WNDSETCURSOR  38
+#define WM_NOTIFY        78
+
 #endif
