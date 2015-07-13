@@ -9,13 +9,13 @@ HB_FUNC( FORMATTERCREATE )
 
 HB_FUNC( FORMATTERDATECREATE )
 {
-    NSDateFormatter *formatter = [ [[NSDateFormatter alloc] init] autorelease ];
+    NSDateFormatter *formatter = [ [NSDateFormatter alloc] init] ;
     hb_retnl( ( HB_LONG ) formatter );
 }
 
 HB_FUNC( FORMATTERNUMBERCREATE )
 {
-    NSNumberFormatter *formatter =  [[[NSNumberFormatter alloc] init] autorelease ];
+    NSNumberFormatter *formatter =  [[NSNumberFormatter alloc] init] ;
     hb_retnl( ( HB_LONG ) formatter );
 }
 

@@ -68,4 +68,13 @@ HB_FUNC( SGETRESCREATE )
     
  	hb_retnl( ( HB_LONG ) edit );	 			
     
-}  
+}
+
+
+HB_FUNC( SGETSETISBULLETS )
+{
+    SGet * edit = ( SGet * ) hb_parnl( 1 );
+    
+    [[ edit cell ] setEchosBullets : hb_parl( 2 )  ] ;
+}
+

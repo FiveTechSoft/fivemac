@@ -16,9 +16,12 @@ typedef enum
   IBNStatusChanged,  // The application set a new status message.
 } NotificationType;
 
-@interface ScintillaView : NSView
+@interface ScintillaView
 {
-}		
+}
+
+- ( void ) rightMouseDown : ( NSEvent * ) theEvent;
+
 - (void) setGeneralProperty: (int) property 
 	                parameter: (long) parameter 
 	                	  value: (long) value;
@@ -27,7 +30,7 @@ typedef enum
                   parameter: (long) parameter
                     value: (NSColor*) value ;
 
-- (void) setLexerProperty: (NSString*) propertye value: (NSString*) value ;
+- (void) setLexerProperty: (NSString*) property value: (NSString*) value ;
 
 
 - (long) getGeneralProperty: (int) property 
@@ -52,6 +55,8 @@ typedef void ( * SciNotifyFunc ) ( id window, unsigned int iMessage, unsigned lo
 - (void) registerNotifyCallback: ( id ) window value: ( SciNotifyFunc ) callback;          	
 	             	
 @end
+
+
 
 struct Sci_CharacterRange
 {
@@ -85,7 +90,7 @@ void NotifyFunc( id sv, unsigned int iMessage, unsigned long wParam, unsigned lo
    
    hb_vmPushSymbol( symFMH );
    hb_vmPushNil();
-   hb_vmPushLong( ( HB_LONG ) [ ( ScintillaView * ) sv window ] );
+   hb_vmPushLong( ( HB_LONG ) [ sv window ] );
    hb_vmPushLong( WM_SCINOTIFY );
    hb_vmPushLong( ( HB_LONG ) sv );
    hb_vmPushLong( ( HB_LONG ) wParam );
@@ -95,13 +100,16 @@ void NotifyFunc( id sv, unsigned int iMessage, unsigned long wParam, unsigned lo
 
 
 
+
+
+
 HB_FUNC( SCICREATE ) 
 {
   
     NSRect newFrame = NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) )  ;
     NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
     ScintillaView * sv = [[[ScintillaView alloc] initWithFrame: newFrame] autorelease];
-    [ GetView( window ) addSubview : sv ];
+    [ GetView( window ) addSubview : sv  ];
     
     [ sv registerNotifyCallback: ( id ) sv value: NotifyFunc ];
    	
