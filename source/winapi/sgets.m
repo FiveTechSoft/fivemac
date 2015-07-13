@@ -59,6 +59,7 @@ HB_FUNC( SGETCREATE )
     hb_retnl( ( HB_LONG ) edit );
 }   
 
+
 HB_FUNC( SGETRESCREATE ) 
 {
     NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
