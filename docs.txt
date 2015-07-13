@@ -1,6 +1,6 @@
 FiveMac is a commercial GUI library for Harbour/xHarbour developed by:
 
-(c) FiveTech Software SL 2007-2010
+(c) FiveTech Software SL 2007-2015
 http://www.fivetechsoft.com
 
 Fully online documentation is available from:
