@@ -49,10 +49,23 @@ cat >AdditionalLanguages.plist <<EOF
         <string>Xcode.SourceCodeLanguage</string>
         <key>languageName</key>
         <string>Fivemac</string>
+<key>commentSyntax</key>
+<array>
+<dict>
+<key>prefix</key>
+<string>/*</string>
+<key>suffix</key>
+<string>*/</string>
+</dict>
+<dict>
+<key>prefix</key>
+<string>//</string>
+</dict>
+</array>
         <key>version</key>
         <string>1.0</string>
         <key>documentationAbbreviation</key>
-        <string>fivemac</string>                
+        <string>nut</string>
         <key>conformsTo</key>
         <array>
             <dict>
@@ -80,7 +93,9 @@ rm -f AdditionalLanguages.plist
 cp "$SCRIPT_PATH/Fivemac.xclangspec" "$DVTFOUNDATION_PATH"
 
 # Remove any cached Xcode plugins
-rm -rf /private/var/folders/*/*/*/com.apple.DeveloperTools/*/Xcode/PlugInCache.xcplugincache
+rm -rf /private/var/folders/*/*/*/com.apple.DeveloperTools/*/Xcode/PlugInCache*.xcplugincache
 
 echo "Syntax coloring must be manually selected from the Editor - Syntax Coloring menu in Xcode."
+
+
 

@@ -178,6 +178,9 @@
 			Words = (
 				and,
 				break,
+				button,
+				get,
+				say,
 				case,
 				do,
 				docase,
@@ -211,6 +214,7 @@
 				getfenv,
 				getmetatable,
 				ipairs,
+				image,
 				load,
 				loadfile,
 				loadstring,
@@ -251,7 +255,7 @@
 				"__tostring",
 				"__unm",
 				package,
-				"package.cpath",
+				cpath,
 				"package.loaded",
 				"package.loadlib",
 				"package.path",
@@ -271,12 +275,13 @@
 				"string.find",
 				"string.format",
 				"string.gmatch",
-				"string.gsub",
+				right,
+				left,
 				len,
-				"string.lower",
+				lower,
 				"string.match",
 				"string.rep",
-				"string.sub",
+				substr,
 				upper,
 				table,
 				"table.concat",
@@ -319,7 +324,7 @@
 				"file:flush",
 				"file:lines",
 				fread,
-				"file:seek",
+				fseek,
 				"file:setvbuf",
 				fwrite,
 				os,
@@ -330,7 +335,7 @@
 				"os.exit",
 				"os.getenv",
 				"os.remove",
-				"os.rename",
+				 rename,
 				"os.setlocale",
 				"os.time",
 				"os.tmpname",
@@ -351,8 +356,38 @@
 			Type = "xcode.syntax.plain";
 		};
 	},
-
-
+	{
+		Identifier = "xcode.lang.fivemac.symbol";
+		Syntax = {
+			Words = (
+				"{",
+				"}",
+				"[",
+				"]",
+				"(",
+				")",
+				",",
+				".",
+				"<",
+				">",
+				"=",
+				"+",
+				"-",
+				"!",
+				"%",
+				"^",
+				"*",
+				"/",
+				"&",
+				"|",
+				";",
+				":",
+				"\\",
+			);
+			Type = "xcode.syntax.keyword";
+		};
+	},
+	
 	{
 		Identifier = "xcode.lang.fivemac";
 		Description = "Fivemac Coloring";
@@ -362,6 +397,7 @@
 		Syntax = {
 			Tokenizer = "xcode.lang.fivemac.lexer.toplevel";
 			IncludeRules = (
+		     	"xcode.lang.fivemac.preprocessor",
 				"xcode.lang.fivemac.module",
 				"xcode.lang.fivemac.class",
 				"xcode.lang.fivemac.function",
@@ -375,6 +411,7 @@
 				"xcode.lang.fivemac.bracketexpr",
 				"xcode.lang.fivemac.parenexpr",
 				"xcode.lang.fivemac.logicals",
+				"xcode.lang.fivemac.symbol",
 			);
 			Type = "xcode.syntax.plain";
 		};
@@ -395,6 +432,7 @@
 				"xcode.lang.character",
 				"xcode.lang.fivemac.identifier",
 				"xcode.lang.number",
+				"xcode.lang.fivemac.symbol",
 				"xcode.lang.fivemac.interestingOperators",
 			);
 		};
@@ -418,6 +456,7 @@
 				"xcode.lang.fivemac.function.declarator",
 				"xcode.lang.fivemac.method.declarator",
 				"xcode.lang.fivemac.identifier",
+				"xcode.lang.fivemac.symbol",
 				"xcode.lang.number",
 			);
 		};
