@@ -9,7 +9,7 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
 # else
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
 	HEADERS=$(SDKPATH)/usr/include
      
 # endif
