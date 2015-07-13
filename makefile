@@ -1,11 +1,11 @@
-# FiveMac makefile (c) FiveTech Software 2008-2012
+# FiveMac makefile (c) FiveTech Software 2008-2015
 # Don't use spaces before the rules. Use TABs
 
 OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 
-# ifeq ( $(OS_VERSION), 10.9 )
-	# Mountain Lion detected
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+# ifeq ( $(OS_VERSION), 10.10 )
+	# Yosemite detected
+	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
 # else
@@ -24,7 +24,7 @@ PRG_OBJS = \
 	./obj/brImage.o	\
 	./obj/capture.o	\
 	./obj/checkbox.o \
-   	./obj/code.o \
+  ./obj/code.o \
 	./obj/colors.o \
 	./obj/colorwell.o \
 	./obj/combobox.o \
@@ -46,6 +46,7 @@ PRG_OBJS = \
 	./obj/image.o \
 	./obj/inspect.o \
 	./obj/itunes.o \
+	./obj/locale.o \
 	./obj/mail.o \
 	./obj/memoedit.o \
 	./obj/menu.o \
@@ -55,7 +56,8 @@ PRG_OBJS = \
 	./obj/multiview.o \
 	./obj/nodo.o \
 	./obj/notification.o \
-  	./obj/nsobject.o \
+  ./obj/nsobject.o \
+  ./obj/picture.o \
 	./obj/printer.o \
 	./obj/pdfview.o	\
 	./obj/pdmenu.o	\
@@ -73,6 +75,7 @@ PRG_OBJS = \
 	./obj/splash.o \
 	./obj/split.o \
 	./obj/splitItem.o \
+  ./obj/strings.o	\
 	./obj/sheet.o \
 	./obj/Tsound.o \
 	./obj/tabview.o \
@@ -81,6 +84,7 @@ PRG_OBJS = \
 	./obj/Ttimer.o	\
 	./obj/toolbar.o	\
 	./obj/toolbtn.o	\
+  ./obj/valblank.o	\
 	./obj/View.o	\
 	./obj/window.o	\
 	./obj/webview.o
