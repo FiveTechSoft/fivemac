@@ -61,7 +61,7 @@ fi
 
 echo linking...
 CRTLIB=$SDKPATH/usr/lib
-HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr'
+HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'
 FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation'
 #  add -arch ppc -arch i386 for universal binaries
 # -framework Scintilla
