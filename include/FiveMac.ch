@@ -1,4 +1,4 @@
-// FiveMac.ch - (c) FiveTech Software 2006-2010
+// FiveMac.ch - (c) FiveTech Software 2006-2015
 
 #ifndef __FiveMac
 #define __FiveMac
