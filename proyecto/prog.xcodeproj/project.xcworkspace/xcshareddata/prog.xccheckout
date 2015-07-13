@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>41210893-1F61-48A9-8046-B194711E19CB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>prog</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>FE5A2E11C6B7E014ECEC1D0ED42E49A5264697B3</key>
+		<string>https://bitbucket.org/fivetech/fivemac</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>proyecto/prog.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>FE5A2E11C6B7E014ECEC1D0ED42E49A5264697B3</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://bitbucket.org/fivetech/fivemac</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>FE5A2E11C6B7E014ECEC1D0ED42E49A5264697B3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FE5A2E11C6B7E014ECEC1D0ED42E49A5264697B3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>fivemac</string>
+		</dict>
+	</array>
+</dict>
+</plist>

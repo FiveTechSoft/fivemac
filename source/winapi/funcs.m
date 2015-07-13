@@ -2,7 +2,6 @@
 #import <Foundation/Foundation.h>
 #import <Quartz/Quartz.h>
 
-
 #define CGAutorelease(x) (__typeof(x))[NSMakeCollectable(x) autorelease]
 #define DURATION_ANIMATION 3.0
 
@@ -12,8 +11,9 @@
 @end
 */
 
-NSString * NumToStr( NSInteger myInt ) 
+NSString * NumToStr( NSInteger myInteger )
 {
+    int myInt = myInteger ;
     NSString *intString = [ NSString stringWithFormat : @"%d", myInt ];
 	  return intString;
 }
