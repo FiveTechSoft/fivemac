@@ -3,11 +3,11 @@
 function Main()
 
    local oDlg,oCap
-   local cFile:="/Users/Shared/My Recorded Movie.mov"
+   local cFile:="/Volumes/Macintosh HD/Usuarios/Manuel/Desktop/My Recorded Movie.mov"
    
    DEFINE DIALOG oDlg TITLE "Dialog"
    
-   @ 1, 40 BUTTON "start" OF oDlg ACTION   (  ocap:=TCapture():new(70,84,330,300 ,oDlg,cfile ) , oCap:Start()  )
+   @ 1, 40 BUTTON "start" OF oDlg ACTION   (  ocap:= TCapture():new(70,84,330,300 ,oDlg,cfile )  )
    
    @ 1, 140 BUTTON "Stop" OF oDlg ACTION   (  ocap:Stop()  )   
    

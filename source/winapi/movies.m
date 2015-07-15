@@ -12,103 +12,215 @@
 void MsgAlert( NSString *, NSString * messageText );
 
 
+#ifdef DEBUG
+#   define Log(...) NSLog(__VA_ARGS__)
+#else
+#   define Log(...)
+#endif
 
-HB_FUNC( QTCAPTUREVIEWCREATE )
+
+#import <Foundation/Foundation.h>
+#import <AVFoundation/AVCaptureOutput.h>
+
+@interface RecordingDelegate : NSObject <AVCaptureFileOutputDelegate,AVCaptureFileOutputRecordingDelegate>
+@end
+
+@interface RecordingDelegate () <AVCaptureFileOutputRecordingDelegate>
+@end
+
+@implementation RecordingDelegate
+
+#pragma mark AVCaptureFileOutputRecordingDelegate
+
+// This is never called.
+
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    QTCaptureView * mview = [ [ QTCaptureView alloc ] initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), 
-                                                                             hb_parnl( 3 ), hb_parnl( 4 ) ) ];
-    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
-    
-    [ GetView( window ) addSubview : mview ];   
-    [ mview setPreservesAspectRatio :YES ]; 
-       
-    hb_retnl( ( HB_LONG ) mview );
+  
+    Log(@"didFinishRecordingToOutputFileAtURL!");
+    if (error) { Log(@"Error: %@", [error localizedDescription]); }
 }
 
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput willFinishRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections error:(NSError *)error
+{
+    
+    Log(@"willFinishRecordingToOutputFileAtURL!");
+    // "Error: Recording Stopped"
+    if (error) { Log(@"Error: %@", [error localizedDescription]); }
+}
+
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections; {
+   
+    Log(@"Recording started!");
+}
+
+#pragma mark AVCaptureFileOutputDelegate
+
+- (BOOL)captureOutputShouldProvideSampleAccurateRecordingStart:(AVCaptureOutput *)captureOutput {
+   
+    return NO;
+}
+
+@end
+
+
+
+
+HB_FUNC( AVCAPTUREVIEWCREATE )
+{
+    AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
+    
+    AVCaptureVideoPreviewLayer *previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:captureSession];
+    previewLayer.frame = NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ),hb_parnl( 3 ), hb_parnl( 4 ) ) ;
+    
+    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
+    NSView * backView = [[NSView alloc] initWithFrame: NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ),hb_parnl( 3 ), hb_parnl( 4 ) ) ] ;
+    backView.wantsLayer = YES ;
+    backView.layer = previewLayer ;
+    [ GetView( window ) addSubview : backView ] ;
+    
+    hb_retnl( ( HB_LONG ) previewLayer );
+}
 
 HB_FUNC( CAPTURECAM )
 {
+
     
-    QTCaptureView * vista = ( QTCaptureView *) hb_parnl( 1 ); 
+    AVCaptureVideoPreviewLayer * vista = ( AVCaptureVideoPreviewLayer *) hb_parnl( 1 );
     
     // Nueva Sesion de captura
-    QTCaptureSession *  mCaptureSession = [[QTCaptureSession alloc] init]; 
-    
-    BOOL success = NO;
-    NSError *error;
+    AVCaptureSession *mCaptureSession = [[AVCaptureSession alloc] init];
     
     
-    // Buscar una camara de video 
+    NSError * error = NULL;
     
-    QTCaptureDevice *device = [QTCaptureDevice defaultInputDeviceWithMediaType:QTMediaTypeVideo];
-    if(device) {
-        success = [device open:&error];
-        if(!success) {
-            MsgAlert(@"Error camara no encontrada", @"Atention" ) ;
-            //NSRunAlertPanel( @"Atention" ,@"Error camara no encontrada", @"ok", NULL , NULL );
-             return  hb_retl( success );     
-        }
-        
-        // AÒadimos la camara ‡ la sesiÛn
-        
-        QTCaptureDeviceInput * mCaptureDeviceInput = [[QTCaptureDeviceInput alloc] initWithDevice:device];
-        success = [mCaptureSession addInput:mCaptureDeviceInput error:&error];
-        if(!success) {
-            MsgAlert( @"Error no se pudo añadir la camara a la sesion", @"Atention" ) ;
-           // NSRunAlertPanel( @"Atention" ,@"Error no se pudo añadir la camara a la sesion", @"ok", NULL , NULL );
-            return hb_retl( success );                   
-        }
-        
-        // Asociamos la vista de captura con la sesiÛn
-        [ vista setCaptureSession:mCaptureSession];
-        
-        // empezamos la captura
-        //[mCaptureSession startRunning];
-        
+    // Buscar una camara de video
+    AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeVideo ];
+    
+    
+    if(!device) {
+         MsgAlert(@"Error camara no encontrada", @"Atention" ) ;
+         return  hb_retl( false );
+      }
+    
+    
+    // AÒadimos la camara ‡ la sesiÛn
+    AVCaptureDeviceInput * mCaptureDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+   
+   // [mCaptureSession beginConfiguration];
+    
+   // mCaptureSession.sessionPreset = AVCaptureSessionPresetHigh;
+    
+   // [mCaptureSession addInput:mCaptureDeviceInput];
+  //  [mCaptureSession addInput:self.audioInput];
+  //  [mCaptureSession addOutput:self.movieOutput];
+  //  [mCaptureSession addOutput:self.stillImageOutput];
+    
+  //  [mCaptureSession commitConfiguration];
+    
+    
+  
+   
+    if(mCaptureDeviceInput){
+        [mCaptureSession addInput:mCaptureDeviceInput];
+    }
+    else{
+        NSLog(@"Input Error:%@", error);
     }
     
-    hb_retnl( ( HB_LONG ) mCaptureSession  );   
+    
+    
+   /*
+    if ([mCaptureSession canAddInput:mCaptureDeviceInput]) {
+        [mCaptureSession addInput:mCaptureDeviceInput];
+    } else {
+        NSLog(@"Error opening input device: %@", [error localizedDescription]);
+    }
+    */
+    
+    
+     // Asociamos la vista de captura con la sesiÛn
+     vista.session = mCaptureSession ;
+        
+    // empezamos la captura
+    //[mCaptureSession startRunning];
+        
+   hb_retnl( ( HB_LONG ) mCaptureSession  );
 }
+
+
 
 HB_FUNC( CAPTUREFILEOUTPUT )
 {
-  BOOL success = NO;
-  NSError *error;
-    
-  QTCaptureSession *  mCaptureSession =  ( QTCaptureSession *) hb_parnl( 1 );
+   
+   
+  AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
   NSString * string =hb_NSSTRING_par( 2 ) ;
   
-  QTCaptureMovieFileOutput *out = [[QTCaptureMovieFileOutput alloc] init];
-  [out recordToOutputFileURL:[NSURL fileURLWithPath: string ]];
+    NSURL * destPath = [NSURL fileURLWithPath: string ] ;
     
-  success = [mCaptureSession addOutput: out error:&error];
-
-  if (!success) {
-      MsgAlert( @"Error no se pudo añadir archivo de salida" , @"Atención") ;
-
-  // NSRunAlertPanel( @"Atention" ,@"Error no se pudo añadir archivo de salida", @"ok", NULL , NULL );
-   return  hb_retl( success );   
-  }
-//mCaptureMovieFileOutput setDelegate:self];
- hb_retnl( ( HB_LONG ) out );  
+ 
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[destPath path]])
+    {
+        NSError *err;
+        if (![[NSFileManager defaultManager] removeItemAtPath:[destPath path] error:&err])
+        {
+            NSLog(@"Error deleting existing movie %@",[err localizedDescription]);
+        }
+    }
+    
+   
+  AVCaptureMovieFileOutput *out = [[AVCaptureMovieFileOutput alloc] init];
+    
+  if ( [ mCaptureSession  canAddOutput: out ] ){
+         [ mCaptureSession addOutput: out ];
+    }
+    
+    
+    [mCaptureSession startRunning];
+    
+    
+    
+    RecordingDelegate* delegate = [[RecordingDelegate alloc] init];
+    [out setDelegate:delegate];
+    
+    [ out startRecordingToOutputFileURL:destPath recordingDelegate: delegate] ;
+    
+    
+    
+   hb_retnl( ( HB_LONG ) out );
+ 
 }
 
 
 HB_FUNC( CAPTURESTART )
 {
-  QTCaptureSession * mCaptureSession = ( QTCaptureSession * ) hb_parnl( 1 );   
-  [mCaptureSession startRunning];    
+    
+  AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
+ // AVCaptureMovieFileOutput *out =  ( AVCaptureMovieFileOutput * ) hb_parnl( 2 );
+  [mCaptureSession startRunning];
+    
+    
+    
+ //  RecordingDelegate* delegate = [[RecordingDelegate alloc] init];
+ //  [out setDelegate:delegate];
+    
+//  [ out startRecordingToOutputFileURL:destPath recordingDelegate: delegate] ;
+    
     
 }
 
 
 HB_FUNC( CAPTURESTOP )
 {
- QTCaptureSession * mCaptureSession = ( QTCaptureSession * ) hb_parnl( 1 );    
- QTCaptureMovieFileOutput *out = ( QTCaptureMovieFileOutput *) hb_parnl( 2 );       
+ AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
     
-[out recordToOutputFileURL:nil];
 
+  AVCaptureFileOutput *out = ( AVCaptureFileOutput *) hb_parnl( 2 );
+    
+  [ out stopRecording ] ;
+    
+ 
 [mCaptureSession removeOutput:out];
 [mCaptureSession stopRunning];
 
@@ -139,6 +251,7 @@ HB_FUNC( AVOPEN )
    [ mview setPlayer: videoPlayer];
  
 }
+
 
 
 HB_FUNC( AVOPENPANEL )
