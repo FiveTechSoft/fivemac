@@ -125,6 +125,7 @@
 
 @end
 
+
 //----------------------------------------------------------//
 
 HB_FUNC( SHOWPOPOVER ) 
@@ -165,7 +166,26 @@ HB_FUNC( CLOSEPOPOVER )
 
 HB_FUNC( SETPOPOVERAPPERANCE ) 
 {
-   NSPopover * popover = ( NSPopover * ) hb_parnl( 1 );  
-    popover.appearance =   hb_parni( 2 )   ; 
+   NSPopover * popover = ( NSPopover * ) hb_parnl( 1 );
+   int nAparence =  hb_parni( 2 )   ;
+    
+    switch( nAparence )
+    {
+        case 0:
+            popover.appearance =  [ [ NSAppearance init ] appearanceNamed: NSAppearanceNameAqua  ];
+            break;
+            
+        case 1:
+            popover.appearance = [ [ NSAppearance init ] appearanceNamed: NSAppearanceNameVibrantDark ] ;
+            break;
+        case 2:
+            popover.appearance = [ [ NSAppearance init ] appearanceNamed:NSAppearanceNameVibrantLight  ];
+            break;
+    }
+ 
+    
+    
+    
+    
 } 
 
