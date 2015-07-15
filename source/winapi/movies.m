@@ -63,9 +63,6 @@ void MsgAlert( NSString *, NSString * messageText );
 
 @end
 
-
-
-
 HB_FUNC( AVCAPTUREVIEWCREATE )
 {
     AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
@@ -82,134 +79,152 @@ HB_FUNC( AVCAPTUREVIEWCREATE )
     hb_retnl( ( HB_LONG ) previewLayer );
 }
 
-HB_FUNC( CAPTURECAM )
+HB_FUNC( CREATECAPSESSION )
+{
+ AVCaptureSession *mCaptureSession = [[AVCaptureSession alloc] init];      
+ hb_retnl( ( HB_LONG ) mCaptureSession  );  
+}
+
+
+HB_FUNC( CREATECAPDEVINPUT )
 {
 
+   NSError * error = NULL;
+  
+  // Buscar una camara de video
+   AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeVideo ];
     
-    AVCaptureVideoPreviewLayer * vista = ( AVCaptureVideoPreviewLayer *) hb_parnl( 1 );
+   if(!device) {
+       MsgAlert(@"Error camara no encontrada", @"Atention" ) ;
+       return  hb_retl( false );
+    }
+        
+   // AÒadimos la camara como dispositivo de entrada
+    AVCaptureDeviceInput * mCaptureDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+    
+   hb_retnl( ( HB_LONG ) mCaptureDeviceInput );   
+}
+
+HB_FUNC( AVCAPTURESETSESSION )
+{
+
+  AVCaptureVideoPreviewLayer * vista = ( AVCaptureVideoPreviewLayer *) hb_parnl( 1 );
+  AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 2 );
+  // Asociamos la vista de captura con la sesiÛn
+    vista.session = mCaptureSession ;
+ }
+
+HB_FUNC( AVCAPTURESETINPUT )
+{
+
+  AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
+  AVCaptureDeviceInput * mCaptureDeviceInput = (  AVCaptureDeviceInput * ) hb_parnl( 2 );
+  
+  [mCaptureSession addInput:mCaptureDeviceInput];
+  
+ }
+
+HB_FUNC( AVCAPTURESETOUTPUT )
+{
+
+  AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
+  AVCaptureMovieFileOutput *out  = (   AVCaptureMovieFileOutput * ) hb_parnl( 2 );
+    
+   if ( [ mCaptureSession canAddOutput: out ] ){
+        [ mCaptureSession addOutput: out ];
+    }
+    
+ }
+
+/*
+HB_FUNC( CAPTURECAM )
+{
+    
+   NSError * error = NULL;
+   
+   AVCaptureVideoPreviewLayer * vista = ( AVCaptureVideoPreviewLayer *) hb_parnl( 1 );
+    
+   
+   // Buscar una camara de video
+   AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeVideo ];
+    
+   if(!device) {
+       MsgAlert(@"Error camara no encontrada", @"Atention" ) ;
+       return  hb_retl( false );
+    }
+        
+    // AÒadimos la camara como dispositivo de entrada
+    AVCaptureDeviceInput * mCaptureDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
     
     // Nueva Sesion de captura
-    AVCaptureSession *mCaptureSession = [[AVCaptureSession alloc] init];
+    
+   // configuramos la sesion de captura ( por probar aun ) 
+   // [ mCaptureSession beginConfiguration];
+   //   mCaptureSession.sessionPreset = AVCaptureSessionPresetHigh;
+   // [ mCaptureSession addInput:mCaptureDeviceInput];
+   // [ mCaptureSession addInput:self.audioInput];
+   // [ mCaptureSession addOutput:self.movieOutput];
+   // [ mCaptureSession addOutput:self.stillImageOutput];
+   // [ mCaptureSession commitConfiguration];
     
     
-    NSError * error = NULL;
-    
-    // Buscar una camara de video
-    AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeVideo ];
-    
-    
-    if(!device) {
-         MsgAlert(@"Error camara no encontrada", @"Atention" ) ;
-         return  hb_retl( false );
-      }
-    
-    
-    // AÒadimos la camara ‡ la sesiÛn
-    AVCaptureDeviceInput * mCaptureDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
-   
-   // [mCaptureSession beginConfiguration];
-    
-   // mCaptureSession.sessionPreset = AVCaptureSessionPresetHigh;
-    
-   // [mCaptureSession addInput:mCaptureDeviceInput];
-  //  [mCaptureSession addInput:self.audioInput];
-  //  [mCaptureSession addOutput:self.movieOutput];
-  //  [mCaptureSession addOutput:self.stillImageOutput];
-    
-  //  [mCaptureSession commitConfiguration];
-    
-    
-  
-   
-    if(mCaptureDeviceInput){
+   // a¤adimos a la sesion el dispositivo de entrada
+   if(mCaptureDeviceInput){
         [mCaptureSession addInput:mCaptureDeviceInput];
     }
     else{
         NSLog(@"Input Error:%@", error);
     }
     
-    
-    
-   /*
-    if ([mCaptureSession canAddInput:mCaptureDeviceInput]) {
-        [mCaptureSession addInput:mCaptureDeviceInput];
-    } else {
-        NSLog(@"Error opening input device: %@", [error localizedDescription]);
-    }
-    */
-    
-    
-     // Asociamos la vista de captura con la sesiÛn
+          
+    // Asociamos la vista de captura con la sesiÛn
      vista.session = mCaptureSession ;
-        
-    // empezamos la captura
-    //[mCaptureSession startRunning];
         
    hb_retnl( ( HB_LONG ) mCaptureSession  );
 }
+*/
 
-
-
-HB_FUNC( CAPTUREFILEOUTPUT )
+HB_FUNC( CREATECAPDEVOUTPUT )
 {
-   
-   
-  AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
-  NSString * string =hb_NSSTRING_par( 2 ) ;
+
+    NSString * string =hb_NSSTRING_par( 1 ) ;
   
     NSURL * destPath = [NSURL fileURLWithPath: string ] ;
     
- 
+    
     if ([[NSFileManager defaultManager] fileExistsAtPath:[destPath path]])
     {
         NSError *err;
         if (![[NSFileManager defaultManager] removeItemAtPath:[destPath path] error:&err])
         {
-            NSLog(@"Error deleting existing movie %@",[err localizedDescription]);
+           // MsgInfo(@"Error deleting existing movie %@",[err localizedDescription]);
         }
     }
-    
-   
-  AVCaptureMovieFileOutput *out = [[AVCaptureMovieFileOutput alloc] init];
-    
-  if ( [ mCaptureSession  canAddOutput: out ] ){
-         [ mCaptureSession addOutput: out ];
-    }
-    
-    
-    [mCaptureSession startRunning];
-    
-    
-    
-    RecordingDelegate* delegate = [[RecordingDelegate alloc] init];
-    [out setDelegate:delegate];
-    
-    [ out startRecordingToOutputFileURL:destPath recordingDelegate: delegate] ;
-    
-    
+      
+   AVCaptureMovieFileOutput *out = [[AVCaptureMovieFileOutput alloc] init];
     
    hb_retnl( ( HB_LONG ) out );
- 
 }
-
 
 HB_FUNC( CAPTURESTART )
 {
     
   AVCaptureSession * mCaptureSession = ( AVCaptureSession * ) hb_parnl( 1 );
- // AVCaptureMovieFileOutput *out =  ( AVCaptureMovieFileOutput * ) hb_parnl( 2 );
+  AVCaptureMovieFileOutput *out = ( AVCaptureMovieFileOutput * ) hb_parnl( 2 );
+  NSString * string = hb_NSSTRING_par( 3 ) ;
+    
+    NSURL * destPath = [NSURL fileURLWithPath: string ] ;
+    
   [mCaptureSession startRunning];
+   
+    RecordingDelegate* delegate = [[RecordingDelegate alloc] init];
+    [out setDelegate: delegate ];
     
+  [ out startRecordingToOutputFileURL:destPath recordingDelegate: delegate ] ;
     
-    
- //  RecordingDelegate* delegate = [[RecordingDelegate alloc] init];
- //  [out setDelegate:delegate];
-    
-//  [ out startRecordingToOutputFileURL:destPath recordingDelegate: delegate] ;
-    
+  hb_retnl( ( HB_LONG ) out );
     
 }
-
 
 HB_FUNC( CAPTURESTOP )
 {

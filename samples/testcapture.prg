@@ -7,7 +7,7 @@ function Main()
    
    DEFINE DIALOG oDlg TITLE "Dialog"
    
-   @ 1, 40 BUTTON "start" OF oDlg ACTION   (  ocap:= TCapture():new(70,84,330,300 ,oDlg,cfile )  )
+@ 1, 40 BUTTON "start" OF oDlg ACTION  oCap:= CreateCaptureCaM( cFile, oDlg )
    
    @ 1, 140 BUTTON "Stop" OF oDlg ACTION   (  ocap:Stop()  )   
    
@@ -19,6 +19,13 @@ function Main()
    
 return nil   
 
+Function CreateCaptureCaM( cFile ,oDlg )
+local oCap := TCapture():new( 70, 84, 330, 300, oDlg ) 
+  
+   oCap:Initiate( cFile ) 
+   oCap:Start()
+            
+Return ocap
    
    
    
