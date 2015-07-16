@@ -12,26 +12,34 @@ CLASS TCapture FROM TControl
 
    METHOD New( nTop, nLeft, nWidth, nHeight, oWnd )
    METHOD CreateSession() 		  INLINE ::oSession := CreateCapSession()
-   METHOD CreateDevInput()		  INLINE ::oDeviceInput  := CreateCapDevInput()
+   
+   METHOD CreateDefaultVideo()	INLINE CreateCapDefDevInputVideo()
+   METHOD CreateDefaultAudio()	INLINE CreateCapDefDevInputAudio()
+   METHOD CreateDevInput( hDevice )	INLINE ::oDeviceInput  := CreateCapDevInput( hDevice )
+   
    METHOD CreateDevOutput(cfile ) INLINE ::oDeviceOutput := CreateCapDevOutput( cfile )
    METHOD SetInputDev()           INLINE AVCaptureSetInput( ::oSession, ::oDeviceInput )
    METHOD SetOutputDev()          INLINE AVCaptureSetOutput( ::oSession, ::oDeviceOutput )
    METHOD SetSession()            INLINE AVCaptureSetSession( ::hWnd, ::oSession  )
    
-   
+   METHOD CreateScreenInput()   INLINE ::oDeviceInput  := CreateCapScreenInput()
+  
+   METHOD SetScreencrop( nTop, nLeft, nWidth, nHeight ) INLINE SetCapScreenCrop( ::oDeviceInput, nTop, nLeft, nWidth, nHeight )
+   METHOD SetScreenxFactor( nFactor ) INLINE SetCapScreenFactor( ::oDeviceInput, nFactor )
+   METHOD SetScreenlMouseClick( lMouseClick ) INLINE SetCapScreenMouseclick( ::oDeviceInput, lMouseClick )
+      
    METHOD setOutFile( cFile ) 
    
    METHOD Start() INLINE CaptureStart( ::oSession, ::oDeviceOutput, ::cFile )
    METHOD Stop()  INLINE CaptureStop( ::oSession, ::oDeviceOutput )
-   
+   METHOD PausaResume() INLINE CapturePauseResume( ::oDeviceOutput )
     
-   
+     
  // METHOD Redefine( nId, oWnd, cMovie )
  
-   METHOD Initiate( cFile )
+   METHOD Initiate( cFile, lScreen, lAudio  )
    
-   
-   
+      
 ENDCLASS   
 
 //----------------------------------------------------------------------------//
@@ -70,10 +78,13 @@ Return .t.
 
 //----------------------------------------------------------------------------//
 
-METHOD Initiate( cFile ) CLASS TCapture
+METHOD Initiate( cFile , lScreen, lAudio ) CLASS TCapture
+local hDev
+DEFAULT lScreen := .f.
+DEFAULT lAudio  := .f.
 
+   // configuracion de session
    ::CreateSession()
-   
    if !Empty(::oSession )
       ::SetSession()
    else
@@ -81,13 +92,30 @@ METHOD Initiate( cFile ) CLASS TCapture
       Return .f.
    endif
    
-   ::CreateDevInput()
-   ::setInputDev()
-   
-   if !::setOutFile( cfile )
-       Msginfo( "no se ha podido asignar el archivo")
+   // configuracion de Entrada Video
+   if lScreen
+      ::CreateScreenInput() 
+   else
+hDev := ::CreateDefaultVideo()
+      ::CreateDevInput( hDev )
    endif
-       
-   ::setOutPutDev()
-
+   ::SetInputDev()
+   
+    // configuracion de Entrada Audio
+    if lAudio
+       hDev := ::CreateDefaultAudio()
+      ::CreateDevInput( hDev )
+      ::SetInputDev()  
+    endif 
+   
+   
+  // configuracion de salida 
+  if !Empty( cFile )
+   	 if !::SetOutFile( cfile )
+      		Msginfo( "no se ha podido asignar el archivo")
+   	 endif
+     ::SetOutPutDev()     
+   EndIf
+   
 Return nil
+

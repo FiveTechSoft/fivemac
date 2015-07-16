@@ -36,17 +36,15 @@ void MsgAlert( NSString *, NSString * messageText );
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-  
     Log(@"didFinishRecordingToOutputFileAtURL!");
     if (error) { Log(@"Error: %@", [error localizedDescription]); }
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput willFinishRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    
-    Log(@"willFinishRecordingToOutputFileAtURL!");
-    // "Error: Recording Stopped"
-    if (error) { Log(@"Error: %@", [error localizedDescription]); }
+   Log(@"willFinishRecordingToOutputFileAtURL!");
+   // "Error: Recording Stopped"
+   if (error) { Log(@"Error: %@", [error localizedDescription]); }
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections; {
@@ -85,16 +83,55 @@ HB_FUNC( CREATECAPSESSION )
  hb_retnl( ( HB_LONG ) mCaptureSession  );  
 }
 
+HB_FUNC( CREATECAPSCREENINPUT )
+{
+   AVCaptureScreenInput *mCaptureDeviceInput = [[AVCaptureScreenInput alloc] initWithDisplayID:CGMainDisplayID()];
+   mCaptureDeviceInput.capturesMouseClicks = YES ;
+           
+   hb_retnl( ( HB_LONG ) mCaptureDeviceInput );   
+}
+
+HB_FUNC( SETCAPSCREENCROP )
+{
+ AVCaptureScreenInput *mCaptureDeviceInput  = ( AVCaptureScreenInput *) hb_parnl( 1 );
+ mCaptureDeviceInput.cropRect = CGRectMake(hb_parnl(2),hb_parnl(3),hb_parnl(4), hb_parnl(5) );    
+}
+
+HB_FUNC( SETCAPSCREENFACTOR )
+{
+ AVCaptureScreenInput *mCaptureDeviceInput  = ( AVCaptureScreenInput *) hb_parnl( 1 );
+ mCaptureDeviceInput.scaleFactor = hb_parnl( 2 );
+}
+
+HB_FUNC( SETCAPSCREENMOUSECLICK )
+{
+ AVCaptureScreenInput *mCaptureDeviceInput  = ( AVCaptureScreenInput *) hb_parnl( 1 );
+ mCaptureDeviceInput.capturesMouseClicks =  hb_parl( 2 );
+}
+
+HB_FUNC( CREATECAPDEFDEVINPUTVIDEO )
+{
+   // camara de video default
+   AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeVideo ];
+    hb_retnl( ( HB_LONG ) device );
+ }   
+
+HB_FUNC( CREATECAPDEFDEVINPUTAUDIO )
+{
+   // micro audio default
+   AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeAudio ];
+    hb_retnl( ( HB_LONG ) device );
+ }   
+
 
 HB_FUNC( CREATECAPDEVINPUT )
 {
 
-   NSError * error = NULL;
+  NSError * error = NULL;
   
-  // Buscar una camara de video
-   AVCaptureDevice *device =  [ AVCaptureDevice defaultDeviceWithMediaType: AVMediaTypeVideo ];
-    
-   if(!device) {
+  AVCaptureDevice * device = ( AVCaptureDevice *) hb_parnl( 1 );
+ 
+  if(!device) {
        MsgAlert(@"Error camara no encontrada", @"Atention" ) ;
        return  hb_retl( false );
     }
@@ -240,6 +277,21 @@ HB_FUNC( CAPTURESTOP )
 [mCaptureSession stopRunning];
 
 }
+
+HB_FUNC( CAPTUREPAUSERESUME )
+{
+ AVCaptureFileOutput *out = ( AVCaptureFileOutput *) hb_parnl( 1 );
+ 
+ if ( out.recordingPaused ) {
+    [ out resumeRecording ];
+    return hb_retl( ( BOOL ) YES  );
+  }
+
+  [ out pauseRecording];
+   return hb_retl( ( BOOL ) NO  );
+
+}
+
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1090	
 
