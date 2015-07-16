@@ -16,7 +16,7 @@ typedef enum
   IBNStatusChanged,  // The application set a new status message.
 } NotificationType;
 
-@interface ScintillaView
+@interface ScintillaView : NSView
 {
 }
 
