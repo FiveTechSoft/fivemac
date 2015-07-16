@@ -123,7 +123,6 @@ HB_FUNC( CREATECAPDEFDEVINPUTAUDIO )
     hb_retnl( ( HB_LONG ) device );
  }   
 
-
 HB_FUNC( CREATECAPDEVINPUT )
 {
 

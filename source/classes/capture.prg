@@ -38,8 +38,7 @@ CLASS TCapture FROM TControl
  // METHOD Redefine( nId, oWnd, cMovie )
  
    METHOD Initiate( cFile, lScreen, lAudio  )
-   
-      
+         
 ENDCLASS   
 
 //----------------------------------------------------------------------------//
