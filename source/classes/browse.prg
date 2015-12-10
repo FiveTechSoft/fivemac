@@ -16,6 +16,7 @@ CLASS TWBrowse FROM TControl
    DATA   bAction, bHeadclick
    DATA   lVScroll, lHScroll
    DATA   nArrayAt
+   DATA   bClrText
 
    CLASSDATA aProps INIT { "nTop", "nLeft", "nWidth", "nHeight", "cVarName",;
                              "nClrText", "nClrBack", "nAutoResize" }
@@ -24,6 +25,9 @@ CLASS TWBrowse FROM TControl
                       nAutoResize, aSizes, nClrText, nClrBack, cVarName )
 
    METHOD cGenPrg()
+
+   METHOD GetTextColor( pColumn, nRowIndex ) INLINE ;
+                    If( ::bClrText != nil, Eval( ::bClrText, pColumn, nRowIndex ),)
 
    METHOD GetValue( nCol, nRow )
 
@@ -335,7 +339,9 @@ return cCode
 
 //----------------------------------------------------------------------------//
 
-METHOD HandleEvent( nMsg, uParam1, uParam2 ) CLASS TWBrowse
+METHOD HandleEvent( nMsg, hWnd, uParam1, uParam2 ) CLASS TWBrowse
+
+   local oControl := If( hWnd != nil, ::FindControl( hWnd ),)
 
    do case
       case nMsg == WM_BRWVALUE

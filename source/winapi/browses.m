@@ -5,7 +5,7 @@ static PHB_SYMB symFMH = NULL;
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 1060
    @interface Wbrowse : NSTableView
 #else
-   @interface Wbrowse : NSTableView <NSTableViewDelegate>
+   @interface Wbrowse : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
 #endif
 {
 }
@@ -14,6 +14,7 @@ static PHB_SYMB symFMH = NULL;
 	                    ( NSTableColumn * ) aTableColumn;
 - ( void ) keyDown : ( NSEvent *  ) theEvent;
 - ( void ) drawRow: ( NSInteger ) row clipRect: ( NSRect ) clipRect;
+- (void)tableView:(Wbrowse *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex ;
 @end
 
 @implementation Wbrowse
@@ -88,6 +89,29 @@ static PHB_SYMB symFMH = NULL;
    [ super drawRow: row clipRect: clipRect ];
 }
 
+- (void)tableView:( Wbrowse * ) aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+   //NSLog(@"siyo"); 
+   // NSBeep();
+
+   if( ! [ [ aCell className ] isEqual : @"NSImageCell" ] )
+   {
+      if( symFMH == NULL )
+         symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+    
+      hb_vmPushSymbol( symFMH );
+      hb_vmPushNil();
+      hb_vmPushLong( ( HB_LONG ) [ self window ] );
+      hb_vmPushLong( WM_BRWCLRTEXT );
+      hb_vmPushLong( ( HB_LONG ) self );
+      hb_vmPushLong( ( HB_LONG ) aTableColumn );
+      hb_vmPushLong( rowIndex );
+      hb_vmDo( 5 );
+   
+      [ aCell setTextColor: ( NSColor * ) hb_parnl( -1 ) ];
+   }
+}
+
 @end
 
 @interface BrwImageAndTextCell : NSTextFieldCell
@@ -112,7 +136,7 @@ static PHB_SYMB symFMH = NULL;
 
 - (void)tableView : ( Wbrowse * ) aTableView setObjectValue: ( id ) aData forTableColumn: ( NSTableColumn * )aTableColumn row :( NSInteger ) rowIndex ;
 
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex ;
+- (void)tableView:(Wbrowse *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex ;
 
 @end
 
@@ -197,11 +221,11 @@ static PHB_SYMB symFMH = NULL;
   // }    
 }   
 
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+- (void)tableView:( Wbrowse * ) aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-//NSLog(@"siyo");    
-
-
+   //NSLog(@"siyo"); 
+   NSBeep();
+   [ aCell setTextColor:[NSColor blueColor]];
 }
 
 - (void) tableView: ( Wbrowse * ) aTableView setObjectValue: ( id ) aData forTableColumn: ( NSTableColumn * ) aTableColumn row: ( NSInteger ) rowIndex 

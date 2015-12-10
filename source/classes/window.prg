@@ -604,12 +604,19 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
 		       else
 		          MsgInfo( "oControl is nil" )
 		       endif
-	   case nMsg == WM_BRWSETVALUE
-               if oControl != nil
-                  return oControl:SetValue( uParam1, uParam2, uParam3 )
-		       else
-		          MsgInfo( "oControl is nil" )
-		       endif	
+
+      case nMsg == WM_BRWSETVALUE
+           if oControl != nil
+              return oControl:SetValue( uParam1, uParam2, uParam3 )
+	      else
+		   MsgInfo( "oControl is nil" )
+		endif	
+  
+      case nMsg == WM_BRWCLRTEXT
+           if oControl != nil
+              return oControl:GetTextColor( uParam1, uParam2 )
+           endif  
+
       case nMsg == WM_TBRCLICK
 	         if ::oBar != nil
 		          ::oBar:Click( nSender )
