@@ -29,7 +29,7 @@
 #define WM_RBUTTONDOWN    26
 #define WM_BRWSETVALUE    27
 #define WM_TABITEMSEL     28
-#define WM_BRWDRAWRECT		29
+#define WM_BRWDRAWRECT    29
 #define WM_WHEN           30
 #define WM_FLIPPED        31
 #define WM_RESIZE         32
@@ -37,8 +37,9 @@
 #define WM_GETSETVALUE    34
 #define WM_NOTICLICK      35
 #define WM_GETPARTEVALUE  36 
-#define WM_GETLOSTFOCUS  37
-#define WM_WNDSETCURSOR  38
-#define WM_NOTIFY        78
+#define WM_GETLOSTFOCUS   37
+#define WM_WNDSETCURSOR   38
+#define WM_NOTIFY         39
+#define WM_BRWCLRTEXT     40
 
 #endif
