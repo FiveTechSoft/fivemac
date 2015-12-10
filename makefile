@@ -3,13 +3,13 @@
 
 OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 
-# ifeq ( $(OS_VERSION), 10.10 )
+# ifeq ( $(OS_VERSION), 10.11 )
 	# Yosemite detected
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
+	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
 # else
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
+	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
 	HEADERS=$(SDKPATH)/usr/include
      
 # endif
