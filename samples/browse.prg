@@ -32,7 +32,7 @@ function Main()
    
    oBrw:bDrawRect:=  { | nRow | test->(dbskip()), if(left(test->Last,1) =="L", BRWSETGRADICOLOR(oBrw:hWnd,nRow,ETIQUETGRADCOLORS("orange") ), ) , test->(dbskip(-1)) }
    
-   
+
 
    ACTIVATE WINDOW oWnd
 

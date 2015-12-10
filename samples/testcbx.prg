@@ -47,8 +47,8 @@ function Main()
    oBrw:bLine = { | nRow | { aFields[ nRow ][ 1 ], aFields[ nRow ][ 2 ], alltrim(str(aFields[ nRow ][ 3 ])),;
                                         alltrim(str(aFields[ nRow ][ 4 ] ))} }
    oBrw:SetSelectorStyle( 1 )	
-   oBrw:SetAlternateColor( .t. )  	 
-   
+   oBrw:SetAlternateColor( .t. )
+
                
    @ 324, 407 BUTTON "Add" OF oDlg ;
         ACTION ( btnAddField(@aFields,{ cFieldName,cType,nLength,nDec },oBrw:nRowPos),;
