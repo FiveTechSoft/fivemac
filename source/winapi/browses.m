@@ -91,9 +91,6 @@ static PHB_SYMB symFMH = NULL;
 
 - (void)tableView:( Wbrowse * ) aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-   //NSLog(@"siyo"); 
-   // NSBeep();
-
    if( ! [ [ aCell className ] isEqual : @"NSImageCell" ] )
    {
       if( symFMH == NULL )
@@ -223,9 +220,8 @@ static PHB_SYMB symFMH = NULL;
 
 - (void)tableView:( Wbrowse * ) aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-   //NSLog(@"siyo"); 
-   NSBeep();
-   [ aCell setTextColor:[NSColor blueColor]];
+   // NSLog(@"siyo"); 
+   // NSBeep();   // this beep sounds, so NSTableViewDataSource also calls this willDisplayCell 
 }
 
 - (void) tableView: ( Wbrowse * ) aTableView setObjectValue: ( id ) aData forTableColumn: ( NSTableColumn * ) aTableColumn row: ( NSInteger ) rowIndex 
