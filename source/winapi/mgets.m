@@ -96,6 +96,14 @@ HB_FUNC( TXTSETTEXT )
    [ memo setString : string ];
 }  
 
+HB_FUNC( TXTSETATTRIBUTEDSTRING )
+{
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+   NSAttributedString * string = hb_NSASTRING_par( 2 ) ;
+    
+   [ [ memo textStorage ] setAttributedString : string ];
+}  
+
 HB_FUNC( TXTGETTEXT )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
@@ -141,7 +149,15 @@ HB_FUNC( TXTSETINCREMENTALSEARCH ) // hWnd, cTxtLine
 HB_FUNC( TXTGOBOTTOM )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
-   NSRange range = NSMakeRange ( [ [ memo string ] length ], 0 );
+   NSRange range = NSMakeRange( [ [ memo string ] length ], 0 );
+
+   [ memo scrollRangeToVisible : range ];
+}    
+
+HB_FUNC( TXTGOTOP )
+{
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+   NSRange range = NSMakeRange( 0, 0 );
 
    [ memo scrollRangeToVisible : range ];
 }    
@@ -243,15 +259,17 @@ HB_FUNC( TXTADDRULERHORI )
 
 HB_FUNC( TXTSETRICHTEXT )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    [memo setRichText: hb_parl(2) ] ;
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+
+   [ memo setRichText: hb_parl( 2 ) ];
 }      
 
 HB_FUNC( TXTSETIMPORTGRAF )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    [memo setImportsGraphics: hb_parl(2) ] ;
-  }  
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+
+   [ memo setImportsGraphics: hb_parl( 2 ) ];
+}  
 
 HB_FUNC( TXTSElECTDEL )
 {

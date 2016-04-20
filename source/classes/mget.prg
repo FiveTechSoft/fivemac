@@ -14,11 +14,15 @@ CLASS TMultiGet FROM TControl
 
    METHOD SetText( cText ) INLINE TxtSetText( ::hWnd, cText )
 
+   METHOD SetAttributedString( cRTFText ) INLINE TxtSetAttributedString( ::hWnd, cRTFText )
+
    METHOD GetText() INLINE TxtGetText( ::hWnd )
    
    METHOD AddLine( cTxtLine ) INLINE TxtAddLine( ::hWnd, cTxtLine )
 
    METHOD GoBottom() INLINE TxtGoBottom( ::hWnd )
+
+   METHOD GoTop() INLINE TxtGoTop( ::hWnd )
    
    METHOD KeyDown( nKey ) INLINE If( ::bKeyDown != nil, Eval( ::bKeyDown, nKey ),)
    

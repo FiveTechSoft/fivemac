@@ -15,23 +15,33 @@ NSString * NumToStr( NSInteger myInteger )
 {
     int myInt = myInteger ;
     NSString *intString = [ NSString stringWithFormat : @"%d", myInt ];
-	  return intString;
+
+    return intString;
 }
 
 NSString * hb_NSSTRING_par( int iParam )
 {
-	return [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( iParam ) ? hb_parc( iParam ) : "" encoding:  NSUTF8StringEncoding ] autorelease ];   
+   return [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( iParam ) ? hb_parc( iParam ) : "" encoding:  NSUTF8StringEncoding ] autorelease ];   
+}
+
+NSAttributedString * hb_NSASTRING_par( int iParam )
+{
+   NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( iParam ) ? hb_parc( iParam ) : "" encoding:  NSUTF8StringEncoding ] autorelease ];
+   NSData * data = [ string dataUsingEncoding: NSUTF8StringEncoding ];
+
+   return [ [ [ NSAttributedString alloc ] initWithRTF: data documentAttributes: NULL ] autorelease ];   
 }
 
 HB_FUNC( RANDOMMINMAX)
 {
-  hb_retni( (arc4random()%(hb_parni(2)-hb_parni(1)+1))+hb_parni(1) ) ;
+   hb_retni( (arc4random()%(hb_parni(2)-hb_parni(1)+1))+hb_parni(1) ) ;
 }
 
 HB_FUNC( OSVERSION)
 {
-  NSString * version = [[NSProcessInfo processInfo] operatingSystemVersionString];
-  hb_retc( [ version cStringUsingEncoding: NSWindowsCP1252StringEncoding ] );
+   NSString * version = [[NSProcessInfo processInfo] operatingSystemVersionString];
+
+   hb_retc( [ version cStringUsingEncoding: NSWindowsCP1252StringEncoding ] );
 }
 
 HB_FUNC( SDKVERSION)
