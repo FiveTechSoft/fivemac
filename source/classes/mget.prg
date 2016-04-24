@@ -42,6 +42,8 @@ CLASS TMultiGet FROM TControl
    
    METHOD AddHRuler() INLINE  TxtAddRulerHori( ::hWnd )   
 
+   METHOD SetEditable( lOnOff ) INLINE TxtSetEditable( ::hWnd, lOnOff )
+
    METHOD SETRichText( lRich ) INLINE TxtSetRichText( ::hWnd, lRich )
 
    METHOD SetImportGraf( lGraf ) INLINE TxtSetImportGraf( ::hWnd, lGraf )   
