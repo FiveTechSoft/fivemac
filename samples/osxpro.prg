@@ -27,18 +27,18 @@ function Main()
 
    DEFINE BUTTON OF oBar PROMPT "New" ;
       TOOLTIP "Creates a new file" ;
-	    IMAGE "./../bitmaps/new.png" ;
+	    IMAGE ImgPath() + "new.png" ;
       ACTION MsgInfo( Str( oWndCommand:nTop ) + "," + Str( oWndCommand:nLeft ) + ;
                       "," + Str( oWndCommand:nWidth ) + "," + Str( oWndCommand:nHeight ) )
 	
    DEFINE BUTTON OF oBar PROMPT "Open" ;
       TOOLTIP "Open a file" ;
-      IMAGE "./../bitmaps/folder.png" ;
+      IMAGE ImgPath() + "folder.png" ;
       ACTION ChooseFile( "*.prg" )
 	
    DEFINE BUTTON OF oBar PROMPT "Save" ;
       TOOLTIP "Save a file" ;
-	    IMAGE "" ;
+	    IMAGE ImgPath() + "save.png" ;
 	    ACTION ( TxtHighlight( oMemo:hWnd ), oMemo:Refresh() )	
 	
    @ 20, 20 GET oMemo VAR cCommand MEMO OF oWndCommand ;
@@ -48,6 +48,8 @@ function Main()
    oMemo:SetFont( "Monaco", 13 )
 
    oMemo:bKeyDown = { | nKey | DoLine( nKey, oMemo ) }
+
+   oWndCommand:SetPos( ScreenHeight() - 700, 200 )
 
    BuildButtonBar()
 
@@ -62,6 +64,8 @@ function _QOut( cText )
    if oWndResult == nil
       BuildResult()
    endif
+
+   oWndResult:SetFocus()
 
    oWndResult:aControls[ 1 ]:AddLine( cValToChar( cText ) + CRLF )
    oWndResult:aControls[ 1 ]:GoBottom()
@@ -247,18 +251,18 @@ function BuildResult()
    endif
 
    DEFINE WINDOW oWndResult TITLE "Result" ;
-      FROM 172, 58 TO 600, 550
+      FROM 172, 458 TO 600, 1150
 
    DEFINE TOOLBAR oBar OF oWndResult
 
-   DEFINE BUTTON OF oBar PROMPT "New" ;
+   DEFINE BUTTON OF oBar PROMPT "New" IMAGE ImgPath() + "new.png" ;
       ACTION MsgInfo( Str( oWndResult:nTop ) + ", " + ;
                       Str( oWndResult:nLeft ) + ", " + ;
                       Str( oWndResult:nWidth ) + ", " + ;
                       Str( oWndResult:nHeight ) )
 
-   DEFINE BUTTON OF oBar PROMPT "Open"
-   DEFINE BUTTON OF oBar PROMPT "Save"
+   DEFINE BUTTON OF oBar PROMPT "Open" IMAGE ImgPath() + "folder.png"
+   DEFINE BUTTON OF oBar PROMPT "Save" IMAGE ImgPath() + "save.png"
 
    @ 20, 20 GET oMemo VAR cResult MEMO OF oWndResult ;
       SIZE oWndResult:nWidth - 40, oWndResult:nHeight - 100
@@ -545,29 +549,32 @@ function BuildButtonBar()
 
    local oWnd, oBar
 
-   DEFINE WINDOW oWnd TITLE "" ;
-      FROM ScreenHeight(), 0 TO ScreenHeight(), ScreenWidth() PANELED TEXTURED
+   DEFINE WINDOW oWnd TITLE "OsxPro" ;
+    FROM  0, 0  TO 0, ScreenWidth()
 
    DEFINE TOOLBAR oBar OF oWnd
 
    DEFINE BUTTON OF oBar PROMPT "New" ;
       TOOLTIP "Create a new file" ;
-	  IMAGE "./../bitmaps/new.png" ;
+	  IMAGE ImgPath() + "new.png" ;
       ACTION New()
 
    DEFINE BUTTON OF oBar PROMPT "Open" ;
       TOOLTIP "Open a file" ;
-      IMAGE "./../bitmaps/folder.png" ;
+      IMAGE ImgPath() + "folder.png" ;
       ACTION ModifyCommand( ChooseFile( "*.prg" ) )
 
    DEFINE BUTTON OF oBar PROMPT "Save" ;
       TOOLTIP "Save the file" ;
-	  IMAGE "./../bitmaps/floppy.png" ;
+	  IMAGE ImgPath() + "floppy.png" ;
 	  ACTION MsgInfo( "Save" )
 
    DEFINE BUTTON OF oBar PROMPT "Exit" ;
       TOOLTIP "Exit" ;
+      IMAGE ImgPath() + "exit.png" ; 
       ACTION oWndCommand:End()
+
+   oWnd:SetPos( ScreenHeight(), 0 )
 
    /*
    @ 5, 5 BTNBMP FILENAME "bitmaps/new.png" ACTION New()
