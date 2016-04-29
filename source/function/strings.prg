@@ -423,14 +423,14 @@ function FWString( cString )
             endif   
          endif
       endif
-      MsgInfo( FWString( "The string" ) + ': "' + cString + '" ' + ;
-               FWString( "for language" ) + " " + ;
+      MsgInfo( "The string" + ': "' + cString + '" ' + ;
+               "for language" + " " + ;
                { "EN", "ES", "FR", "PT", "DE", "IT" }[ FWLanguageID() ] + CRLF + ;
-               FWString( "defined from" ) + ": " + ProcName( 1 ) + " " + ;
-               FWString( "line" ) + " " + ;
+               "defined from" + ": " + ProcName( 1 ) + " " + ;
+               "line" + " " + ;
                AllTrim( Str( ProcLine( 1 ) ) ) + " in " + ProcFile( 1 ) + CRLF + ;
-               FWString( "is not defined in FWH strings" ) + CRLF + ;
-               FWString( "Please add it to FWH\source\function\strings.prg" ) )
+               "is not defined in FMC strings" + CRLF + ;
+               "Please add it to fivemac/source/function/strings.prg" )
       AAdd( aMissing, cString )
    endif
   
