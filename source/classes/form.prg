@@ -41,7 +41,7 @@ ENDCLASS
 
 METHOD New() CLASS TForm
 
-   Super:New()
+   ::Super:New()
    
    AAdd( ::aForms, Self )
    

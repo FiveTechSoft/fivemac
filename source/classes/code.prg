@@ -60,7 +60,7 @@ ENDCLASS
 
 METHOD New() CLASS TWndCode
 
-   Super:New()
+   ::Super:New()
 
    ::cText = "code editor"
    ::SetPos( ScreenHeight() - 580, 380 )
