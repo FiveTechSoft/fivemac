@@ -108,7 +108,7 @@ HB_FUNC( TXTGETTEXT )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
    
-   hb_retc( [ [ memo string ] cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+   hb_retc( [ [ memo string ] cStringUsingEncoding : NSUTF8StringEncoding ] );
 }  
 
 HB_FUNC( TXTADDLINE ) // hWnd, cTxtLine
