@@ -2,7 +2,7 @@
 
 function Execute( cCode )
 
-   local oHrb, cResult, bOldError, uRet
+   local oHrb, bOldError, uRet
 
    oHrb = HB_CompileFromBuf( cCode, "-n",;
                              "-I" + UserPath() + "/fivemac/include",;

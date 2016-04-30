@@ -313,17 +313,10 @@ function DoCommand( cPrgName )
    endif
 
    cPrg = MemoRead( cPrgName )
-   __Run( "./../../harbour/bin/harbour " + cPrgName + " -gh -n -I./../../harbour/include:./../include > comp.log" )
-   // _QOut( MemoRead( "comp.log" ) )
+   Execute( cPrg )
    if At( "error", MemoRead( "comp.log" ) ) != 0
       MsgInfo( MemoRead( "comp.log" ) )
    endif	
-
-   if File( SubStr( cPrgName, 1, At( ".", cPrgName ) ) + "hrb" )
-      pCode = hb_HRBLoad( SubStr( cPrgName, 1, At( ".", cPrgName ) ) + "hrb" )
-      hb_HRBDo( pCode )
-      hb_HRBUnLoad( pCode )
-   endif
 
 return nil
 
@@ -456,28 +449,27 @@ function ModifyCommand( cPrgName )
       cPrg = MemoRead( cPrgName )
    else
       cPrg = '#include "FiveMac.ch"' + CRLF + CRLF + ;
-                 "function Main()" + CRLF + CRLF + CRLF + CRLF + ;
+                 "function Test()" + CRLF + CRLF + ;
+                 '   MsgInfo( "Hello world" )' + CRLF + CRLF + ; 
                  "return nil"	
    endif
 
    DEFINE WINDOW oWnd TITLE cPrgName ;
-      FROM 100, 30 TO 650, 950
+      FROM 100, 430 TO 650, 1350
 	
-   oWnd:Full()
-
    DEFINE TOOLBAR oBar OF oWnd
 
    DEFINE BUTTON OF oBar ;
       PROMPT  "New" ;
       TOOLTIP "Create a new PRG" ;
-      IMAGE   "./../bitmaps/new.png" ;
+      IMAGE   Imgpath() + "new.png" ;
       ACTION MsgInfo( oWnd:nTop )
 
    DEFINE BUTTON OF oBar ;
       PROMPT  "Run" ;
       TOOLTIP "Build and run the PRG" ;
-      IMAGE   "./../bitmaps/run.tiff" ;
-      ACTION  ( MemoWrit( "_temp.prg", oMemo:GetText() ), DoCommand( "_temp.prg" ) )
+      IMAGE   ImgPath() + "run.tiff" ;
+      ACTION  Execute( oMemo:GetText() )
 
    @ 0, 20 GET oMemo VAR cPRG MEMO OF oWnd SIZE 900, 550
 
