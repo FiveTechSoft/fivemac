@@ -95,10 +95,7 @@ function DoLine( nKey, oMemo )
    if Empty( cCommand )
       return nil
    endif
-   MsgInfo( cCommand )
-   BuildPreprocessor()
    cPP = __pp_process( hPP, cCommand )
-   MsgInfo( cPP )
 
    bError = ErrorBlock( { | o | Break( o ) } )
    BEGIN SEQUENCE
