@@ -19,9 +19,9 @@ NSString * NumToStr( NSInteger myInteger )
     return intString;
 }
 
-NSString * hb_NSSTRING_par( int iParam )
+NSString * hb_NSSTRING_par( int iParam ) // NSUTF8StringEncoding
 {
-   return [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( iParam ) ? hb_parc( iParam ) : "" encoding:  NSUTF8StringEncoding ] autorelease ];   
+   return [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( iParam ) ? hb_parc( iParam ) : "" encoding:  NSWindowsCP1252StringEncoding ] autorelease ];   
 }
 
 NSAttributedString * hb_NSASTRING_par( int iParam )

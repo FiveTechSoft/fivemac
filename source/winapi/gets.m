@@ -134,22 +134,10 @@ HB_FUNC( GETRESCREATE )
 HB_FUNC( GETSETTEXT )
 {
    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
-   NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding : NSUTF8StringEncoding ] autorelease ]; 
-   
-  /*  
-   if (hb_parl( 3 ) == YES )  
-  {  
-    string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding : NSUTF8StringEncoding ] autorelease ];
-  }  
-   else
-   {
-      string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding : NSWindowsCP1252StringEncoding ] autorelease ];  
-   }
-   */  
-
-   [ get setStringValue: string ];
-}   
-
+   NSString * string =  hb_NSSTRING_par( 2 ) ;
+  
+  [ get setStringValue: string ];
+} 
 
 HB_FUNC( GETSETNUMBER )
 {
