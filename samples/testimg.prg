@@ -10,13 +10,15 @@ function Main()
    
    oWnd:center()
    
-   @ 100, 139 IMAGE oImg OF oWnd SIZE 107, 91 FILENAME "./../bitmaps/fivetech.gif"
+   @ 100, 139 IMAGE oImg OF oWnd SIZE 107, 91 FILENAME ImgPath() + "fivetech.gif"
+
+   oImg:bLButtonDown = { || MsgInfo( oImg:nWidth ) }
 
    @ 69, 95 SAY "(c) FiveTech Software 2007-2012" OF oWnd SIZE 210, 14
    
    @ 22, 150 BUTTON "Ok" OF oWnd ACTION oWnd:End()
    
-    @ 22, 250 BUTTON "Frame" OF oWnd ACTION ( oImg:setFrame( ) )
+    @ 22, 250 BUTTON "Frame" OF oWnd ACTION ( MsgInfo( oImg:nWidth ), oImg:setFrame( ) )
    
    ACTIVATE WINDOW oWnd
    
