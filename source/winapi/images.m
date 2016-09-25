@@ -99,6 +99,22 @@ HB_FUNC( IMGGETFILE )
    hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
 }
 
+HB_FUNC( IMGGETWIDTH )
+{
+   NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
+   NSImageRep * rep = [ [ [ image image ] representations ] objectAtIndex:0 ];
+
+   hb_retnl( rep.pixelsWide );
+}
+
+HB_FUNC( IMGGETHEIGHT )
+{
+   NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
+   NSImageRep * rep = [ [ [ image image ] representations ] objectAtIndex:0 ];
+
+   hb_retnl( rep.pixelsHigh );
+}
+
 HB_FUNC( IMGSETFRAME )
 {
    NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
