@@ -1,9 +1,56 @@
 #include <fivemac.h>
 
+static PHB_SYMB symFMH = NULL;
+
+@interface ImageView : NSImageView
+{
+}
+- ( void ) mouseDown : ( NSEvent * ) theEvent;
+- ( void ) mouseUp : ( NSEvent * ) theEvent;
+@end 
+
+@implementation ImageView
+
+- ( void ) mouseDown : ( NSEvent * ) theEvent
+{
+   NSPoint point = [ theEvent locationInWindow ]; 
+
+   if( symFMH == NULL )
+      symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+   
+   hb_vmPushSymbol( symFMH );
+   hb_vmPushNil();
+   hb_vmPushLong( ( HB_LONG ) [ self window ] );
+   hb_vmPushLong( WM_LBUTTONDOWN );
+   hb_vmPushLong( ( HB_LONG ) self );
+   hb_vmPushLong( point.y );
+   hb_vmPushLong( point.x );
+   hb_vmDo( 5 );
+} 
+
+- ( void ) mouseUp : ( NSEvent * ) theEvent
+{
+   NSPoint point = [ theEvent locationInWindow ]; 
+
+   if( symFMH == NULL )
+      symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+   
+   hb_vmPushSymbol( symFMH );
+   hb_vmPushNil();
+   hb_vmPushLong( ( HB_LONG ) [ self window ] );
+   hb_vmPushLong( WM_LBUTTONUP );
+   hb_vmPushLong( ( HB_LONG ) self );
+   hb_vmPushLong( point.y );
+   hb_vmPushLong( point.x );
+   hb_vmDo( 5 );
+}
+
+@end
+
 HB_FUNC( IMGCREATE ) // hWnd
 {
-   NSImageView * image = [ [ NSImageView alloc ] 
- 			           initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
+   ImageView * image = [ [ ImageView alloc ] 
+                           initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
 
    [ GetView( window ) addSubview : image ];
