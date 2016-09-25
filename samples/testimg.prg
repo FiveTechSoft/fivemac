@@ -13,7 +13,7 @@ function Main()
 
    oImg:bLButtonDown = { || MsgInfo( oImg:nWidth ) }
 
-   @ 69, 95 SAY "(c) FiveTech Software 2007-2012" OF oWnd SIZE 210, 14
+   @ 69, 95 SAY "(c) FiveTech Software 2007-2016" OF oWnd SIZE 210, 14
    
    @ 22, 150 BUTTON "Ok" OF oWnd ACTION oWnd:End()
    
