@@ -35,7 +35,11 @@ CLASS TImage FROM TControl
    
    METHOD OpenSheet() INLINE ChooseSheetImage( ::hWnd )
    
-   METHOD setImage( hImage ) INLINE ImgSetNSImage(::hwnd,hImage)
+   METHOD setImage( hImage ) INLINE ImgSetNSImage( ::hwnd, hImage )
+
+   METHOD GetWidth() INLINE ImgGetWidth( ::hWnd )
+
+   METHOD GetHeight() INLINE ImgGetHeight( ::hWnd )
    
 ENDCLASS   
 
