@@ -3,7 +3,6 @@
 function Main()
 
    local oWnd, oImg
-   local i:= 0
 
    DEFINE WINDOW oWnd ;
       FROM 444, 89 TO 689, 500
