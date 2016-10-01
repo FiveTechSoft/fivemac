@@ -22,7 +22,6 @@ function ImgPath()
 
    if ! lInit   
       aFiles = Directory( cImgPath + "*" )
-      MsgInfo( Len( aFiles ) )
       for n = 1 to Len( aFiles )
          if ! File( ResPath() + "/bitmaps/" + aFiles[ n ][ 1 ] )
             CopyFileTo( cImgPath + aFiles[ n ][ 1 ],;
