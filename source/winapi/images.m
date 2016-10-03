@@ -275,3 +275,62 @@ HB_FUNC( IMAGETODESKTOPWALLPAPER )
       }
    #endif	
 }
+
+HB_FUNC( SAVEIMAGEFROMIMAGE )
+{
+    NSString * fileIni = hb_NSSTRING_par( 1 );
+    NSString * fileFin = hb_NSSTRING_par( 2 );
+    
+    NSString *extension =  [ [fileFin substringFromIndex:[fileFin length] - 3] uppercaseString ];
+    NSImage *sourceImage =  [[NSImage alloc]initWithContentsOfFile: fileIni ];
+    
+    NSSize newSize;
+    newSize.width = hb_parnl( 3 );
+    newSize.height = hb_parnl( 4 );
+    
+    if (![sourceImage isValid]){
+        NSLog(@"Invalid Image");
+    } else {
+        
+        NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];
+        [smallImage lockFocus];
+        [sourceImage setSize: newSize];
+        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
+        [smallImage unlockFocus];
+        
+        NSData *imageData = [smallImage TIFFRepresentation];
+        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+        NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+        
+        if  ([extension isEqualToString:@"JPG"] )
+        {
+            imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if  ([extension isEqualToString:@"PNG"] )        {
+            imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if  ([extension isEqualToString:@"BMP"] )
+        {
+            imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if ([extension isEqualToString:@"GIF"] )
+        {
+            imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
+         {
+            imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
+
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+    }  
+}
