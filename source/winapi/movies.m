@@ -1,6 +1,5 @@
 #include <fivemac.h>
- #import <QTKit/QTKit.h>
- 
+
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1090	
  
  #import <AVFoundation/AVFoundation.h>

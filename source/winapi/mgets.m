@@ -108,7 +108,7 @@ HB_FUNC( TXTRTFFROMRANGE )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
 
-   hb_retc( [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string] length]) ] cStringUsingEncoding : NSUTF8StringEncoding ] );
+   hb_retc( [ [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string] length]) ] cStringUsingEncoding : NSUTF8StringEncoding ] );
 }
 
 HB_FUNC( TXTGETTEXT )
