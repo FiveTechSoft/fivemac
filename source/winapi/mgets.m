@@ -104,11 +104,11 @@ HB_FUNC( TXTSETATTRIBUTEDSTRING )
    [ [ memo textStorage ] setAttributedString : string ];
 }  
 
-HB_FUNC( TXTRTFFROMRANGE )
+HB_FUNC( TXTGETRTF )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
 
-   hb_retc( [ [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string] length]) ] cStringUsingEncoding : NSUTF8StringEncoding ] );
+   hb_retc( [ [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string] length ] ) ] cStringUsingEncoding : NSUTF8StringEncoding ] );
 }
 
 HB_FUNC( TXTGETTEXT )

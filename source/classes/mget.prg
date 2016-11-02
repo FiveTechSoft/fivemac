@@ -17,6 +17,8 @@ CLASS TMultiGet FROM TControl
    METHOD SetAttributedString( cRTFText ) INLINE TxtSetAttributedString( ::hWnd, cRTFText )
 
    METHOD GetText() INLINE TxtGetText( ::hWnd )
+
+   METHOD GetRTF() INLINE TxtGetRtf( ::hWnd )
    
    METHOD AddLine( cTxtLine ) INLINE TxtAddLine( ::hWnd, cTxtLine )
 
