@@ -63,7 +63,9 @@ static function ArgsList( oError )
       cArgs += "Args:" + CRLF
       for n = 1 to Len( oError:Args )
          cArgs += "   [" + Str( n, 4 ) + "] = " + ValType( oError:Args[ n ] ) + ;
-                  "   " + cValToChar( oError:Args[ n ] ) + CRLF
+                  "   " + cValToChar( oError:Args[ n ] ) + ;
+                  If( ValType( oError:Args[ n ] ) == "A", " length: " + AllTrim( Str( Len( oError:Args[ n ] ) ) ), "" ) + ;
+                  If( ValType( oError:Args[ n ] ) == "O", " ClassName: " + oError:Args[ n ]:ClassName(), "" ) + CRLF
       next
    elseif ValType( oError:Args ) == "C"
       cArgs += "Args:" + oError:Args + CRLF
