@@ -107,8 +107,9 @@ HB_FUNC( TXTSETATTRIBUTEDSTRING )
 HB_FUNC( TXTGETRTF )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
+   NSData * rtfData = [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string ] length ] ) ]; 
 
-   hb_retc( [ [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string] length ] ) ] cStringUsingEncoding : NSUTF8StringEncoding ] );
+   hb_retc( [ [ [ NSString alloc ] initWithData: rtfData encoding: NSUTF8StringEncoding ] cStringUsingEncoding: NSUTF8StringEncoding ] );
 }
 
 HB_FUNC( TXTGETTEXT )
