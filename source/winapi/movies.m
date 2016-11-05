@@ -1,11 +1,13 @@
 #include <fivemac.h>
- #import <QTKit/QTKit.h>
- 
+
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1090	
  
  #import <AVFoundation/AVFoundation.h>
  #import <AVKit/AVKit.h>
  #import <CoreMedia/CMTime.h>
+
+#else
+   #import <QTKit/QTKit.h>
 
 #endif
 
@@ -17,7 +19,6 @@ void MsgAlert( NSString *, NSString * messageText );
 #else
 #   define Log(...)
 #endif
-
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVCaptureOutput.h>

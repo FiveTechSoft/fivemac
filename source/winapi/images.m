@@ -99,9 +99,240 @@ HB_FUNC( CHOOSESHEETIMAGE )
    #endif    
 }
 
-/*
-HB_FUNC( IMGMASREFLEXSETFILE ) 
+HB_FUNC( NEWRESIZEIMAGE )
 {
+  NSImageView * vista = ( NSImageView * ) hb_parnl( 1 );
+    NSString * fileName = hb_NSSTRING_par( 2 );
+   
+    
+    NSSize newSize;
+    newSize.width = hb_parnl( 3 );
+    newSize.height = hb_parnl( 4 );
+
+    NSImage *sourceImage = [ vista image ] ;
+    
+  //  [sourceImage setScalesWhenResized:YES];
+    
+    // Report an error if the source isn't a valid image
+    if (![sourceImage isValid]){
+        NSLog(@"Invalid Image");
+    } else {
+        
+        
+        
+        NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];
+        [smallImage lockFocus];
+        [sourceImage setSize: newSize];
+        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
+        [smallImage unlockFocus];
+        
+        NSData *imageData = [smallImage TIFFRepresentation];
+        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+        NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+        imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+        [imageData writeToFile:fileName atomically:NO];
+        
+        
+    }
+   
+}
+
+
+HB_FUNC( SIZEWIDTHIMAGE )
+{
+
+  NSImageView * vista = ( NSImageView * ) hb_parnl( 1 );
+  
+  NSImage *sourceImage = [ vista image ] ;
+  NSData *imageData = [sourceImage TIFFRepresentation];
+  NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+
+NSInteger width = [imageRep pixelsWide];
+//NSInteger height = [imageRep pixelsHigh];
+
+ hb_retnl( ( HB_LONG ) width );
+
+}
+
+
+HB_FUNC( SIZEHEIGHTIMAGE )
+{
+    
+    NSImageView * vista = ( NSImageView * ) hb_parnl( 1 );
+    //  NSString * fileName = hb_NSSTRING_par( 2 );
+    
+    NSImage *sourceImage = [ vista image ] ;
+    NSData *imageData = [sourceImage TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+    
+ //   NSInteger width = [imageRep pixelsWide];
+    NSInteger height = [imageRep pixelsHigh];
+    
+    hb_retnl( ( HB_LONG ) height );
+    
+}
+
+HB_FUNC( NSIMGFROMFILE )
+{
+    NSString * fileName = hb_NSSTRING_par( 1 );
+    NSImage *image = [[NSImage alloc]initWithContentsOfFile: fileName ];
+    hb_retnl( ( HB_LONG ) image );
+}
+
+
+
+HB_FUNC( NSIMGGETWIDTH )
+{
+    
+    NSImage * image = ( NSImage * ) hb_parnl( 1 );
+    NSImageRep * rep = [ [ image representations ] objectAtIndex:0 ];
+    
+    hb_retnl( rep.pixelsWide );
+}
+
+
+HB_FUNC( NSIMGGETHEIGHT )
+{
+    NSImage * image = ( NSImage * ) hb_parnl( 1 );
+    NSImageRep * rep = [ [ image representations ] objectAtIndex:0 ];
+    
+    hb_retnl( rep.pixelsHigh );
+}
+
+
+HB_FUNC( SAVEIMAGEFROMIMAGE )
+{
+    NSString * fileIni = hb_NSSTRING_par( 1 );
+    NSString * fileFin = hb_NSSTRING_par( 2 );
+    
+    NSString *extension =  [ [fileFin substringFromIndex:[fileFin length] - 3] uppercaseString ];
+    NSImage *sourceImage =  [[NSImage alloc]initWithContentsOfFile: fileIni ];
+    
+    NSSize newSize;
+    newSize.width = hb_parnl( 3 );
+    newSize.height = hb_parnl( 4 );
+    
+    if (![sourceImage isValid]){
+        NSLog(@"Invalid Image");
+    } else {
+        
+        NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];
+        [smallImage lockFocus];
+        [sourceImage setSize: newSize];
+        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
+        [smallImage unlockFocus];
+        
+        NSData *imageData = [smallImage TIFFRepresentation];
+        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+        NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+        
+        if  ([extension isEqualToString:@"JPG"] )
+        {
+            imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if  ([extension isEqualToString:@"PNG"] )        {
+            imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if  ([extension isEqualToString:@"BMP"] )
+        {
+            imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if ([extension isEqualToString:@"GIF"] )
+        {
+            imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
+         {
+            imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+    }
+    
+}
+
+
+HB_FUNC( SAVETEXTINIMAGE ) // fileini,filefin,ctexto, fuente, ntop, nleft
+{
+    NSString * fileIni = hb_NSSTRING_par( 1 );
+    NSString * fileFin = hb_NSSTRING_par( 2 );
+    
+    NSString * text = hb_NSSTRING_par( 3 );
+    
+    
+    
+    NSString *extension =  [ [fileFin substringFromIndex:[fileFin length] - 3] uppercaseString ];
+    
+    NSImage *iniImage =  [[NSImage alloc]initWithContentsOfFile: fileIni ];
+    
+    NSImage *finImage = [NSImage imageWithSize: iniImage.size flipped:YES drawingHandler:^BOOL(NSRect dstRect) {
+        [iniImage drawInRect:dstRect];
+        
+        // Attributes permite customizar fuente, color, etc.
+        NSDictionary *attributes = @{NSFontAttributeName: [NSFont systemFontOfSize:hb_parnl( 4 ) ]};
+        
+        [text drawAtPoint:NSMakePoint(hb_parnl( 6 ),hb_parnl( 5 ) ) withAttributes:attributes];
+        
+        return YES;
+    }];
+    
+    NSBitmapImageRep *imageRep = [[NSBitmapImageRep alloc] initWithCGImage:[finImage CGImageForProposedRect:NULL context:nil hints:nil]];
+    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+
+    
+    NSData *imageData ;
+    
+    if  ([extension isEqualToString:@"JPG"] )
+    {
+        imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+        [imageData writeToFile:fileFin atomically:NO];
+    }
+    
+    if  ([extension isEqualToString:@"PNG"] )        {
+        imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+        [imageData writeToFile:fileFin atomically:NO];
+    }
+    
+    if  ([extension isEqualToString:@"BMP"] )
+    {
+        imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
+        [imageData writeToFile:fileFin atomically:NO];
+    }
+    
+    if ([extension isEqualToString:@"GIF"] )
+    {
+        imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
+        [imageData writeToFile:fileFin atomically:NO];
+    }
+    
+    if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
+    {
+        imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
+        [imageData writeToFile:fileFin atomically:NO];
+    }
+    
+    
+    
+    //NSData *data = [rep representationUsingType:NSPNGFileType properties:nil];
+    //[data writeToFile: finFile atomically:YES];
+    
+}
+
+
+
+/*
+ HB_FUNC( IMGMASREFLEXSETFILE )
+ {
  NSImageView * imageView = ( NSImageView * ) hb_parnl( 1 );
  NSString * string =  hb_NSSTRING_par( 2 ) ;
  NSImage * image = [ [ NSImage alloc ] initWithContentsOfFile : string ] ;

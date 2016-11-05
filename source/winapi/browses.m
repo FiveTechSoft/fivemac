@@ -261,7 +261,7 @@ HB_FUNC( BRWCREATE )
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
    DataSource * data = [ [ DataSource alloc ] init ];
    
-   // [ sv setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
+  // [ sv setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
    [ sv setHasVerticalScroller : YES ];
    [ sv setHasHorizontalScroller : YES ];
    [ sv setBorderType : NSBezelBorder ];
@@ -836,6 +836,21 @@ HB_FUNC( BRWSETTEXTCOLOR )
     
     [  [ browse cell ] setTextColor : color ] ;
 }
+
+
+
+HB_FUNC( SETCELLTEXTCOLOR )
+{
+    
+    NSTextFieldCell * cell = ( NSTextFieldCell * ) hb_parnl( 1 );
+    NSColor * color =  [ NSColor colorWithCalibratedRed  : ( hb_parnl( 2 ) / 255.0 )
+                                                    green: ( hb_parnl( 3 ) / 255.0 )
+                                                     blue: ( hb_parnl( 4 ) / 255.0 )
+                                                   alpha : ( hb_parnl( 5 ) / 100.0 ) ];
+    
+    [ cell setTextColor : color ] ;
+}
+
 
 
 HB_FUNC( BRWSSETCROLLHGRAFITE )

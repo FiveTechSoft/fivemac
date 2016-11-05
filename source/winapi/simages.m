@@ -2,14 +2,16 @@
 #import <Quartz/Quartz.h>
 
 @interface MIKImageView : IKImageView  
-
+{
    NSURL * selectedImageURL ;
- 
-//- (NSString*)fileName   ; 
+}
+//- (NSString*)fileName   ;
+
 
 - (NSURL*)selectedImageURL;
 - (void)setSelectedImageURL: (NSURL*)url;	
-    
+
+
 @end
 
 @implementation MIKImageView 
@@ -60,7 +62,6 @@
 
 @end
 
-
 HB_FUNC( PHOTOCAMLOAD )
 {
     MIKImageView * vista = ( MIKImageView  *) hb_parnl( 1);  
@@ -75,35 +76,62 @@ HB_FUNC( PHOTOCAMLOAD )
 HB_FUNC( SIMAGECREATE )
 {
 
-   NSScrollView * sv = [ [ NSScrollView alloc ]
-                   initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
+    
+ //  NSScrollView * sv = [ [ NSScrollView alloc ]
+ //                  initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
 
+   
+    
+    
+    
+ // [ sv setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
+ //  [ sv setHasVerticalScroller : YES ];
+ //  [ sv setHasHorizontalScroller : YES ];
+ //   sv.hasVerticalRuler =   YES ;
+ //  [ sv setBorderType : NSBezelBorder ];
 
-   [ sv setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
-   [ sv setHasVerticalScroller : YES ];
-   [ sv setHasHorizontalScroller : YES ];
-   [ sv setBorderType : NSBezelBorder ];
+ //  MIKImageView  * vista = [ [ MIKImageView alloc ] initWithFrame : [ [ sv contentView ] frame ] ];
 
-   MIKImageView  * vista = [ [ MIKImageView alloc ] initWithFrame : [ [ sv contentView ] frame ] ];
-
-
+    
+    MIKImageView  * vista = [ [ MIKImageView alloc ] initWithFrame :  NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
+    
+ 
+    //vista.editable = YES;
+    vista.autoresizes = YES;
+    vista.autohidesScrollers = NO;
+    vista.hasHorizontalScroller = YES;
+    vista.hasVerticalScroller = YES;
+    
+    
+    
+   // [ vista setAutoresizes: TRUE ];
+    [ vista setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
+  //  [ vista setHasVerticalScroller : YES ];
+  //  [ vista setHasHorizontalScroller : YES ];
+    
+    
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
 
-   [ sv setDocumentView : vista ];
+ //  [ sv setDocumentView : vista ];
 
-   [ GetView( window ) addSubview : sv ];
+    
+   
+    
+    
+ //  [ GetView( window ) addSubview : sv ];
 
-  // [ GetView( window ) addSubview : vista ];
+   [ GetView( window ) addSubview : vista ];
 
 
     hb_retnl( ( HB_LONG ) vista );
 }
 
 
+
 HB_FUNC( SIMAGEOPEN )
 {
    MIKImageView * vista = ( MIKImageView *) hb_parnl( 1 );
-   NSString * path = hb_NSSTRING_par( 2 )
+    NSString * path = hb_NSSTRING_par( 2 ) ;
  
    NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:path];
 
@@ -222,17 +250,19 @@ HB_FUNC( CHOOSESHEETSIMAGE )
         
     [panel setMessage:@"Importe el Archivo"];
 
-    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
     [panel beginSheetModalForWindow:[vista window ] completionHandler:^(NSInteger result)
 	{
-       if (result == NSFileHandlingPanelOKButton)
+       if ( result == NSFileHandlingPanelOKButton )
        {
           [ vista setHidden: NO ];
+          [ vista setAutoresizes: TRUE ];
+          [ vista setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
           [ vista setImageWithURL: [[panel URLs] objectAtIndex:0]  ];    
           [ vista setSelectedImageURL : [[panel URLs] objectAtIndex:0] ] ;
 	   } 
 	} ];
-    #endif      
+    
+    
 }
    
 HB_FUNC( SIMAGESAVEAS )

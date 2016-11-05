@@ -31,8 +31,9 @@ HB_FUNC( RANDOMMINMAX)
 HB_FUNC( OSVERSION)
 {
   NSString * version = [[NSProcessInfo processInfo] operatingSystemVersionString];
-  hb_retc( [ version cStringUsingEncoding: NSWindowsCP1252StringEncoding ] );
+  hb_retc( [ version cStringUsingEncoding: NSUTF8StringEncoding ] );
 }
+
 
 HB_FUNC( SDKVERSION)
 {
@@ -60,7 +61,7 @@ HB_FUNC( SDKVERSION)
    #endif
  #endif
     
- hb_retc( [ version cStringUsingEncoding: NSWindowsCP1252StringEncoding ] );
+ hb_retc( [ version cStringUsingEncoding:NSUTF8StringEncoding ] );
 }
 
 
@@ -88,7 +89,7 @@ HB_FUNC( SLEEP )
 HB_FUNC( NSSTRINGTOSTRING ) 
 {
    NSString * string = ( NSString * ) hb_parnl( 1 );
-   hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+   hb_retc( [ string cStringUsingEncoding : NSUTF8StringEncoding ] );
 }   
 
 HB_FUNC( STRINGTONSTRING ) 

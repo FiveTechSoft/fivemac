@@ -265,12 +265,13 @@ REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
            [ TOOLTIP <cToolTip> ] ;
            [ AUTORESIZE <nAutoResize> ] ;
            [ PICTURE <cPicture> ] ;
+           [ <lUtf: UTF > ] ;
            [ PIXEL ] ;
 		    => ;
 		       [ <oGet> := ] TGet():New( <nRow>, <nCol>, <nWidth>, <nHeight>,;
 		       <oWnd>, bSETGET(<uVar>), [\{||(<uValid>)\}],;
 		       <.update.>, <.password.> ,<.lsearch.>, [{|Self|<uChange>}],;
-		       <.lrounded.>, [<cToolTip>], [<nAutoResize>], [<(oGet)>], [<cPicture>] )
+		       <.lrounded.>, [<cToolTip>], [<nAutoResize>], [<(oGet)>], [<cPicture>],,<.lUtf.> )
 		                                   
 #xcommand REDEFINE GET [ <oGet> VAR ] <uVar> ;
              [ ID <nId> ] ;

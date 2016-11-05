@@ -25,14 +25,12 @@ function Main()
 
    oBrw:SetColBmp( 1 ) // Column 1 will display images
    
-   oBrw:bHeadClick:= { | obj , nindex| if(nindex== 1, msginfo("clickada cabecera"+str(nindex)),)  } 
+   // oBrw:bHeadClick:= { | obj , nindex| if(nindex== 1, msginfo("clickada cabecera"+str(nindex)),)  } 
    
-   oBrw:bChange := { | obj , nindex|   msginfo("cambio a reg:"+str(obj:nRowPos()) ) } 
-   
-   
-   oBrw:bDrawRect:=  { | nRow | test->(dbskip()), if(left(test->Last,1) =="L", BRWSETGRADICOLOR(oBrw:hWnd,nRow,ETIQUETGRADCOLORS("orange") ), ) , test->(dbskip(-1)) }
-   
+   oBrw:bDrawRect:=  { | nRow | test->(dbskip()),;
+                  if(left(test->Last,1) =="L", BRWSETGRADICOLOR(oBrw:hWnd,nRow,ETIQUETGRADCOLORS("orange") ), ) , test->(dbskip(-1)) }
 
+   oBrw:bClrText = { | pColumn, nRowIndex | ColorFromNRGB( If( nRowIndex % 2 == 0, CLR_RED, CLR_GREEN ) ) }
 
    ACTIVATE WINDOW oWnd
 

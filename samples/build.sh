@@ -16,7 +16,7 @@ fi
 echo compiling C module...
 #  add -arch ppc -arch i386 for universal binaries
 if [ -d /Applications/Xcode.app ]; then
-   SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
+   SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
    HEADERS=$SDKPATH/usr/include
    gcc $1.c -c -I./../include -I./../../harbour/include -I$HEADERS
 else

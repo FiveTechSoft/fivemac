@@ -65,7 +65,7 @@ HB_FUNC( MNUACTIVATE ) // hMenu
 HB_FUNC( MNUITEMTEXT )
 {
    NSMenuItem * item = ( NSMenuItem * ) hb_parnl( 1 );
-   hb_retc( [ [ item title ] cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+   hb_retc( [ [ item title ] cStringUsingEncoding : NSUTF8StringEncoding ] );
 }
 
 HB_FUNC( MNUGETITEMINDEX )
