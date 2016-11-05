@@ -21,7 +21,7 @@ CLASS TGet FROM TControl
   
    METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
                lPassword, lSeach, bChanged, lRounded, cTooltip, nAutoResize,;
-               cVarName, cPicture )
+               cVarName, cPicture, cCueText, lUtf )
 
    METHOD Redefine( nId, oWnd, bSetGet, lUpdate, lPassword, lSearch, bChanged,;
                     cPicture )
@@ -54,6 +54,8 @@ CLASS TGet FROM TControl
 
    METHOD GetText() INLINE GetGetText( ::hWnd )
 
+   METHOD GetRTF() INLINE TxtGetRtf( ::hWnd )
+
    METHOD GoBottom() INLINE TxtGoBottom( ::hWnd )
 
    METHOD GoHome()
@@ -69,7 +71,8 @@ CLASS TGet FROM TControl
    METHOD SetTextColor( nRed, nBlue, nGreen ) INLINE ;
                         SetTextColor( ::hWnd, nRed, nBlue, nGreen )
 
-   METHOD SetText( cText  ) INLINE  GetSetText( ::hWnd, cText ) 
+METHOD SetText( cText , lUtf ) INLINE ;
+          GetSetText( ::hWnd, cText, Iif( Empty(lUtf), .f. , lUtf )  )
 
    METHOD lValid()
    
@@ -122,7 +125,7 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
             lPassword, lSearch, bChanged, lRounded, cToolTip, nAutoResize,;
-            cVarName, cPicture, cCueText ) CLASS TGet
+            cVarName, cPicture, cCueText, lUtf ) CLASS TGet
 
    local cText := Space( 20 )
 
@@ -165,8 +168,11 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
    ::cCaption = ::oGet:Buffer
    ::oGet:KillFocus()
 
+   if Empty( lUtf )
+      lUtf := .f.
+   endif
 
-   ::SetText( ::cCaption )
+   ::SetText( ::cCaption , lUtf )
    
    // ::SetText( cValToChar( Eval( bSetGet ) ) )
 
@@ -219,7 +225,7 @@ return Self
 
 METHOD Change(nkey) CLASS TGet
 
-  // ::Assign()
+   ::Assign()
 
    if ! Empty( ::bChanged )
       Eval( ::bChanged, Self )
@@ -650,8 +656,8 @@ Return GetGetText( hWnd )
 
 //----------------------------------------------------------------------------//
 
-Static Function SetWindowText( hWnd, cText  )
-    GetSetText( hWnd, cText )
+Static Function SetWindowText( hWnd, cText, lUtf )
+     GetSetText( hWnd, cText, Iif( Empty(lUtf), .f. , lUtf )  )
 Return nil
 
 //----------------------------------------------------------------------------//
