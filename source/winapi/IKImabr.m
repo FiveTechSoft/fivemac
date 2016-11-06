@@ -523,5 +523,11 @@ HB_FUNC( IKIMGRUNSLIDE )
                                                       options: dict];
 }
 
+HB_FUNC( IKIMGSTOPSLIDE )
 
+{
+    
+   [[IKSlideshow sharedSlideshow] stopSlideshow: [IKSlideshow sharedSlideshow] ];
+
+}
 
