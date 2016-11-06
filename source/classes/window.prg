@@ -547,22 +547,22 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
 
         case nMsg == WM_WNDSETCURSOR
                  ::CursorChange()
-                case nMsg == WM_MOUSEMOVED
+        case nMsg == WM_MOUSEMOVED
              return ::MouseMove( uParam1, uParam2 )
 
         case nMsg == WM_LBUTTONDOWN
              if oControl != nil
-		      return oControl:LButtonDown( uParam1, uParam2 )
+                return oControl:LButtonDown( uParam1, uParam2 )
              else
                 return ::LButtonDown( uParam1, uParam2 ) 
-		   endif
+		     endif
 
         case nMsg == WM_LBUTTONUP
              if oControl != nil
-		      return oControl:LButtonUp( uParam1, uParam2 )
+                return oControl:LButtonUp( uParam1, uParam2 )
              else
                 return ::LButtonUp( uParam1, uParam2 ) 
-		   endif
+             endif
 
         case nMsg == WM_RBUTTONDOWN
              return ::RButtonDown( uParam1, uParam2 )

@@ -71,7 +71,7 @@ CLASS TGet FROM TControl
    METHOD SetTextColor( nRed, nBlue, nGreen ) INLINE ;
                         SetTextColor( ::hWnd, nRed, nBlue, nGreen )
 
-METHOD SetText( cText , lUtf ) INLINE ;
+   METHOD SetText( cText , lUtf ) INLINE ;
           GetSetText( ::hWnd, cText, Iif( Empty(lUtf), .f. , lUtf )  )
 
    METHOD lValid()
