@@ -25,9 +25,7 @@ CLASS TMultiGet FROM TControl
    METHOD nRow( nNewRow ) INLINE TxtRow( ::hWnd, nNewRow )
 
    METHOD nCol( nNewCol ) INLINE TxtCol( ::hWnd, nNewCol )
-   
-   METHOD SetEditable( lYesNo ) INLINE TxtSetEditable( ::hWnd, lYesNo )
-   
+
    METHOD SetBkColor( nColor ) INLINE TxtSetBkColor( ::hWnd, nColor )
    
    METHOD SetFont( cName, nSize ) INLINE TxtSetFont( ::hWnd, cName, nSize )
@@ -36,7 +34,9 @@ CLASS TMultiGet FROM TControl
    
    METHOD AddVRuler() INLINE  TxtAddRulerVert( ::hWnd )   
    
-   METHOD AddHRuler() INLINE  TxtAddRulerHori( ::hWnd )   
+   METHOD AddHRuler() INLINE  TxtAddRulerHori( ::hWnd )
+
+   METHOD SetEditable( lYesNo ) INLINE TxtSetEditable( ::hWnd, lYesNo )
 
    METHOD SETRichText( lRich ) INLINE TxtSetRichText( ::hWnd, lRich )
 

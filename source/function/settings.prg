@@ -2,21 +2,25 @@
 
 #include "FiveMac.ch"
 
-static cImgPath
+static cImgPath, lInit := .F.
 
 //----------------------------------------------------------------------------//
 
 function ImgPath()
 
-   local aFiles, n, lInit := Empty( cImgPath )
-
+   local aFiles, n
    DEFAULT cImgPath := UserPath() + "/fivemac/bitmaps/"
-   
+
+
+   if ! lIsDir( ResPath() )
+      MakeDir( ResPath() )
+   endif
+
    if ! lIsDir( ResPath() + "/bitmaps" )
       MakeDir( ResPath() + "/bitmaps" )
    endif
       
-   if lInit   
+   if ! lInit
       aFiles = Directory( cImgPath + "*" )
       for n = 1 to Len( aFiles )
          if ! File( ResPath() + "/bitmaps/" + aFiles[ n ][ 1 ] )
@@ -24,6 +28,7 @@ function ImgPath()
                         ResPath() + "/bitmaps/" + aFiles[ n ][ 1 ] )
          endif               
       next
+      lInit = .T. 
    endif   
   
    cImgPath = ResPath() + "/bitmaps/"               

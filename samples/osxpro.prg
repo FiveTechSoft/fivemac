@@ -294,32 +294,24 @@ function Browse()
 return nil
 
 //----------------------------------------------------------------------------//
-
 function DoCommand( cPrgName )
 
-   local cPrg, pCode
+    local cPrg, pCode
 
-   if ! "." $ cPrgName
-      cPrgName += ".prg"
-   endif
+    if ! "." $ cPrgName
+        cPrgName += ".prg"
+    endif
 
-   if ! File( cPrgName )
-      MsgAlert( cPrgName + " : file not found" )
-      return nil
-   endif
+    if ! File( cPrgName )
+        MsgAlert( cPrgName + " : file not found" )
+        return nil
+    endif
 
-   cPrg = MemoRead( cPrgName )
-   __Run( "./../../harbour/bin/harbour " + cPrgName + " -gh -n -I./../../harbour/include:./../include > comp.log" )
-   // _QOut( MemoRead( "comp.log" ) )
-   if At( "error", MemoRead( "comp.log" ) ) != 0
-      MsgInfo( MemoRead( "comp.log" ) )
-   endif	
-
-   if File( SubStr( cPrgName, 1, At( ".", cPrgName ) ) + "hrb" )
-      pCode = hb_HRBLoad( SubStr( cPrgName, 1, At( ".", cPrgName ) ) + "hrb" )
-      hb_HRBDo( pCode )
-      hb_HRBUnLoad( pCode )
-   endif
+    cPrg = MemoRead( cPrgName )
+    Execute( cPrg )
+    if At( "error", MemoRead( "comp.log" ) ) != 0
+        MsgInfo( MemoRead( "comp.log" ) )
+    endif
 
 return nil
 
@@ -452,21 +444,20 @@ function ModifyCommand( cPrgName )
       cPrg = MemoRead( cPrgName )
    else
       cPrg = '#include "FiveMac.ch"' + CRLF + CRLF + ;
-                 "function Main()" + CRLF + CRLF + CRLF + CRLF + ;
-                 "return nil"	
+             "function Test()" + CRLF + CRLF + ;
+             '   MsgInfo( "Hello world" )' + CRLF + CRLF + ;
+             "return nil"
    endif
 
    DEFINE WINDOW oWnd TITLE cPrgName ;
-      FROM 100, 30 TO 650, 950
+      FROM 100, 30 TO 650, 1350
 	
-   oWnd:Full()
-
    DEFINE TOOLBAR oBar OF oWnd
 
    DEFINE BUTTON OF oBar ;
       PROMPT  "New" ;
       TOOLTIP "Create a new PRG" ;
-      IMAGE   "./../bitmaps/new.png" ;
+      IMAGE   Imgpath() +"new.png" ;
       ACTION MsgInfo( oWnd:nTop )
 
    DEFINE BUTTON OF oBar ;

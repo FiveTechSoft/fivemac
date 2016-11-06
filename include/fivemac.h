@@ -9,6 +9,8 @@
 
 NSString * hb_NSSTRING_par( int iParam );
 
+NSAttributedString * hb_NSASTRING_par( int iParam );
+
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 1050
    #define NSInteger int
    #define NSUInteger int

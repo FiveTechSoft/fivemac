@@ -552,9 +552,20 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
 
         case nMsg == WM_LBUTTONDOWN
              return ::LButtonDown( uParam1, uParam2 )
+             if oControl != nil
+                return oControl:LButtonDown( uParam1, uParam2 )
+             else
+                return ::LButtonDown( uParam1, uParam2 )
+             endif
 
         case nMsg == WM_LBUTTONUP
              return ::LButtonUp( uParam1, uParam2 )
+             if oControl != nil
+                return oControl:LButtonUp( uParam1, uParam2 )
+             else
+                return ::LButtonUp( uParam1, uParam2 )
+             endif
+
 
         case nMsg == WM_RBUTTONDOWN
              return ::RButtonDown( uParam1, uParam2 )
