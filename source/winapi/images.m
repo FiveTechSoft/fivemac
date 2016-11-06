@@ -7,51 +7,53 @@ static PHB_SYMB symFMH = NULL;
 }
 - ( void ) mouseDown : ( NSEvent * ) theEvent;
 - ( void ) mouseUp : ( NSEvent * ) theEvent;
-@end
+
+@end 
 
 @implementation ImageView
 
 - ( void ) mouseDown : ( NSEvent * ) theEvent
 {
-    NSPoint point = [ theEvent locationInWindow ];
-    
-    if( symFMH == NULL )
-        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
-    
-    hb_vmPushSymbol( symFMH );
-    hb_vmPushNil();
-    hb_vmPushLong( ( HB_LONG ) [ self window ] );
-    hb_vmPushLong( WM_LBUTTONDOWN );
-    hb_vmPushLong( ( HB_LONG ) self );
-    hb_vmPushLong( point.y );
-    hb_vmPushLong( point.x );
-    hb_vmDo( 5 );
-} 
 
+   NSPoint point = [ theEvent locationInWindow ]; 
+
+   if( symFMH == NULL )
+      symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+   
+   hb_vmPushSymbol( symFMH );
+   hb_vmPushNil();
+   hb_vmPushLong( ( HB_LONG ) [ self window ] );
+   hb_vmPushLong( WM_LBUTTONDOWN );
+   hb_vmPushLong( ( HB_LONG ) self );
+   hb_vmPushLong( point.y );
+   hb_vmPushLong( point.x );
+   hb_vmDo( 5 );
+} 
 
 - ( void ) mouseUp : ( NSEvent * ) theEvent
 {
-    NSPoint point = [ theEvent locationInWindow ];
-    
-    if( symFMH == NULL )
-        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
-    
-    hb_vmPushSymbol( symFMH );
-    hb_vmPushNil();
-    hb_vmPushLong( ( HB_LONG ) [ self window ] );
-    hb_vmPushLong( WM_LBUTTONUP );
-    hb_vmPushLong( ( HB_LONG ) self );
-    hb_vmPushLong( point.y );
-    hb_vmPushLong( point.x );
-    hb_vmDo( 5 );
+   NSPoint point = [ theEvent locationInWindow ]; 
+
+   if( symFMH == NULL )
+      symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+   
+   hb_vmPushSymbol( symFMH );
+   hb_vmPushNil();
+   hb_vmPushLong( ( HB_LONG ) [ self window ] );
+   hb_vmPushLong( WM_LBUTTONUP );
+   hb_vmPushLong( ( HB_LONG ) self );
+   hb_vmPushLong( point.y );
+   hb_vmPushLong( point.x );
+   hb_vmDo( 5 );
 }
 
 @end
 
 HB_FUNC( IMGCREATE ) // hWnd
 {
-   ImageView * image = [ [ NSImageView alloc ] 
- 			           initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
+
+   ImageView * image = [ [ ImageView alloc ] 
+                           initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
 
    [ GetView( window ) addSubview : image ];
@@ -102,20 +104,21 @@ HB_FUNC( IMGGETFILE )
 
 HB_FUNC( IMGGETWIDTH )
 {
-    NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
-    NSImageRep * rep = [ [ [ image image ] representations ] objectAtIndex:0 ];
-    
-    hb_retnl( rep.pixelsWide );
+
+   NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
+   NSImageRep * rep = [ [ [ image image ] representations ] objectAtIndex:0 ];
+
+   hb_retnl( rep.pixelsWide );
 }
 
 HB_FUNC( IMGGETHEIGHT )
 {
-    NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
-    NSImageRep * rep = [ [ [ image image ] representations ] objectAtIndex:0 ];
-    
-    hb_retnl( rep.pixelsHigh );
-}
 
+   NSImageView * image = ( NSImageView * ) hb_parnl( 1 );
+   NSImageRep * rep = [ [ [ image image ] representations ] objectAtIndex:0 ];
+
+   hb_retnl( rep.pixelsHigh );
+}
 
 HB_FUNC( IMGSETFRAME )
 {
@@ -265,66 +268,6 @@ HB_FUNC( NSIMGGETHEIGHT )
     hb_retnl( rep.pixelsHigh );
 }
 
-
-HB_FUNC( SAVEIMAGEFROMIMAGE )
-{
-    NSString * fileIni = hb_NSSTRING_par( 1 );
-    NSString * fileFin = hb_NSSTRING_par( 2 );
-    
-    NSString *extension =  [ [fileFin substringFromIndex:[fileFin length] - 3] uppercaseString ];
-    NSImage *sourceImage =  [[NSImage alloc]initWithContentsOfFile: fileIni ];
-    
-    NSSize newSize;
-    newSize.width = hb_parnl( 3 );
-    newSize.height = hb_parnl( 4 );
-    
-    if (![sourceImage isValid]){
-        NSLog(@"Invalid Image");
-    } else {
-        
-        NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];
-        [smallImage lockFocus];
-        [sourceImage setSize: newSize];
-        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
-        [smallImage unlockFocus];
-        
-        NSData *imageData = [smallImage TIFFRepresentation];
-        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-        NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
-        
-        if  ([extension isEqualToString:@"JPG"] )
-        {
-            imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
-            [imageData writeToFile:fileFin atomically:NO];
-        }
-        
-        if  ([extension isEqualToString:@"PNG"] )        {
-            imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
-            [imageData writeToFile:fileFin atomically:NO];
-        }
-        
-        if  ([extension isEqualToString:@"BMP"] )
-        {
-            imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
-            [imageData writeToFile:fileFin atomically:NO];
-        }
-        
-        if ([extension isEqualToString:@"GIF"] )
-        {
-            imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
-            [imageData writeToFile:fileFin atomically:NO];
-        }
-        
-        if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
-         {
-            imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
-            [imageData writeToFile:fileFin atomically:NO];
-        }
-        
-    }
-    
-}
 
 
 HB_FUNC( SAVETEXTINIMAGE ) // fileini,filefin,ctexto, fuente, ntop, nleft
@@ -508,3 +451,63 @@ HB_FUNC( IMAGETODESKTOPWALLPAPER )
       }
    #endif	
 }
+
+HB_FUNC( SAVEIMAGEFROMIMAGE )
+{
+    NSString * fileIni = hb_NSSTRING_par( 1 );
+    NSString * fileFin = hb_NSSTRING_par( 2 );
+    
+    NSString *extension =  [ [fileFin substringFromIndex:[fileFin length] - 3] uppercaseString ];
+    NSImage *sourceImage =  [[NSImage alloc]initWithContentsOfFile: fileIni ];
+    
+    NSSize newSize;
+    newSize.width = hb_parnl( 3 );
+    newSize.height = hb_parnl( 4 );
+    
+    if (![sourceImage isValid]){
+        NSLog(@"Invalid Image");
+    } else {
+        
+        NSImage *smallImage = [[NSImage alloc] initWithSize: newSize];
+        [smallImage lockFocus];
+        [sourceImage setSize: newSize];
+        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
+        [smallImage unlockFocus];
+        
+        NSData *imageData = [smallImage TIFFRepresentation];
+        NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+        NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+        
+        if  ([extension isEqualToString:@"JPG"] )
+        {
+            imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if  ([extension isEqualToString:@"PNG"] )        {
+            imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if  ([extension isEqualToString:@"BMP"] )
+        {
+            imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if ([extension isEqualToString:@"GIF"] )
+        {
+            imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+        
+        if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
+         {
+            imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
+
+            [imageData writeToFile:fileFin atomically:NO];
+        }
+    }  
+}
+

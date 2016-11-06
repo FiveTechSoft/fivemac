@@ -67,11 +67,15 @@ HB_FUNC( MSGINFO )
    
    ValToChar( hb_param( 1, HB_IT_ANY ) );
    msg = hb_NSSTRING_par( -1 );
-
-   if( hb_pcount() > 1 )
+   if( [ msg length ] == 0 )
+      msg = @" " ;
+   
+if( hb_pcount() > 1 )
    {	   
       ValToChar( hb_param( 2, HB_IT_ANY ) );
       title = hb_NSSTRING_par( -1 );
+      if( [ title length ] == 0 )
+         title = @"Attention" ;
    }
    else
       title = @"Attention";
@@ -79,7 +83,7 @@ HB_FUNC( MSGINFO )
     NSAlert * alert = [ [ NSAlert alloc ] init ];
     
     alert.alertStyle = NSInformationalAlertStyle ;
-    alert.informativeText =  msg ;
+    alert.informativeText = msg ;
     alert.messageText = title  ;
     
     [ alert addButtonWithTitle:@"OK"];
@@ -137,26 +141,31 @@ HB_FUNC( MSGALERTSHEET )
 
 HB_FUNC( MSGYESNO ) // cMsg --> lYesNo
 {
+   NSString * texto;
+   NSAlert * alert = [ [ NSAlert alloc ] init ];
     
    CocoaInit();
+
    ValToChar( hb_param( 2, HB_IT_ANY ) );
-   NSString * texto= hb_NSSTRING_par( -1 ) ;
+   texto = hb_NSSTRING_par( -1 ) ;
+   if( [ texto isEqualToString : @"" ] )
+      texto = @"Please select" ;
     
-   if( ! [ texto isEqualToString : @"" ] )
-         texto = @"Please select" ;
-    
+   alert.messageText = texto;
+   
    ValToChar( hb_param( 1, HB_IT_ANY ) );
+   texto = hb_NSSTRING_par( -1 ) ;
+   if( [ texto isEqualToString : @"" ] )
+      texto = @"make a choice" ;
     
-    NSAlert * alert = [ [ NSAlert alloc ] init ];
-    alert.messageText = texto;
-    alert.informativeText = hb_NSSTRING_par( -1 ) ;
+   alert.informativeText = texto;
+
+   [alert addButtonWithTitle : @"YES" ] ;
+   [alert addButtonWithTitle : @"NO" ] ;
     
-    [alert addButtonWithTitle : @"YES" ] ;
-    [alert addButtonWithTitle : @"NO" ] ;
-    
-    hb_retl( [alert runModal] == NSAlertFirstButtonReturn  ) ;
+   hb_retl( [alert runModal] == NSAlertFirstButtonReturn );
         
-    [alert release];
+   [alert release];
 
 }
 

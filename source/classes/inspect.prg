@@ -48,7 +48,7 @@ METHOD New() CLASS TInspector
 
    local nControl, oThis := Self
 
-   Super:New()
+   ::Super:New()
 
    ::cText = "Inspector"
    ::SetPos( ScreenHeight() - 600, 32 )

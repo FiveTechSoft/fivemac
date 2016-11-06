@@ -41,8 +41,7 @@ CLASS TImage FROM TControl
 
    METHOD GetHeight() INLINE ImgGetHeight( ::hWnd )
 
-
-ENDCLASS
+ENDCLASS   
 
 //----------------------------------------------------------------------------//
 

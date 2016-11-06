@@ -19,17 +19,17 @@ function Main()
       DEFINE BUTTON OF oBar PROMPT "New" ;
          ACTION MsgInfo( "New" ) ;
          TOOLTIP "Creates a new customer" ;
-	       IMAGE "./../bitmaps/new.png"
+	       IMAGE ImgPath() + "new.png"
 	
 	   DEFINE BUTTON OF oBar PROMPT "Open" ;
 	       ACTION MsgInfo( "Open" ) ;
          TOOLTIP "Open a file" ;
-	       IMAGE "./../bitmaps/folder.png"
+	       IMAGE ImgPath() + "folder.png"
 
       DEFINE BUTTON OF oBar PROMPT "Exit" ;
          ACTION oWnd:End() ;
          TOOLTIP "Exit from the application" ;
-         IMAGE "./../bitmaps/exit.png"
+         IMAGE ImgPath() + "exit.png"
 	
 	   DEFINE MSGBAR OF oWnd
 

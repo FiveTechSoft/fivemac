@@ -1,3 +1,9 @@
+September 2016
+==============
+
+* Fix: GETs with special chars were not shown properly. We change
+  the function GETSETTEXT() to use NSUTF8StringEncoding
+
 * Enhancement: Class TGroup can be used as a container for controls:
   @ ..., ... OF oGroup. Please review samples/TestGrp.prg
 

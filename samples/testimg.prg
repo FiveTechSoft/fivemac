@@ -2,8 +2,12 @@
 
 function Main()
 
+<<<<<<< HEAD
    local oWnd, oImg, ocbx, cType
    local i:= 0
+=======
+   local oWnd, oImg
+>>>>>>> 1814318a707b41d01432e5e8b7fd4c9d33efe9ea
 
    local cfile  //:= cGetfile("escoge la imagen ")
    local cNewFile
@@ -12,6 +16,7 @@ function Main()
       FROM 444, 89 TO 689, 500
    
    oWnd:center()
+<<<<<<< HEAD
 
  //  @ 100, 139 IMAGE oImg OF oWnd SIZE 107, 91 FILENAME cFile
 
@@ -26,6 +31,18 @@ SIZE 110, 25 ITEMS { "PNG", "JPG", "TIF", "BMP", "GIF" }
 @ 22, 150 BUTTON "Save" OF oWnd ACTION SaveImage(cType )
 
 @ 22, 250 BUTTON "Exit" OF oWnd ACTION oWnd:End()
+=======
+   
+   @ 100, 139 IMAGE oImg OF oWnd SIZE 107, 91 FILENAME ImgPath() + "fivetech.gif"
+
+   oImg:bLButtonDown = { || MsgInfo( oImg:GetHeight() ) }
+
+   @ 69, 95 SAY "(c) FiveTech Software 2007-2016" OF oWnd SIZE 210, 14
+   
+   @ 22, 150 BUTTON "Ok" OF oWnd ACTION oWnd:End()
+   
+    @ 22, 250 BUTTON "Frame" OF oWnd ACTION ( MsgInfo( oImg:GetWidth() ), oImg:setFrame( ) )
+>>>>>>> 1814318a707b41d01432e5e8b7fd4c9d33efe9ea
    
    ACTIVATE WINDOW oWnd
    

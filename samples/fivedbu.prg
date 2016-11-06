@@ -1,5 +1,5 @@
 #include "FiveMac.ch"
-#include "hbcompat.ch"
+#include "../../harbour/contrib/xhb/hbcompat.ch"
 
 #define GENBLOCK(x)  &( "{ || " + x + " }" )
 
@@ -12,11 +12,6 @@ static oWnd, oMruFiles, cPrefFile
 
 function Main()
 
-  FWSetLanguage( 2 )
-
-
-
-
    cPrefFile = Path() + "/fivedbu.plist"
 
    BuildMenu()
@@ -24,15 +19,13 @@ function Main()
    DEFINE WINDOW oWnd TITLE "FiveDBU for FiveMac" ;
     FROM  0,0  TO 0 , ScreenWidth()
 
-
-
    BuildBar()
    
-oWnd:setPos( ScreenHeight(),0)
+   oWnd:setPos( ScreenHeight(), 0 )
 
    ACTIVATE WINDOW oWnd ;
-      ON INIT ( LoadUsedFileNames() ,FWSetLanguage( LoadLanguageUsed() ) ) ;
-      VALID ( SaveUsedFileNames(), MsgYesNo( FWString("Want to end ?") ,"Select an option" ) )
+      ON INIT ( LoadUsedFileNames(), FWSetLanguage( LoadLanguageUsed() ) ) ;
+      VALID ( SaveUsedFileNames(), MsgYesNo( FWString("Want to end ?"), FWString( "Select an option" ) ) )
   
 return nil
 

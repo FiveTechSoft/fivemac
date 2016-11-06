@@ -98,26 +98,25 @@ HB_FUNC( TXTSETTEXT )
 
 HB_FUNC( TXTSETATTRIBUTEDSTRING )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    NSAttributedString * string = hb_NSASTRING_par( 2 ) ;
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+   NSAttributedString * string = hb_NSASTRING_par( 2 ) ;
     
-    [ [ memo textStorage ] setAttributedString : string ];
-}
+   [ [ memo textStorage ] setAttributedString : string ];
+}  
 
 HB_FUNC( TXTGETRTF )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    NSData * rtfData = [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string ] length ] ) ];
-    
-    hb_retc( [ [ [ NSString alloc ] initWithData: rtfData encoding: NSUTF8StringEncoding ] cStringUsingEncoding: NSUTF8StringEncoding ] );
-}
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+   NSData * rtfData = [ memo RTFFromRange:NSMakeRange( 0, [ [ memo string ] length ] ) ]; 
 
+   hb_retc( [ [ [ NSString alloc ] initWithData: rtfData encoding: NSUTF8StringEncoding ] cStringUsingEncoding: NSUTF8StringEncoding ] );
+}
 
 HB_FUNC( TXTGETTEXT )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
    
-   hb_retc( [ [ memo string ] cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+   hb_retc( [ [ memo string ] cStringUsingEncoding : NSUTF8StringEncoding ] );
 }  
 
 HB_FUNC( TXTADDLINE ) // hWnd, cTxtLine
@@ -158,18 +157,18 @@ HB_FUNC( TXTSETINCREMENTALSEARCH ) // hWnd, cTxtLine
 HB_FUNC( TXTGOBOTTOM )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
-   NSRange range = NSMakeRange ( [ [ memo string ] length ], 0 );
+   NSRange range = NSMakeRange( [ [ memo string ] length ], 0 );
 
    [ memo scrollRangeToVisible : range ];
 }    
 
 HB_FUNC( TXTGOTOP )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    NSRange range = NSMakeRange( 0, 0 );
-    
-    [ memo scrollRangeToVisible : range ];
-}
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+   NSRange range = NSMakeRange( 0, 0 );
+
+   [ memo scrollRangeToVisible : range ];
+}    
 
 HB_FUNC( TXTROW )
 {
@@ -268,15 +267,17 @@ HB_FUNC( TXTADDRULERHORI )
 
 HB_FUNC( TXTSETRICHTEXT )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    [memo setRichText: hb_parl(2) ] ;
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+
+   [ memo setRichText: hb_parl( 2 ) ];
 }      
 
 HB_FUNC( TXTSETIMPORTGRAF )
 {
-    TextView * memo = ( TextView * ) hb_parnl( 1 );
-    [memo setImportsGraphics: hb_parl(2) ] ;
-  }  
+   TextView * memo = ( TextView * ) hb_parnl( 1 );
+
+   [ memo setImportsGraphics: hb_parl( 2 ) ];
+}  
 
 HB_FUNC( TXTSElECTDEL )
 {
