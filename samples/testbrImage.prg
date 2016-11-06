@@ -33,7 +33,7 @@ function Main()
 
    local oWnd, oSay
    local oBrImage
-   local path := "./../bitmaps"
+   local path := ImgPath()
    local oSlide
    local npos, obtn2,obtn1,obtn3
    local oget,cText:=""
@@ -57,9 +57,9 @@ function Main()
     
       @ 7, 10  BUTTON oBtn2 PROMPT "+" OF oWnd  ; 
          ACTION oBrImage:openPanel() SIZE 45, 26 STYLE 2
-         
-              
-      @ -5, 760  BUTTON oBtn3 OF oWnd FILENAME path+"/PlayOff.tif" ; 
+
+
+      @ -5, 760  BUTTON oBtn3 OF oWnd FILENAME path+"/PlayOff.tif" ;
          ACTION oBrImage:RunSlide() SIZE 45, 45 STYLE 7
          
             
