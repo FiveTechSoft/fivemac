@@ -106,6 +106,7 @@ C_OBJS = ./objc/browses.o	\
   ./objc/funcs.o \
 	./objc/gets.o \
 	./objc/groups.o \
+    ./objc/IKImabr.o \
 	./objc/images.o	\
 	./objc/ImageAndTextCell.o	\
   ./objc/ituness.o	\

@@ -9,7 +9,7 @@ static NSArray *openFiles()
     [panel setCanChooseDirectories:YES];
     [panel setCanChooseFiles:YES];
 	int i = [panel runModal ];
-	if(i == NSOKButton){
+	if(i == NSModalResponseOK){
        return [panel URLs];
     }
     return nil;
@@ -280,7 +280,8 @@ static NSArray *openFiles()
 - (BOOL) keyword:(NSString *) aKeyword matchSearch:(NSString *) search
 {
     NSRange r = [aKeyword rangeOfString:search options:NSCaseInsensitiveSearch];
-    return (r.length>0 && r.location>=0);
+     return (r.length>0 );
+  //  return (r.length>0 && r.location >= 0);
 }
 
 
@@ -446,7 +447,7 @@ HB_FUNC( IKIMGBROPENPANEL )
 	
 HB_FUNC( IKIMGBROPENDIR )
 {
-	NSString * path = hb_NSSTRING_par( 2 )
+    NSString * path = hb_NSSTRING_par( 2 ) ;
 	ImageBrowserView * vista = ( ImageBrowserView *) hb_parnl( 1 );
 	
 	[vista addImagesFromDirectory:path ];
@@ -455,7 +456,7 @@ HB_FUNC( IKIMGBROPENDIR )
 
 HB_FUNC( IKIMGBROPENFILE )
 {
-	NSString * path = hb_NSSTRING_par( 2 )
+    NSString * path = hb_NSSTRING_par( 2 ) ;
 	ImageBrowserView * vista = ( ImageBrowserView *) hb_parnl( 1 );
 	
     [vista addImageWithPath:path ];
@@ -481,7 +482,7 @@ HB_FUNC( IKIMGBROSTYLE )
 
 HB_FUNC( IKIMGBROFILTRO )
 {
-    NSString * filtro = hb_NSSTRING_par( 2 )
+    NSString * filtro = hb_NSSTRING_par( 2 ) ;
 	ImageBrowserView * vista = ( ImageBrowserView *) hb_parnl( 1 );
 	
 	[vista searchFiltro: filtro];
