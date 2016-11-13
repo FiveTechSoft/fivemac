@@ -116,9 +116,9 @@ HB_FUNC( NSSTRINGCANCONVERENCODE )
  hb_retl( [ string canBeConvertedToEncoding:hb_parnl( 2 ) ] ) ;
 }
 
+
 HB_FUNC( GETSERIALNUMBER )
 {
-
     NSString *serial = nil;
     io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
                                                               IOServiceMatching("IOPlatformExpertDevice"));
