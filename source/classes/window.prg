@@ -177,7 +177,9 @@ CLASS TWindow
    METHOD SetTitle( cTitle ) INLINE WndSetText( ::hWnd, cTitle )  
    
    METHOD SetRounded() INLINE ::lRounded := .T., WndSetRounded( ::hWnd )
-   
+
+   METHOD SetShadow( lShadow ) INLINE WndSetShadow( ::hWnd, lShadow )
+
    METHOD cGenPrg()
    
 ENDCLASS

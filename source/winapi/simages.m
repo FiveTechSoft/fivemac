@@ -38,11 +38,12 @@
 }
 
 
+
 - (void)pictureTakerDidEnd:(IKPictureTaker *)pictureTaker returnCode:(NSInteger)returnCode contextInfo:(void  *)contextInfo
 {
     static int snapCount = 0;
     
-    if(returnCode == NSOKButton){
+    if( returnCode == NSModalResponseOK ){
         NSImage *image = [pictureTaker outputImage];
         
         NSString *outputPath = [NSString stringWithFormat:@"/tmp/snap%d.tiff", ++snapCount];

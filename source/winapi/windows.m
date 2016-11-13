@@ -692,11 +692,7 @@ HB_FUNC( WNDSETSHADOW )
 {
     NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
     window.hasShadow = hb_parl( 2 ) ;
- //  [ window setHasShadow : hb_parl( 2 ) ];
-    
 }
-
-
 
 HB_FUNC( WNDDESTROY )                             
 {

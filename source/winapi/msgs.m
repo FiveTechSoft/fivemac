@@ -33,7 +33,6 @@ void CocoaExit( void )
    }   	
 }	
 
-
 void MsgAlert( NSString * detailedInformation , NSString * messageText )
 {
     NSAlert *alert = [[NSAlert alloc] init];

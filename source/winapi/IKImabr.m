@@ -453,15 +453,13 @@ HB_FUNC( IKIMGBROPENDIR )
 	[vista addImagesFromDirectory:path ];
 }
 
-
 HB_FUNC( IKIMGBROPENFILE )
 {
     NSString * path = hb_NSSTRING_par( 2 ) ;
 	ImageBrowserView * vista = ( ImageBrowserView *) hb_parnl( 1 );
 	
     [vista addImageWithPath:path ];
-	[vista reloadData]; 
-    	
+	[vista reloadData];
 }
 
 

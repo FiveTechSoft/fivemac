@@ -147,7 +147,7 @@ static NSArray *openFiles()
     [panel setCanChooseDirectories:YES];
     [panel setCanChooseFiles:YES];
 	int i = [panel runModal ];
-	if(i == NSOKButton){
+	if(i == NSModalResponseOK){
        return [panel URLs];
     }
     
@@ -389,7 +389,6 @@ static NSArray *openFiles()
 
 
 @end
-
 
 
 
