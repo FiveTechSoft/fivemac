@@ -21,7 +21,7 @@ function Main()
  DEFINE WINDOW oWnd TITLE "Testing coordinates" ;
       FROM 50, 50 TO 200, 400
 
- @ 30, 40 BUTTON "Dialog" OF oWnd ACTION oWnd:Iconize()
+ @ 30, 40 BUTTON "Dialog" OF oWnd ACTION msginfo( GETSERIALNUMBER() )  //oWnd:Iconize()
 
 
   @ 80, 20 BUTTON obtn1 PROMPT "Disclusure" OF oWnd ACTION MsgInfo ("no");

@@ -97,6 +97,7 @@ C_OBJS = ./objc/browses.o	\
   ./objc/colorton.o	\
 	./objc/comboboxes.o \
 	./objc/constants.o \
+    ./objc/coverflows.o \
 	./objc/cursors.o \
 	./objc/datepickers.o \
 	./objc/dialogs.o	\
