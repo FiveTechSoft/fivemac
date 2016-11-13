@@ -1,6 +1,7 @@
 #include <fivemac.h>
 #import <Foundation/Foundation.h>
 #import <Quartz/Quartz.h>
+#include <IOKit/IOKitLib.h>
 
 #define CGAutorelease(x) (__typeof(x))[NSMakeCollectable(x) autorelease]
 #define DURATION_ANIMATION 3.0
