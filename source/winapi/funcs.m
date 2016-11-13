@@ -115,6 +115,25 @@ HB_FUNC( NSSTRINGCANCONVERENCODE )
  hb_retl( [ string canBeConvertedToEncoding:hb_parnl( 2 ) ] ) ;
 }
 
+HB_FUNC( GETSERIALNUMBER )
+{
+    NSString *serial = nil;
+    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+                                                              IOServiceMatching("IOPlatformExpertDevice"));
+    if (platformExpert) {
+        CFTypeRef serialNumberAsCFString =
+        IORegistryEntryCreateCFProperty(platformExpert,
+                                        CFSTR(kIOPlatformSerialNumberKey),
+                                        kCFAllocatorDefault, 0);
+        if (serialNumberAsCFString) {
+            serial = CFBridgingRelease(serialNumberAsCFString);
+        }
+        
+        IOObjectRelease(platformExpert);
+    }
+  hb_retc( [ serial cStringUsingEncoding : NSUTF8StringEncoding ]  );
+}
+
 HB_FUNC( NSLOG )
 {
   NSLog( @"%@", hb_NSSTRING_par( 1 ) );
