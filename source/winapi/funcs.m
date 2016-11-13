@@ -1,6 +1,7 @@
 #include <fivemac.h>
 #import <Foundation/Foundation.h>
 #import <Quartz/Quartz.h>
+#include <IOKit/IOKitLib.h>
 
 #define CGAutorelease(x) (__typeof(x))[NSMakeCollectable(x) autorelease]
 #define DURATION_ANIMATION 3.0
@@ -114,6 +115,27 @@ HB_FUNC( NSSTRINGCANCONVERENCODE )
  NSString * string = ( NSString * ) hb_parnl( 1 );
  hb_retl( [ string canBeConvertedToEncoding:hb_parnl( 2 ) ] ) ;
 }
+
+HB_FUNC( GETSERIALNUMBER )
+{
+
+    NSString *serial = nil;
+    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+                                                              IOServiceMatching("IOPlatformExpertDevice"));
+    if (platformExpert) {
+        CFTypeRef serialNumberAsCFString =
+        IORegistryEntryCreateCFProperty(platformExpert,
+                                        CFSTR(kIOPlatformSerialNumberKey),
+                                        kCFAllocatorDefault, 0);
+        if (serialNumberAsCFString) {
+            serial = CFBridgingRelease(serialNumberAsCFString);
+        }
+        
+        IOObjectRelease(platformExpert);
+    }
+  hb_retc( [ serial cStringUsingEncoding : NSUTF8StringEncoding ]  );
+}
+
 
 HB_FUNC( NSLOG )
 {
