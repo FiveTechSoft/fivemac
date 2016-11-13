@@ -1,3 +1,8 @@
+November 2016
+=============
+
+* New: function GetMacAdress() --> cMacAddress
+
 September 2016
 ==============
 
