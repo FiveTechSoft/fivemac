@@ -497,4 +497,38 @@ HB_FUNC( DELIVERNOTIFICATION )
 
 }
 
+HB_FUNC( GETMACADDRESS )
+{
+   NSPipe *outPipe = [NSPipe pipe];
+   NSTask* theTask = [[NSTask alloc] init];
+   NSString *string;
+   NSString *s;
+   //Built-in ethernet
+   [theTask setStandardOutput:outPipe];
+   [theTask setStandardError:outPipe];
+   [theTask setLaunchPath:@"/sbin/ifconfig"];
+   [theTask setCurrentDirectoryPath:@"~/"];
+   [theTask setArguments:[NSArray arrayWithObjects:@"en0", nil]];
+   [theTask launch];
+   [theTask waitUntilExit];
+
+   string = [[NSString alloc] initWithData:[[outPipe fileHandleForReading] readDataToEndOfFile] encoding:NSUTF8StringEncoding];
+
+   if (![string isEqualToString:@"ifconfig: interface en0 does not exist"]) 
+   {
+      s = string;
+      NSRange f;
+      f = [s rangeOfString:@"ether "];
+      if( f.location != NSNotFound) 
+      {
+        s = [s substringFromIndex:f.location + f.length];
+        
+        string = [s substringWithRange:NSMakeRange(0, 17)];
+      }
+   }
+
+   hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] ); 
+}
+
+
 
