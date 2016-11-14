@@ -18,7 +18,8 @@ echo compiling C module...
 if [ -d /Applications/Xcode.app ]; then
    SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
    HEADERS=$SDKPATH/usr/include
-   gcc $1.c -c -I./../include -I./../../harbour/include -I$HEADERS
+   gcc $1.c -c -I./../include -I./../../harbour/include 
+   # -I$HEADERS
 else
    gcc $1.c -c -I./../include -I./../../harbour/include
 fi   
@@ -67,7 +68,7 @@ FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quart
 # -framework Scintilla
 gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla
 
-rm $1.c
+#rm $1.c
 rm $1.o
 
 echo done!
