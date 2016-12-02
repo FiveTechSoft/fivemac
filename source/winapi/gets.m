@@ -14,6 +14,7 @@ static PHB_SYMB symFMH = NULL;
 - ( void ) controlTextDidEndEditing:(NSNotification *) aNotification;
 - (BOOL)   acceptsFirstResponder;
 - ( void ) keyUp : ( NSEvent * ) theEvent;
+- (BOOL) performKeyEquivalent: (NSEvent*) theEvent ;
 @end
 
 @implementation Get
@@ -66,10 +67,52 @@ static PHB_SYMB symFMH = NULL;
    // NSLog( @"The contents of the text field changed" );
 }
 
+
+- (BOOL) performKeyEquivalent: (NSEvent*) theEvent
+{
+    BOOL handled = NO;
+    if( ([theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask)
+       == NSEventModifierFlagCommand ) {
+        NSString* keyChars = [theEvent charactersIgnoringModifiers];
+        
+        NSRange range = [[ self currentEditor ] selectedRange];
+        bool hasSelection = (range.length > 0);
+        
+        handled = YES;
+        
+        NSResponder * responder = [[self window] firstResponder];
+       
+        
+        if ((responder != nil) && [responder isKindOfClass:[NSTextView class]])
+        {
+        
+         NSTextView * textView = (NSTextView *)responder;
+            
+        if( [keyChars isEqual: @"a"])
+               [ textView  selectAll:  self  ];
+        else if( hasSelection && [keyChars isEqual: @"x"])
+            [ textView   cut: self ];
+        else if( hasSelection && [keyChars isEqual: @"c"])
+             [ textView copy: self ];
+        else if( [keyChars isEqual: @"v"])
+             [ textView  paste: self ];
+        else if( [keyChars isEqual: @"z"])
+             [[textView undoManager] undo];
+        else if( [keyChars isEqual: @"y"])
+            [[textView undoManager] redo];
+            
+            
+        else
+            handled = NO;
+    }
+    }
+    return handled || [super performKeyEquivalent: theEvent];
+}
+
 - ( void ) keyUp : ( NSEvent * ) theEvent
 {
    //  NSLog(@"Pressed key in NStextField!");
-   // unsigned int flags = [ theEvent modifierFlags ];
+ // unsigned int flags = [ theEvent modifierFlags ];
     
    NSString * key = [ theEvent characters ];
    int unichar = [ key characterAtIndex: 0 ];
