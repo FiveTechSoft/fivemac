@@ -215,15 +215,15 @@ static NSWindow * wndMain = NULL;
 
 - ( void ) keyDown : ( NSEvent * ) theEvent
 {
-   // unsigned int flags = [ theEvent modifierFlags ]; 
+  // unsigned int flags = [ theEvent modifierFlags ];
    NSString * key = [ theEvent characters ]; 
    int unichar = [ key characterAtIndex: 0 ];
-   
+    
    // if ( flags & NSAlternateKeyMask) 
    //    NSLog(@"Option key on");   
     
-   // NSRunAlertPanel( @"Attention", @"key pressed", @"Ok", NULL, NULL, NULL );
-
+   //        NSRunAlertPanel( @"Attention", @"key pressed", @"Ok", NULL, NULL, NULL );
+    
    if( symFMH == NULL )
       symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
     
@@ -237,11 +237,11 @@ static NSWindow * wndMain = NULL;
    
    if( hb_parnl( -1 ) != 1 )
       [ super keyDown: theEvent ];
-}	
-
+}
+    
 - ( void ) flagsChanged : ( NSEvent * ) theEvent
 {
-   /*
+  /*
    unsigned flags = [ theEvent modifierFlags ];
 
    if( [ theEvent keyCode ] == 0x39 ) // 57 = key code for caps lock
