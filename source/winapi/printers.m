@@ -193,6 +193,12 @@ HB_FUNC( PRNINFOPAGSETTOPMARGIN) // in points
  [ pi setTopMargin : hb_parnl( 2 ) ] ;
 }
 
+HB_FUNC( PRNINFOPAGSETBOTTOMMARGIN) // in points
+{
+ NSPrintInfo * pi = ( NSPrintInfo *   ) hb_parnl( 1 );
+ [ pi setBottomMargin : hb_parnl( 2 ) ] ;
+}
+
 HB_FUNC( PRNINFOPAGSETORIENTATION) 
 {
  NSPrintInfo * pi = ( NSPrintInfo *   ) hb_parnl( 1 );
