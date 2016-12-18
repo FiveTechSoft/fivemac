@@ -150,6 +150,21 @@ HB_FUNC( TXTISENABLED ) // hGet --> cText
 	hb_retl( ( BOOL ) [ get isEnabled ] );
 }
 
+HB_FUNC( TXTGETWIDTH )
+{
+   NSString * text = hb_NSSTRING_par( 1 );
+   NSString * name = hb_NSSTRING_par( 2 );
+   NSFont * font = [ NSFont fontWithName: name size:  hb_parnl( 3 ) ];
+   CGSize frameSize = CGSizeMake( 300, 50 );
+
+   CGRect idealFrame = [ text boundingRectWithSize: frameSize
+                         options: NSStringDrawingUsesLineFragmentOrigin
+                         attributes: @{ NSFontAttributeName: font }
+                         context: nil ];
+
+   hb_retnl( idealFrame.size.width );
+}
+
 HB_FUNC( SAYHIPERLINKCREATE )
 {
     NSTextField * say = [ [ NSTextField alloc ]
