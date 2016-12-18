@@ -1,3 +1,9 @@
+December 2016
+=============
+
+* New: function TxtGetWidth( xText, cFontName, nFontSize ) --> nWidth
+
+
 November 2016
 =============
 
