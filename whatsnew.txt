@@ -3,6 +3,8 @@ December 2016
 
 * New: function TxtGetWidth( xText, cFontName, nFontSize ) --> nWidth
 
+* New: Class TXBrowse Method nColPos() --> nCol
+
 
 November 2016
 =============
