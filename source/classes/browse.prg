@@ -53,6 +53,8 @@ CLASS TWBrowse FROM TControl
 
    METHOD nRowPos() INLINE BrwRowPos( ::hWnd )
 
+   METHOD nColPos() INLINE BrwColPos( ::hWnd )
+
    METHOD SetColBmp( nColumn ) INLINE BrwSetColBmp( ::hWnd, nColumn ) // Sets a column to display images
 
    METHOD SetColBmpTxt( nColumn ) INLINE BrwSetColBmpTxt( ::hWnd, nColumn ) // Sets a column to display image and text

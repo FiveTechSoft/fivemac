@@ -8,13 +8,16 @@ static PHB_SYMB symFMH = NULL;
    @interface Wbrowse : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
 #endif
 {
+   @public int nRow;
+   @public int nCol;
 }
 - ( void ) tableViewSelectionDidChange: ( NSNotification * ) aNotification;	
 - ( void ) tableView: ( Wbrowse * ) tableView mouseDownInHeaderOfTableColumn: 
 	                    ( NSTableColumn * ) aTableColumn;
 - ( void ) keyDown : ( NSEvent *  ) theEvent;
 - ( void ) drawRow: ( NSInteger ) row clipRect: ( NSRect ) clipRect;
-- (void)tableView:(Wbrowse *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex ;
+- (void) tableView:(Wbrowse *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex ;
+- (void) mouseDown: ( NSEvent * ) theEvent;
 @end
 
 @implementation Wbrowse
@@ -67,6 +70,16 @@ static PHB_SYMB symFMH = NULL;
    if( hb_parnl( -1 ) != 1 )
       [ super keyDown: theEvent ];
 }	
+
+- ( void ) mouseDown: ( NSEvent * ) theEvent 
+{
+   NSPoint localLocation = [ self convertPoint: [ theEvent locationInWindow ] fromView: nil ];
+   
+   self->nRow = [ self rowAtPoint: localLocation ];
+   self->nCol = [ self columnAtPoint: localLocation ] + 1;
+   
+   [ super mouseDown: theEvent ];
+}
 
 - ( void ) drawRow: ( NSInteger ) row clipRect: ( NSRect ) clipRect
 {
@@ -274,6 +287,9 @@ HB_FUNC( BRWCREATE )
    
    [ browse setDoubleAction : @selector( BrwDblClick: ) ];
         
+   browse->nRow = 0;
+   browse->nCol = 0;
+
    hb_retnl( ( HB_LONG ) browse );
 }  
 
@@ -287,25 +303,28 @@ HB_FUNC( BRWSETSIZE )
 
 HB_FUNC( BRWRESCREATE )
 {
-    NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
-    Wbrowse * browse =  (Wbrowse *) [  GetView( window ) viewWithTag: hb_parnl( 2 ) ];
-    NSTableColumn * column;
-    int i;
+   NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
+   Wbrowse * browse =  (Wbrowse *) [  GetView( window ) viewWithTag: hb_parnl( 2 ) ];
+   NSTableColumn * column;
+   int i;
      
-    DataSource * data = [ [ DataSource alloc ] init ];
+   DataSource * data = [ [ DataSource alloc ] init ];
     
-    [ browse setDelegate: browse ];
-    [ browse setDataSource: data ];
-    [ browse setDoubleAction: @selector( BrwDblClick: ) ];      
+   [ browse setDelegate: browse ];
+   [ browse setDataSource: data ];
+   [ browse setDoubleAction: @selector( BrwDblClick: ) ];      
 
-   	for( i = 0; i < [ browse numberOfColumns ]; i++ )   
-    {
-       column = [ [ browse tableColumns ] objectAtIndex : i ]; 
+   browse->nRow = 0;
+   browse->nCol = 0;
+
+   for( i = 0; i < [ browse numberOfColumns ]; i++ )   
+   {
+      column = [ [ browse tableColumns ] objectAtIndex : i ]; 
       // column->id = i ;  
-       [ column setIdentifier: [ NSString stringWithFormat: @"%i", i ] ]; 
-    }
+      [ column setIdentifier: [ NSString stringWithFormat: @"%i", i ] ]; 
+   }
     
-    hb_retnl( ( HB_LONG ) browse );   
+   hb_retnl( ( HB_LONG ) browse );   
 }
 
 
@@ -592,6 +611,12 @@ HB_FUNC( BRWSETROWPOS )
 	 [ browse scrollRowToVisible : iRows + 1 ]; 	
 }   
 
+HB_FUNC( BRWCOLPOS )
+{
+   Wbrowse * browse = ( Wbrowse * ) hb_parnl( 1 );
+
+   hb_retnl( browse->nCol );
+}
 
 HB_FUNC( BRWSETCOLWIDTH ) // hTableView, nColumn, nWidth
 {
