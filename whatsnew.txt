@@ -5,6 +5,8 @@ December 2016
 
 * New: Class TXBrowse Method nColPos() --> nCol
 
+* Fix: Class TXBrowse Method nRowPos() now returns zero when there are
+  no rows
 
 November 2016
 =============

@@ -597,7 +597,7 @@ HB_FUNC( BRWROWPOS )
 {
    Wbrowse * browse = ( Wbrowse * ) hb_parnl( 1 );
 
-   hb_retnl( [ browse selectedRow ] == -1 ? 1: [ browse selectedRow ] + 1 );
+   hb_retnl( [ browse selectedRow ] == -1 ? 0: [ browse selectedRow ] + 1 );
 }   
 
 HB_FUNC( BRWSETROWPOS )
