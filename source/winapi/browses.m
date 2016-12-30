@@ -79,6 +79,18 @@ static PHB_SYMB symFMH = NULL;
    self->nCol = [ self columnAtPoint: localLocation ] + 1;
    
    [ super mouseDown: theEvent ];
+
+   if( symFMH == NULL )
+      symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+    
+   hb_vmPushSymbol( symFMH );
+   hb_vmPushNil();
+   hb_vmPushLong( ( HB_LONG ) [ self window ]  );
+   hb_vmPushLong( WM_MOUSEDOWN );
+   hb_vmPushLong( ( HB_LONG ) self );
+   hb_vmPushLong( self->nRow );
+   hb_vmPushLong( self->nCol );
+   hb_vmDo( 5 );
 }
 
 - ( void ) drawRow: ( NSInteger ) row clipRect: ( NSRect ) clipRect

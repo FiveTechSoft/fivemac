@@ -3,10 +3,13 @@ December 2016
 
 * New: function TxtGetWidth( xText, cFontName, nFontSize ) --> nWidth
 
-* New: Class TXBrowse Method nColPos() --> nCol
+* New: Class TWBrowse Method nColPos() --> nCol
 
-* Fix: Class TXBrowse Method nRowPos() now returns zero when there are
+* Fix: Class TWBrowse Method nRowPos() now returns zero when there are
   no rows
+
+* New: Class TWBrowse DATA bMouseDown. It receives nRow, nCol and Self
+
 
 November 2016
 =============

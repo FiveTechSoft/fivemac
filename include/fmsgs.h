@@ -41,5 +41,6 @@
 #define WM_WNDSETCURSOR   38
 #define WM_NOTIFY         39
 #define WM_BRWCLRTEXT     40
+#define WM_MOUSEDOWN      41
 
 #endif

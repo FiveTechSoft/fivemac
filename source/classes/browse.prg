@@ -17,6 +17,7 @@ CLASS TWBrowse FROM TControl
    DATA   lVScroll, lHScroll
    DATA   nArrayAt
    DATA   bClrText
+   DATA   bMouseDown
 
    CLASSDATA aProps INIT { "nTop", "nLeft", "nWidth", "nHeight", "cVarName",;
                              "nClrText", "nClrBack", "nAutoResize" }
@@ -352,6 +353,12 @@ METHOD HandleEvent( nMsg, hWnd, uParam1, uParam2 ) CLASS TWBrowse
             else
                MsgInfo( "oControl is nil" )
             endif
+            
+      case nMsg == WM_MOUSEDOWN
+           if ! Empty( oControl:bMouseDown )
+              Eval( oControl:bMouseDown, uParam1, uParam2, oControl )
+           endif   
+            
 
       otherwise
            return super:HandleEvent( nMsg, uParam1, uParam2 )
