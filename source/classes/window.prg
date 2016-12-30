@@ -547,6 +547,11 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
                 return ::KeyDown( uParam1 ) 
 		   endif
 
+        case nMsg == WM_MOUSEDOWN
+             if oControl != nil
+                oControl:MouseDown( uParam1, uParam2 )
+             endif 
+
         case nMsg == WM_WNDSETCURSOR
                  ::CursorChange()
         case nMsg == WM_MOUSEMOVED

@@ -32,6 +32,10 @@ function Main()
 
    oBrw:bClrText = { | pColumn, nRowIndex | ColorFromNRGB( If( nRowIndex % 2 == 0, CLR_RED, CLR_GREEN ) ) }
 
+   // oBrw:bAction = { | obj, nindex |  MsgInfo( oBrw:nColPos() ) }
+
+   oBrw:bMouseDown = { | nRow, nCol, oControl | MsgInfo( Str( nCol ) ) }
+
    ACTIVATE WINDOW oWnd
 
 return nil

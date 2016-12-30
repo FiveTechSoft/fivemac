@@ -42,6 +42,8 @@ CLASS TWBrowse FROM TControl
 
    METHOD GoUp() INLINE BrwGoUp( ::hWnd )
 
+   METHOD MouseDown( nRow, nCol ) INLINE If( ! Empty( ::bMouseDown ), Eval( ::bMouseDown, nRow, nCol ),)
+
    METHOD Rows() INLINE If( ::bLogicLen != nil, Eval( ::bLogicLen ), 0 )
 
    METHOD SetArray( aArray )
@@ -354,12 +356,6 @@ METHOD HandleEvent( nMsg, hWnd, uParam1, uParam2 ) CLASS TWBrowse
                MsgInfo( "oControl is nil" )
             endif
             
-      case nMsg == WM_MOUSEDOWN
-           if ! Empty( oControl:bMouseDown )
-              Eval( oControl:bMouseDown, uParam1, uParam2, oControl )
-           endif   
-            
-
       otherwise
            return super:HandleEvent( nMsg, uParam1, uParam2 )
    endcase
