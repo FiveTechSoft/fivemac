@@ -563,12 +563,12 @@ HB_FUNC( BRWSETCOLBMPTXT ) // hTableView, nColumn
  
        [image drawInRect:imageFrame
                     fromRect:NSZeroRect
-                   operation:NSCompositeSourceOver
+                   operation:NSCompositingOperationSourceOver
                     fraction:1.0
               respectFlipped:YES
                        hints:nil];
            
-         
+        
         
     }
     else
