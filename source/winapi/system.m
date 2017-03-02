@@ -54,6 +54,13 @@ HB_FUNC( FILENOPATH )
    hb_retc( [ file cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
 }
 
+HB_FUNC( LIBRARYPATH )
+{
+   NSString * Userpath = [ @"~/Library" stringByExpandingTildeInPath ];
+   
+   hb_retc( [ Userpath cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+}
+
 HB_FUNC( USERPATH )
 {
    NSString * Userpath = [ @"~" stringByExpandingTildeInPath ];
