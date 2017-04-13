@@ -122,18 +122,26 @@ HB_FUNC( CREATEDIR )
 
 HB_FUNC( MACEXEC )
 {
-   NSString * appName  = hb_NSSTRING_par( 1 );
-   NSString * fileName = hb_NSSTRING_par( 2 );
-   NSWorkspace * theProcess;
+   NSWorkspace * workspace;
 
    if( hb_pcount() > 1 )
-      hb_retl( [ [ NSWorkspace sharedWorkspace ] openFile: fileName withApplication: appName ] );
-   else   	
    {
-      theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
-      	 
-      hb_retl( [ theProcess launchApplication: appName ] );
-   }
+      workspace = [ [ [ NSWorkspace alloc ] init ] autorelease ];
+       
+      if( hb_pcount() == 1 )
+         hb_retl( [ workspace launchapplication: hb_NSSTRING( 1 ) ] );
+
+      if( hb_pcount() == 2 )
+      {
+         NSURL * url = [ NSURL fileURLWithPath: [ workspace fullPathForApplication: hb_NSSTRING( 1 ) ] ];
+         NSArray * arguments = [ NSArray arrayWithObjects: hb_NSSTRING( 2 ), nil ]; 
+         NSError * error = nil;
+         
+         hb_retl( [ workspace launchApplicationAtURL:url options:0 
+           configuration:[NSDictionary dictionaryWithObject:arguments forKey:NSWorkspaceLaunchConfigurationArguments]  
+           error:error ] );
+      }
+   } 
 }
 
 HB_FUNC( SCREENWIDTH )

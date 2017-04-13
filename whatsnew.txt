@@ -1,3 +1,9 @@
+April 2017
+==========
+
+* Enhancement: function MacExec( cAppName [, param] ) now allows one papameter
+
+
 March 2017
 ==========
 
