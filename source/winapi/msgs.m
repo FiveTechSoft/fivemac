@@ -39,7 +39,7 @@ void MsgAlert( NSString * detailedInformation , NSString * messageText )
     
     alert.messageText = messageText ;
     alert.informativeText = detailedInformation ;
-    alert.alertStyle = NSWarningAlertStyle ;
+    alert.alertStyle = NSAlertStyleWarning ;
     
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
@@ -81,7 +81,7 @@ if( hb_pcount() > 1 )
     
     NSAlert * alert = [ [ NSAlert alloc ] init ];
     
-    alert.alertStyle = NSInformationalAlertStyle ;
+    alert.alertStyle = NSAlertStyleInformational ;
     alert.informativeText = msg ;
     alert.messageText = title  ;
     
@@ -131,7 +131,7 @@ HB_FUNC( MSGWAIT )
     
     Alert * alert = [ [ Alert alloc ] init ];
     
-    alert.alertStyle = NSInformationalAlertStyle;
+    alert.alertStyle = NSAlertStyleInformational;
     alert.informativeText = msg;
     alert.messageText = title;
     
@@ -159,7 +159,7 @@ HB_FUNC( MSGSTOP )
    ValToChar( hb_param( 1, HB_IT_ANY ) );
    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
    dlg.messageText = @"Stop" ;
-   dlg.alertStyle = NSWarningAlertStyle ;
+   dlg.alertStyle = NSAlertStyleWarning ;
    
    [ dlg addButtonWithTitle:@"OK"];
    [ dlg runModal ];
@@ -176,7 +176,7 @@ HB_FUNC( MSGALERT )
    ValToChar( hb_param( 1, HB_IT_ANY ) );
    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
    dlg.messageText = @"Alert" ;
-   dlg.alertStyle = NSWarningAlertStyle ;
+   dlg.alertStyle = NSAlertStyleWarning ;
    
    [ dlg addButtonWithTitle: @"OK"];
    [ dlg runModal ];
