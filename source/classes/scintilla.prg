@@ -356,25 +356,26 @@ return lSw
 
 METHOD StyleSetColor( nClrFore, nClrBack ) CLASS TScintilla
 
-if Valtype( nClrFore ) == 'N'
-::Send( SCI_STYLESETFORE, ::nSetStyle, nClrFore )
-endif
-if Valtype( nClrBack ) == 'N'
-::Send( SCI_STYLESETBACK, ::nSetStyle, nClrBack )
-endif
+   if Valtype( nClrFore ) == 'N'
+      ::Send( SCI_STYLESETFORE, ::nSetStyle, nClrFore )
+   endif
 
-Return nil
+   if Valtype( nClrBack ) == 'N'
+      ::Send( SCI_STYLESETBACK, ::nSetStyle, nClrBack )
+   endif
+
+return nil
 
 //----------------------------------------------------------------------------//
 
 
 METHOD SetColor( nClrText, nClrPane ) CLASS TScintilla
 
-::Send( SCI_STYLESETFORE, STYLE_DEFAULT, nClrText )
-::Send( SCI_STYLESETBACK, STYLE_DEFAULT, nClrPane )
+   ::Send( SCI_STYLESETFORE, STYLE_DEFAULT, nClrText )
+   ::Send( SCI_STYLESETBACK, STYLE_DEFAULT, nClrPane )
 
-//::nClrText = nClrText
-//::nClrPane = nClrPane
+   // ::nClrText = nClrText
+   // ::nClrPane = nClrPane
 
 return nil
 

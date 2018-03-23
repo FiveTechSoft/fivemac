@@ -92,31 +92,96 @@ if( hb_pcount() > 1 )
    hb_ret();
 }
 
+@interface Alert : NSAlert
+{
+}
+- ( void ) killWindow: ( NSAlert * ) alert;
+@end
+
+@implementation Alert
+
+-(void) killWindow: ( NSAlert * ) alert;
+{
+   [ NSApp abortModal ];
+}
+
+@end
+
+HB_FUNC( MSGWAIT )
+{
+   NSString * msg, * title;
+   NSTimer * myTimer;
+
+   CocoaInit();
+   
+   ValToChar( hb_param( 1, HB_IT_ANY ) );
+   msg = hb_NSSTRING_par( -1 );
+   if( [ msg length ] == 0 )
+      msg = @" " ;
+   
+   if( hb_pcount() > 1 )
+   {	   
+      ValToChar( hb_param( 2, HB_IT_ANY ) );
+      title = hb_NSSTRING_par( -1 );
+      if( [ title length ] == 0 )
+         title = @"Attention" ;
+   }
+   else
+      title = @"Attention";
+    
+    Alert * alert = [ [ Alert alloc ] init ];
+    
+    alert.alertStyle = NSInformationalAlertStyle;
+    alert.informativeText = msg;
+    alert.messageText = title;
+    
+    myTimer = [ NSTimer timerWithTimeInterval: hb_parnl( 3 )
+                target: alert
+                selector: @selector( killWindow: )
+                userInfo: nil
+                repeats: NO ];
+
+    [[ NSRunLoop currentRunLoop ] addTimer:myTimer forMode:NSModalPanelRunLoopMode ];
+
+    [ alert addButtonWithTitle: @"" ];
+    [ alert runModal ];
+    [ alert release ];
+    
+   hb_ret();
+}
+
 HB_FUNC( MSGSTOP )
 {
-    CocoaInit();
-    ValToChar( hb_param( 1, HB_IT_ANY ) );
-    NSAlert * dlg = [ [ NSAlert alloc ] init ];
-    dlg.alertStyle = NSWarningAlertStyle ;
-    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
-    dlg.messageText = @"Stop" ;
-    [ dlg addButtonWithTitle:@"OK"];
-    [ dlg runModal ];
-    hb_ret();
-  }
+   CocoaInit();
 
+   NSAlert * dlg = [ [ NSAlert alloc ] init ];
+   
+   ValToChar( hb_param( 1, HB_IT_ANY ) );
+   dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
+   dlg.messageText = @"Stop" ;
+   dlg.alertStyle = NSWarningAlertStyle ;
+   
+   [ dlg addButtonWithTitle:@"OK"];
+   [ dlg runModal ];
+   
+   hb_ret();
+}
 
 HB_FUNC( MSGALERT )
 {
-    CocoaInit();
-    ValToChar( hb_param( 1, HB_IT_ANY ) );
-    NSAlert * dlg = [ [ NSAlert alloc ] init ];
-    dlg.alertStyle = NSWarningAlertStyle ;
-    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
-    dlg.messageText = @"Alert" ;
-    [ dlg addButtonWithTitle:@"OK"];
-    [ dlg runModal ];
-      hb_ret();
+   CocoaInit();
+
+   NSAlert * dlg = [ [ NSAlert alloc ] init ];
+   
+   ValToChar( hb_param( 1, HB_IT_ANY ) );
+   dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
+   dlg.messageText = @"Alert" ;
+   dlg.alertStyle = NSWarningAlertStyle ;
+   
+   [ dlg addButtonWithTitle: @"OK"];
+   [ dlg runModal ];
+      
+   hb_ret();
 }
 
 HB_FUNC( MSGALERTSHEET )
