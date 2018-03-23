@@ -20,7 +20,7 @@ HB_FUNC( CREATEURL )
 {
    NSURL * name = ( NSURL * ) hb_parnl( 1 );
    NSString * source = [ [ name path ]
-        stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        stringByRemovingPercentEncoding ];
         
    hb_retc( [ source cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
 }  

@@ -91,7 +91,6 @@ if( hb_pcount() > 1 )
     
    hb_ret();
 }
-
 @interface Alert : NSAlert
 {
 }
@@ -102,32 +101,32 @@ if( hb_pcount() > 1 )
 
 -(void) killWindow: ( NSAlert * ) alert;
 {
-   [ NSApp abortModal ];
+    [ NSApp abortModal ];
 }
 
 @end
 
 HB_FUNC( MSGWAIT )
 {
-   NSString * msg, * title;
-   NSTimer * myTimer;
-
-   CocoaInit();
-   
-   ValToChar( hb_param( 1, HB_IT_ANY ) );
-   msg = hb_NSSTRING_par( -1 );
-   if( [ msg length ] == 0 )
-      msg = @" " ;
-   
-   if( hb_pcount() > 1 )
-   {	   
-      ValToChar( hb_param( 2, HB_IT_ANY ) );
-      title = hb_NSSTRING_par( -1 );
-      if( [ title length ] == 0 )
-         title = @"Attention" ;
-   }
-   else
-      title = @"Attention";
+    NSString * msg, * title;
+    NSTimer * myTimer;
+    
+    CocoaInit();
+    
+    ValToChar( hb_param( 1, HB_IT_ANY ) );
+    msg = hb_NSSTRING_par( -1 );
+    if( [ msg length ] == 0 )
+        msg = @" " ;
+    
+    if( hb_pcount() > 1 )
+    {
+        ValToChar( hb_param( 2, HB_IT_ANY ) );
+        title = hb_NSSTRING_par( -1 );
+        if( [ title length ] == 0 )
+            title = @"Attention" ;
+    }
+    else
+        title = @"Attention";
     
     Alert * alert = [ [ Alert alloc ] init ];
     
@@ -136,52 +135,51 @@ HB_FUNC( MSGWAIT )
     alert.messageText = title;
     
     myTimer = [ NSTimer timerWithTimeInterval: hb_parnl( 3 )
-                target: alert
-                selector: @selector( killWindow: )
-                userInfo: nil
-                repeats: NO ];
-
+                                       target: alert
+                                     selector: @selector( killWindow: )
+                                     userInfo: nil
+                                      repeats: NO ];
+    
     [[ NSRunLoop currentRunLoop ] addTimer:myTimer forMode:NSModalPanelRunLoopMode ];
-
+    
     [ alert addButtonWithTitle: @"" ];
     [ alert runModal ];
     [ alert release ];
     
-   hb_ret();
+    hb_ret();
 }
-
 HB_FUNC( MSGSTOP )
 {
-   CocoaInit();
-
-   NSAlert * dlg = [ [ NSAlert alloc ] init ];
-   
-   ValToChar( hb_param( 1, HB_IT_ANY ) );
-   dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
-   dlg.messageText = @"Stop" ;
-   dlg.alertStyle = NSAlertStyleWarning ;
-   
-   [ dlg addButtonWithTitle:@"OK"];
-   [ dlg runModal ];
-   
-   hb_ret();
-}
+    CocoaInit();
+    
+    NSAlert * dlg = [ [ NSAlert alloc ] init ];
+    
+    ValToChar( hb_param( 1, HB_IT_ANY ) );
+    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
+    dlg.messageText = @"Stop" ;
+    dlg.alertStyle = NSAlertStyleWarning ;
+    
+    [ dlg addButtonWithTitle:@"OK"];
+    [ dlg runModal ];
+    
+     hb_ret();
+  }
 
 HB_FUNC( MSGALERT )
 {
+    
    CocoaInit();
-
-   NSAlert * dlg = [ [ NSAlert alloc ] init ];
-   
-   ValToChar( hb_param( 1, HB_IT_ANY ) );
-   dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
-   dlg.messageText = @"Alert" ;
-   dlg.alertStyle = NSAlertStyleWarning ;
-   
-   [ dlg addButtonWithTitle: @"OK"];
-   [ dlg runModal ];
-      
-   hb_ret();
+    
+    NSAlert * dlg = [ [ NSAlert alloc ] init ];
+    
+    ValToChar( hb_param( 1, HB_IT_ANY ) );
+    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
+    dlg.messageText = @"Alert" ;
+    dlg.alertStyle = NSAlertStyleWarning ;
+    
+    [ dlg addButtonWithTitle:@"OK"];
+    [ dlg runModal ];
+      hb_ret();
 }
 
 HB_FUNC( MSGALERTSHEET )
@@ -283,10 +281,9 @@ HB_FUNC( CHOOSEFILE )
       [ op setAllowedFileTypes:fileTypes ];
    }
         
-    if( [ op runModal ] == NSFileHandlingPanelOKButton )
+    if( [ op runModal ] == NSModalResponseOK  )
     {
-       NSString * source = [ [ [ [ op URLs ] objectAtIndex: 0 ] path ]
-                            stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding ];
+       NSString * source = [ [ [ [ op URLs ] objectAtIndex: 0 ] path ] stringByRemovingPercentEncoding ];
     
        hb_retc( [ source cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
     }  
@@ -302,7 +299,7 @@ HB_FUNC( CHOOSEFILEURL )
    [ op setPrompt: @"Ok" ];
    [ op setMessage: @"Please select a file" ];
    
-   if( [ op runModal ] == NSFileHandlingPanelOKButton )
+   if( [ op runModal ] == NSModalResponseOK )
    {
       source = [ [ op URLs ] objectAtIndex: 0 ];
       hb_retnl( ( HB_LONG ) source );    
@@ -327,11 +324,11 @@ HB_FUNC( SAVEFILE )
       [ op setNameFieldStringValue: hb_NSSTRING_par( 2 ) ];
    #endif
         
-   if( [ op runModal ] == NSFileHandlingPanelOKButton  )
+   if( [ op runModal ] == NSModalResponseOK  )
    {
+       
       NSString * source = [ [  [ op URL ]  path ]
-                             stringByReplacingPercentEscapesUsingEncoding:
-                             NSUTF8StringEncoding ];
+                             stringByRemovingPercentEncoding ];
       hb_retc( [ source cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
    }
    else
@@ -347,11 +344,10 @@ HB_FUNC( CHOOSEIMAGEFILE )
    [ op setMessage: @"Please select a file" ];
    [ op setAllowedFileTypes:imageTypes];
         
-   if( [ op runModal ] == NSFileHandlingPanelOKButton )
+   if( [ op runModal ] == NSModalResponseOK )
    {
       NSString * source = [ [ [ [ op URLs ] objectAtIndex: 0 ] path ]
-                                  stringByReplacingPercentEscapesUsingEncoding:
-                                  NSUTF8StringEncoding ];
+                                  stringByRemovingPercentEncoding ];
         
       hb_retc( [ source cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
    }
@@ -372,14 +368,13 @@ HB_FUNC( CHOOSESHEETTXTIMG )
    [ panel beginSheetModalForWindow: [ vista window ] 
      completionHandler: ^( NSInteger result ) 
    {
-      if( result == NSFileHandlingPanelOKButton )
+      if( result == NSModalResponseOK )
       {
          [ vista setHidden: NO ];
          [ vista setImage  : [ [ NSImage alloc ] initWithContentsOfURL : [[panel URLs] objectAtIndex:0] ] ];
             
          NSString * source = [ [ [ [ panel URLs ] objectAtIndex: 0 ] path ]
-                                 stringByReplacingPercentEscapesUsingEncoding:
-                                 NSUTF8StringEncoding];
+                                 stringByRemovingPercentEncoding ];
             
          [ texto setStringValue: source ];
          [ [ vista image ] setName: source ];

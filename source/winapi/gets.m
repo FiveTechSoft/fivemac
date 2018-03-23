@@ -541,10 +541,10 @@ HB_FUNC( CHOOSESHEETTXT )
     [ panel setCanChooseDirectories: YES ];
     [ panel setMessage:@"Importe el Archivo"];
     [ panel beginSheetModalForWindow: [ texto window ] completionHandler:^(NSInteger result){
-        if (result == NSFileHandlingPanelOKButton)
+        if (result == NSModalResponseOK )
         {
             NSString *source =  [[[[panel URLs] objectAtIndex:0]  path]
-                                 stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                  stringByRemovingPercentEncoding ];
             
             [ texto setStringValue : source ];
             
