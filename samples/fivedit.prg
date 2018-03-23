@@ -178,7 +178,7 @@ function BuildEditor()
    oEditor:nAutoResize = 18
 
    oEditor:bChange = { || EditorChange() }
-   oEditor:SetColor( 0, nRgb( 167, 167, 167 ) )
+   oEditor:SetColor( , nRgb( 167, 167, 167 ) , .t. )
 
    AAdd( aEditors, oEditor )
 
