@@ -277,11 +277,11 @@ function LoadRecentFiles()
    local oPlist := TPlist():New( cPrefFile )
    local aFiles := oPlist:GetArrayByName( "LastFiles" )
 
-   if Len( aFiles ) >0
+   if Len( aFiles ) > 0
 
       for n = 1 to Len( aFiles )
 
-         cfileName = afiles[n]
+         cfileName = afiles[ n ]
 
          // cFileName = GetPlistValue( cPrefFile, "File" + AllTrim( Str( n ) ) )
 
@@ -292,8 +292,10 @@ function LoadRecentFiles()
       next
 
       if lCarga
-         oTree:Select( oTree:oNode:aNodes[ 1 ]:aNodes[ 1 ] )
-         SelectFile()
+         if Len( oTree:oNode:aNodes[ 1 ]:aNodes ) > 0
+            oTree:Select( oTree:oNode:aNodes[ 1 ]:aNodes[ 1 ] )
+            SelectFile()
+         endif
       endif
 
    endif
