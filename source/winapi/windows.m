@@ -416,7 +416,8 @@ HB_FUNC( WNDCREATE )
 
    [ window setContentView : view ];
    [ window setDelegate : view ];
-    
+   [ window setHidesOnDeactivate : NO ]; 
+   
    if( wndMain == NULL )
       wndMain = window;	
 
@@ -520,6 +521,12 @@ HB_FUNC( WNDMAXIMIZE )
 	
    [ window performZoom : nil ];
 }   
+
+HB_FUNC( WNDSETHIDEONDEACTIVATE )
+{
+    NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
+    window.hidesOnDeactivate  = hb_parl( 2 ) ;
+}
 
 HB_FUNC( WNDREFRESH )
 {
