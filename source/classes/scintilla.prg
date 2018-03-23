@@ -283,7 +283,8 @@ METHOD HandleEvent( nMsg, uParam1, uParam2, uParam3 )
     METHOD StutteredpagedownextenD()           INLINE ::Send( SCI_STUTTEREDPAGEDOWNEXTEND )
     METHOD Stutteredpageup()                   INLINE ::Send( SCI_STUTTEREDPAGEUP )
     METHOD Stutteredpageupextend ()            INLINE ::Send( SCI_STUTTEREDPAGEUPEXTEND )
-
+    
+    METHOD StylereSetDefault()                 INLINE ::Send( SCI_STYLERESETDEFAULT, 0, 0 )
 
     METHOD StyleSet( nStyle )				   INLINE ( ::nSetStyle := nStyle )
 
@@ -369,13 +370,26 @@ return nil
 //----------------------------------------------------------------------------//
 
 
-METHOD SetColor( nClrText, nClrPane ) CLASS TScintilla
+METHOD SetColor( nClrText, nClrPane, lIni ) CLASS TScintilla
 
-   ::Send( SCI_STYLESETFORE, STYLE_DEFAULT, nClrText )
-   ::Send( SCI_STYLESETBACK, STYLE_DEFAULT, nClrPane )
+local x
+//DEFAULT nClrText  := ::nClrText
+//DEFAULT nClrPane  := ::nClrPane
+DEFAULT lIni      := .F.
 
-   // ::nClrText = nClrText
-   // ::nClrPane = nClrPane
+//::nClrText = nClrText
+//::nClrPane = nClrPane
+
+if lIni
+//::StylereSetDefault()
+For x = 0 to 31 //255
+::StyleSet( x )
+::StyleSetColor( nClrText, nClrPane )
+Next x
+endif
+
+::Send( SCI_STYLESETFORE, STYLE_DEFAULT, nClrText )
+::Send( SCI_STYLESETBACK, STYLE_DEFAULT, nClrPane )
 
 return nil
 
