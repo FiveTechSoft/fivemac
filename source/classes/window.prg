@@ -182,6 +182,8 @@ CLASS TWindow
 
    METHOD cGenPrg()
    
+   METHOD SetHideOnDeactivate( lValue ) INLINE WNDSETHIDEONDEACTIVATE ( ::hWnd, lValue )
+   
 ENDCLASS
 
 //----------------------------------------------------------------------------//
@@ -213,6 +215,8 @@ METHOD New( nTop, nLeft, nBottom, nRight, cTitle, lTextured, lPaneled, lNoBorder
    endif
    
    WndSetText( ::hWnd, cTitle )
+
+   ::SetHideOnDeactivate( .f. )
 
    AAdd( aWindows, Self )
    SetWndDefault( Self )
