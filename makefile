@@ -5,13 +5,13 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 
 # ifeq ( $(OS_VERSION), 10.11 )
 	# Yosemite detected
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
+	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
 # else
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
+	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 	HEADERS=$(SDKPATH)/usr/include
-     
+    SWIFTFLAGS =  -I../include -sdk $(shell xcrun --show-sdk-path -sdk macosx)
 # endif
 
 all : ./lib/libfive.a ./lib/libfivec.a
@@ -147,13 +147,18 @@ C_OBJS = ./objc/browses.o	\
   ./objc/tabviews.o	\
   ./objc/views.o \
 	./objc/webviews.o \
-  ./objc/windows.o
+    ./objc/windows.o
+
+SWIFT_OBJS =
+
 
 ./lib/libfive.a  : $(PRG_OBJS)
 #	ranlib ./lib/libfive.a
 	
 ./lib/libfivec.a : $(C_OBJS)
 #	ranlib ./lib/libfivec.a
+
+./lib/libfivec.a : $(SWIFT_OBJS)
 
 ./obj/%.c : ./source/classes/%.prg
 	if [ ! -d "obj" ]; then mkdir obj; fi
@@ -162,6 +167,17 @@ C_OBJS = ./objc/browses.o	\
 ./obj/%.c : ./source/function/%.prg
 	if [ ! -d "obj" ]; then mkdir obj; fi
 	./../harbour/bin/harbour $< -o./$@ -n -I./../harbour/include -I./include
+
+./objs/%.o : ./source/swift/%.swift
+	if [ ! -d "objs" ]; then mkdir objs; fi
+	swiftc -frontend -c -color-diagnostics -primary-file $<  \
+-module-name Bridgette \
+$(SWIFTFLAGS) -emit-module -emit-module-path ./source/swift/$*.swiftmodule \
+-emit-objc-header-path ./source/swift/$*-Swift.h \
+-enable-testing -enable-objc-interop -parse-as-library \
+-o $@
+	if [ ! -d "lib" ]; then mkdir lib; fi
+	ar rc ./lib/libfivec.a $@
 
 # -arch i386 -arch ppc
 ./obj/%.o : ./obj/%.c
@@ -199,4 +215,4 @@ C_OBJS = ./objc/browses.o	\
 
 clean:
 	rm ./obj/*
-	rm ./objc/*	
+	rm ./objc/*
