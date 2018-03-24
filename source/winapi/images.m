@@ -155,12 +155,12 @@ HB_FUNC( CHOOSESHEETIMAGE )
     	
       [ panel beginSheetModalForWindow: [vista window ] completionHandler:^(NSInteger result)
       {
-         if (result == NSFileHandlingPanelOKButton)
+         if (result == NSModalResponseOK)
          {
             [ vista setHidden: NO ];
             [ vista setImage  : [ [ NSImage alloc ] initWithContentsOfURL : [[panel URLs] objectAtIndex:0] ] ];
             NSString *source =  [[[[panel URLs] objectAtIndex:0]  path]
-                                stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                stringByRemovingPercentEncoding ];
             [ [ vista image ] setName: source ]  ;
          } 
       } ];
@@ -192,7 +192,7 @@ HB_FUNC( NEWRESIZEIMAGE )
         [smallImage lockFocus];
         [sourceImage setSize: newSize];
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositingOperationCopy fraction:1.0];
         [smallImage unlockFocus];
         
         NSData *imageData = [smallImage TIFFRepresentation];
@@ -472,7 +472,7 @@ HB_FUNC( SAVEIMAGEFROMIMAGE )
         [smallImage lockFocus];
         [sourceImage setSize: newSize];
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositeCopy fraction:1.0];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositingOperationCopy fraction:1.0];
         [smallImage unlockFocus];
         
         NSData *imageData = [smallImage TIFFRepresentation];

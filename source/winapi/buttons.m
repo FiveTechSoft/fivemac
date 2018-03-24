@@ -75,7 +75,7 @@ HB_FUNC( BTNBMPCREATE )
  			           initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
 
-   [ button setBezelStyle : NSThickSquareBezelStyle ];
+   [ button setBezelStyle : NSRegularSquareBezelStyle ];
    [ button setTitle : @"" ];
    
    [ GetView( window ) addSubview : button ];

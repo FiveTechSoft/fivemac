@@ -149,7 +149,7 @@ HB_FUNC( POPMNUCONTEXT )
    	                    NSMakePoint( frame.origin.x, frame.origin.y + frame.size.height + 40 ) 
    	                    toView: nil ];    
    int windowNumber = [ [ view window] windowNumber];   
-   NSEvent * event  = [ NSEvent mouseEventWithType: NSLeftMouseDown
+   NSEvent * event  = [ NSEvent mouseEventWithType: NSEventTypeLeftMouseDown
                                           location: menuOrigin
                                      modifierFlags: 0 //NSLeftMouseDownMask // 0x100
                                          timestamp: 0
@@ -168,7 +168,7 @@ HB_FUNC( POPMNUSHOW )
    NSWindow * window  = ( NSWindow * ) hb_parnl( 2 ); 
    NSPoint menuOrigin = [ [ window contentView ] convertPoint: 
      	                    NSMakePoint( hb_parnl( 4 ), hb_parnl( 3 ) ) toView: nil ];    
-   NSEvent * event    = [ NSEvent mouseEventWithType: NSLeftMouseDown
+   NSEvent * event    = [ NSEvent mouseEventWithType: NSEventTypeLeftMouseDown
                                             location: menuOrigin
                                        modifierFlags: 0 //NSLeftMouseDownMask // 0x100
                                            timestamp: 0

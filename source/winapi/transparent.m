@@ -15,7 +15,7 @@ HB_FUNC( SPLASHCREATE ) // hWnd
 { 
    NSRect screenRect = [[NSScreen mainScreen] frame];
    NSRect content = NSMakeRect(screenRect.size.width/2 - 350, screenRect.size.height/2 - 225, 700, 450);
-   NSWindow *w = [[NSWindow alloc] initWithContentRect:content styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+   NSWindow *w = [[NSWindow alloc] initWithContentRect:content styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO ];
 
    hb_retnl( ( HB_LONG ) w );    
 }

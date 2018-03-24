@@ -233,7 +233,7 @@ HB_FUNC( OUTLINECREATE )
    [ c setMinWidth: hb_parnl( 3 ) ];
      
    [ [ c headerCell ] setStringValue: @"Header" ];
-   [ [ c headerCell ] setAlignment: NSCenterTextAlignment ];
+   [ [ c headerCell ] setAlignment: NSTextAlignmentCenter ];
     
 	 [ outlineView addTableColumn: c ];
    [ outlineView setOutlineTableColumn: c ];

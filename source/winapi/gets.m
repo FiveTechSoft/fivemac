@@ -71,7 +71,7 @@ static PHB_SYMB symFMH = NULL;
 - (BOOL) performKeyEquivalent: (NSEvent*) theEvent
 {
     BOOL handled = NO;
-    if( ([theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask)
+    if( ([theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask )
        == NSEventModifierFlagCommand ) {
         NSString* keyChars = [theEvent charactersIgnoringModifiers];
         
@@ -507,23 +507,23 @@ HB_FUNC( TXTSETFOCUS )
 
 HB_FUNC( ISCOMMANDKEYPRESSED )
 {
-    hb_retl( (([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask) == NSCommandKeyMask) );
+    hb_retl( (([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagCommand ) == NSEventModifierFlagCommand) );
 }
 
 
 HB_FUNC( ISSHIFFKEYPRESSED )
 { 
-    hb_retl( ( ( [ [NSApp currentEvent] modifierFlags] & NSShiftKeyMask  ) == NSShiftKeyMask )) ;
+    hb_retl( ( ( [ [NSApp currentEvent] modifierFlags] & NSEventModifierFlagShift  ) == NSEventModifierFlagShift )) ;
 }  
 
 HB_FUNC( ISOPTIONKEYPRESSED )
 { 
-    hb_retl(  ( ( [ [NSApp currentEvent] modifierFlags] & NSAlternateKeyMask ) == NSAlternateKeyMask ) )  ; 
+    hb_retl(  ( ( [ [NSApp currentEvent] modifierFlags] & NSEventModifierFlagOption ) == NSEventModifierFlagOption ) )  ;
 }
 
 HB_FUNC( ISCONTROLKEYPRESSED )
 { 
-    hb_retl(  ( ( [ [NSApp currentEvent] modifierFlags] & NSControlKeyMask ) == NSControlKeyMask ) )  ; 
+    hb_retl(  ( ( [ [NSApp currentEvent] modifierFlags] & NSEventModifierFlagControl ) == NSEventModifierFlagControl ) )  ;
 }
 
 HB_FUNC( CHOOSESHEETTXT )

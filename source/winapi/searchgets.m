@@ -3,7 +3,7 @@
 static PHB_SYMB symFMH = NULL;
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
-   @interface SearchGet : NSSearchField <NSTextFieldDelegate>
+   @interface SearchGet : NSSearchField <NSSearchFieldDelegate>
 #else
    @interface SearchGet : NSSearchField
 #endif

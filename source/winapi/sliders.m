@@ -51,7 +51,7 @@ HB_FUNC( CIRCULARSLIDER )
 { 
   NSSlider * slider = ( NSSlider * ) hb_parnl( 1 );
   
-  [[slider cell] setSliderType:NSCircularSlider];
+  [[slider cell] setSliderType:NSSliderTypeCircular];
 
 }
 

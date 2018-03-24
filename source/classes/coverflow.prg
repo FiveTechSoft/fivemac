@@ -1,5 +1,8 @@
 #include "FiveMac.ch"
 
+#define WidthSizable  2
+#define HeightSizable 16
+
 //----------------------------------------------------------------------------//
 
 CLASS TCoverflow FROM TControl
@@ -15,8 +18,9 @@ CLASS TCoverflow FROM TControl
     METHOD Redefine( nId, oWnd ) 
 
    METHOD Initiate()
-   
-  						   			   	       
+
+   METHOD Autoresize( nAutoResize ) INLINE IKCOVERAJUST( ::hWnd, nAutoResize )
+
 ENDCLASS   
 
 //----------------------------------------------------------------------------//
@@ -26,9 +30,11 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd ) CLASS TCoverflow
    DEFAULT nWidth := 100, nHeight := 200, oWnd := GetWndDefault()
    
    ::hWnd = IKCoverCreate( nTop, nLeft, nWidth, nHeight, oWnd:hWnd )
-   
+
    ::oWnd = oWnd
-   
+
+   ::AutoResize( WidthSizable + HeightSizable )
+
    oWnd:AddControl( Self )
    
 return Self
@@ -41,6 +47,8 @@ DEFAULT oWnd := GetWndDefault()
 
 ::nId     = nId
 ::oWnd    = oWnd
+
+::AutoResize( 18 )
 
 oWnd:DefControl( Self )
 

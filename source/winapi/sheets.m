@@ -23,7 +23,7 @@ HB_FUNC( SHEETOPENRUN )
 	
    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
    [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
-      if (result == NSFileHandlingPanelOKButton) {
+      if (result == NSModalResponseOK) {
       
 			   //NSArray* urls = [panel URLs];
          // Use the URLs to build a list of items to import.
@@ -58,7 +58,7 @@ HB_FUNC( SHEETSAVERUN )
 
     #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
 	[panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
-        if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSModalResponseOK) {
             
             //NSArray* urls = [panel URLs];
             // Use the URLs to build a list of items to import.

@@ -3,7 +3,7 @@
 static PHB_SYMB symFMH = NULL;
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
-   @interface TextView : NSTextView <NSTextViewDelegate>
+   @interface TextView : NSTextView <NSTextViewDelegate,NSTextInputClient>
 #else
    @interface TextView : NSTextView
 #endif
@@ -132,7 +132,7 @@ HB_FUNC( TXTINSERTTEXT ) // hWnd, cTxtLine
    TextView * memo = ( TextView * ) hb_parnl( 1 );
    NSString * string = hb_NSSTRING_par( 2 ) ;
 
-   [ memo insertText : string ];   
+    [ memo insertText : string replacementRange: NSMakeRange(1, 0) ];   
 }
 
 HB_FUNC( TXTSPELLCHECK ) // hWnd, cTxtLine

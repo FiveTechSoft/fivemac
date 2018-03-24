@@ -83,7 +83,7 @@ HB_FUNC( MSGROUNDCREATE )
         
     NSPanel * window = [ [ NSPanel alloc ] 
 						initWithContentRect : popoverRect
-						styleMask :NSBorderlessWindowMask
+						styleMask :NSWindowStyleMaskBorderless
 						backing : NSBackingStoreBuffered
 						defer :  NO ];
     
@@ -104,7 +104,7 @@ HB_FUNC( MSGROUNDCREATE )
 	[ window setAcceptsMouseMovedEvents : YES ];
 
      #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
-	   [ window setStyleMask: NSBorderlessWindowMask ];
+	   [ window setStyleMask: NSWindowStyleMaskBorderless ];
 	#endif
 
 	[window center];
@@ -130,7 +130,7 @@ HB_FUNC( RDWNDCREATE )
 {
      NSPanel * window = [ [ NSPanel alloc ] 
 						initWithContentRect : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) )
-						styleMask :NSBorderlessWindowMask
+						styleMask :NSWindowStyleMaskBorderless
 						backing : NSBackingStoreBuffered
 						defer :  NO ];
     RoundedView * view = [ [ RoundedView alloc ] init ];
@@ -145,8 +145,8 @@ HB_FUNC( RDWNDCREATE )
 	[ window makeFirstResponder : view ]; 
 	[ window setAcceptsMouseMovedEvents : YES ];
 
-     #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
-	   [window setStyleMask: NSBorderlessWindowMask ];	
+     #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 101000
+	   [window setStyleMask: NSWindowStyleMaskBorderless ];
      #endif
  
 	[window center];
@@ -168,8 +168,8 @@ HB_FUNC(WNDSETROUNDED)
   [ window setDelegate : view ];
   [ window makeFirstResponder : view ];  
 
-   #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
-     [ window setStyleMask: NSBorderlessWindowMask ];
+   #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 101000
+     [ window setStyleMask: NSWindowStyleMaskBorderless ];
    #endif
 	
   [window center];

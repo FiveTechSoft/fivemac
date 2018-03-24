@@ -36,7 +36,8 @@
 - ( void ) keyWindowChanged : ( id ) fp8;
 - (void)setSelectedIndex:(unsigned int)fp8;
 - (BOOL)hitTestWithImage:(id)fp8 x:(float)fp12 y:(float)fp16;
-- (unsigned int)cellIndexAtLocation:(struct _NSPoint)fp8;
+// - (unsigned int)cellIndexAtLocation:(struct _NSPoint)fp8;
+- (unsigned int)cellIndexAtLocation:(NSPoint)fp8;
 - (void)_adjustScroller;
 - (void)resetCursorRects;
 - (void)frameDidChange:(id)fp8;
@@ -124,10 +125,12 @@
 - (void)drawTitle;
 - (BOOL)installViewport;
 - (void)setupGLState;
-- (void)installPerspetiveViewportForPicking:(BOOL)fp8 location:(struct _NSPoint)fp12;
+//- (void)installPerspetiveViewportForPicking:(BOOL)fp8 location:(struct _NSPoint)fp12;
+- (void)installPerspetiveViewportForPicking:(BOOL)fp8 location:(NSPoint)fp12;
 - (void)drawFocusRing;
 - (BOOL)drawWithCurrentRendererInRect:(struct _NSRect)fp8;
-- (void)__copyPixels:(void *)fp8 withSize:(struct _NSSize)fp12 toCurrentFocusedViewAtPoint:(struct _NSPoint)fp20;
+- (void)__copyPixels:(void *)fp8 withSize:(struct _NSSize)fp12 toCurrentFocusedViewAtPoint:(NSPoint)fp20;
+//- (void)__copyPixels:(void *)fp8 withSize:(struct _NSSize)fp12 toCurrentFocusedViewAtPoint:(struct _NSPoint)fp20;
 - (void)__copyGLToCurrentFocusedView;
 - (BOOL)_createPBuffer;
 - (void)_deletePBUffer;
@@ -435,8 +438,8 @@ HB_FUNC( IKCOVEROPENDIR )
 HB_FUNC( IKCOVERAJUST )
 {
 	IKBImageFlowView * vista = (  IKBImageFlowView *) hb_parnl( 1 );
-	[vista setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
-    
+    [ vista setAutoresizingMask: hb_parnl( 2 ) ];
+	//[vista setAutoresizingMask : NSViewWidthSizable | NSViewHeightSizable ];
 }
 
 HB_FUNC( IKCOVEROPENFILE )

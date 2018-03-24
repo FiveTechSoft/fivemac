@@ -53,7 +53,7 @@
 {
     float padding = 5;
     
-    NSSize size = [string sizeWithWidth:250.0 andFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+    NSSize size = [string sizeWithWidth:250.0 andFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeRegular]]];
     
     NSSize popoverSize = NSMakeSize(size.width + (padding * 2), size.height + (padding * 2));
     NSRect popoverRect = NSMakeRect(0, 0, popoverSize.width, popoverSize.height);

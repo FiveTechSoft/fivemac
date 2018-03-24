@@ -253,7 +253,7 @@ HB_FUNC( CHOOSESHEETSIMAGE )
 
     [panel beginSheetModalForWindow:[vista window ] completionHandler:^(NSInteger result)
 	{
-       if ( result == NSFileHandlingPanelOKButton )
+       if ( result == NSModalResponseOK )
        {
           [ vista setHidden: NO ];
           [ vista setAutoresizes: TRUE ];
@@ -298,7 +298,7 @@ HB_FUNC( SIMAGESAVEAS )
         #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
 		[savePanel beginSheetModalForWindow:[ vista window ] completionHandler:^(NSInteger result)
         {
-		   if (result == NSFileHandlingPanelOKButton) 
+		   if (result == NSModalResponseOK)
            {
                 NSString * newUTType = [ saveOptions imageUTType];
                 CGImageRef image = (CGImageRef) [vista image ];
