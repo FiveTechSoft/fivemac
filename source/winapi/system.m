@@ -56,9 +56,9 @@ HB_FUNC( FILENOPATH )
 
 HB_FUNC( LIBRARYPATH )
 {
-   NSString * Userpath = [ @"~/Library" stringByExpandingTildeInPath ];
-   
-   hb_retc( [ Userpath cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+    NSString * Userpath = [ @"~/Library" stringByExpandingTildeInPath ];
+    
+    hb_retc( [ Userpath cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
 }
 
 HB_FUNC( USERPATH )
@@ -88,16 +88,23 @@ HB_FUNC( COPYFILETO )
 
 HB_FUNC( DELETEFILE )
 {
-   NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "" encoding : NSWindowsCP1252StringEncoding ] autorelease ];
-   NSFileManager * filemgr = [ NSFileManager defaultManager ];  
+    bool lresult = false ;
     
-   hb_retl( ( [ filemgr removeItemAtPath: string error: NULL ]  == YES ) );
-}  
+    NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "" encoding : NSWindowsCP1252StringEncoding ] autorelease ];
+    
+    NSFileManager * filemgr = NSFileManager.defaultManager ;
+    
+    if( [ filemgr isDeletableFileAtPath: string ] )
+        lresult =  [filemgr removeItemAtPath:string error: nil ] ;
+    
+    hb_retl( lresult ) ;
+    
+}
 
 HB_FUNC( DELETEDIR )
 {
    NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "" encoding : NSWindowsCP1252StringEncoding ] autorelease ];
-   NSFileManager *fManager = [NSFileManager defaultManager] ;
+   NSFileManager *fManager = NSFileManager.defaultManager ;
    BOOL isDir;
    NSString * strfile = [ string stringByAppendingString:  @"/" ];
     
@@ -111,7 +118,7 @@ HB_FUNC( DELETEDIR )
 HB_FUNC( CREATEDIR )
 {
    NSString * cDirName = hb_NSSTRING_par( 1 );
-   NSFileManager *fileManager= [NSFileManager defaultManager]; 
+   NSFileManager *fileManager= NSFileManager.defaultManager ;
    BOOL isDir;
   
    if( ! [ fileManager fileExistsAtPath: cDirName isDirectory: &isDir ] )
@@ -120,28 +127,47 @@ HB_FUNC( CREATEDIR )
       NSLog( @"Error: Create folder failed %@", cDirName );
 }
 
+/*
 HB_FUNC( MACEXEC )
 {
-   NSWorkspace * workspace;
+   NSString * appName  = hb_NSSTRING_par( 1 );
+   NSString * fileName = hb_NSSTRING_par( 2 );
+   NSWorkspace * theProcess;
 
    if( hb_pcount() > 1 )
+      hb_retl( [ [ NSWorkspace sharedWorkspace ] openFile: fileName withApplication: appName ] );
+   else   	
    {
-      workspace = [ [ [ NSWorkspace alloc ] init ] autorelease ];
-       
-      if( hb_pcount() == 1 )
-         hb_retl( [ workspace launchapplication: hb_NSSTRING_par( 1 ) ] );
+      theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
+      	 
+      hb_retl( [ theProcess launchApplication: appName ] );
+   }
+}
+*/
 
-      if( hb_pcount() == 2 )
-      {
-         NSURL * url = [ NSURL fileURLWithPath: [ workspace fullPathForApplication: hb_NSSTRING_par( 1 ) ] ];
-         NSArray * arguments = [ NSArray arrayWithObjects: hb_NSSTRING_par( 2 ), nil ]; 
-         NSError * error = nil;
-         
-         hb_retl( [ workspace launchApplicationAtURL:url options:0 
-           configuration:[NSDictionary dictionaryWithObject:arguments forKey:NSWorkspaceLaunchConfigurationArguments]  
-           error:error ] );
-      }
-   } 
+HB_FUNC( MACEXEC )
+{
+    NSWorkspace * workspace;
+    
+    if( hb_pcount() > 1 )
+    {
+        workspace = [ [ [ NSWorkspace alloc ] init ] autorelease ];
+        
+        if( hb_pcount() == 1 )
+            hb_retl( [ workspace launchApplication: hb_NSSTRING_par( 1 ) ] );
+        
+        if( hb_pcount() == 2 )
+        {
+             NSURL * url = [ NSURL fileURLWithPath: [ workspace fullPathForApplication: hb_NSSTRING_par( 1 ) ] ];
+            NSArray * arguments = [ NSArray arrayWithObjects: hb_NSSTRING_par( 2 ), nil ];
+            NSError * error = nil;
+            [ workspace launchApplicationAtURL: url options:NSWorkspaceLaunchDefault
+                                                configuration:[NSDictionary dictionaryWithObject:arguments forKey:NSWorkspaceLaunchConfigurationArguments]
+                                                    error:&error ] ;
+            hb_retl( ( error == nil )  ) ;
+            
+        }
+    }
 }
 
 HB_FUNC( SCREENWIDTH )
@@ -209,11 +235,32 @@ HB_FUNC( SYSTEM )
 
 HB_FUNC( OPENFILE )
 {
-   NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "" encoding : NSWindowsCP1252StringEncoding ] autorelease ];
+   NSString * string = hb_NSSTRING_par( 1 ) ;
    NSWorkspace * theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
      
    hb_retl( [ theProcess openFile : string ] );    
 } 
+
+
+HB_FUNC( MOVETOTRASH2 )
+{
+   NSFileManager * filemgr = NSFileManager.defaultManager ;
+   bool lresult = false ;
+    
+   NSString * string = hb_NSSTRING_par( 1 ) ;
+    
+   if( [ filemgr isDeletableFileAtPath: string ] )
+    {
+       NSURL * originalURL = [ [ NSURL alloc ] initFileURLWithPath: string ];
+       
+       lresult =  [filemgr trashItemAtURL:originalURL resultingItemURL: nil error: nil ] ;
+        
+    }
+  
+   hb_retl( lresult) ;
+ 
+}
+
 
 HB_FUNC( MOVETOTRASH )
 {
