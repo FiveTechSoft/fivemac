@@ -17,6 +17,7 @@ CLASS TScintilla FROM TControl
    DATA aKey             AS ARRAY INIT {}
    
    DATA cFileName
+   DATA cFilePath
    
    DATA cLastFind
    DATA bChange
@@ -245,6 +246,7 @@ CLASS TScintilla FROM TControl
    METHOD ReplaceSel( cText )      INLINE ::Send( SCI_REPLACESEL,len( cText ), cText  )
 
    METHOD Save()
+   METHOD SaveAS( cFileName )
 
    METHOD ScrollToEnd() INLINE ::Send( SCI_SCROLLTOEND )
 
@@ -948,6 +950,7 @@ METHOD Open( cFileName ) CLASS TScintilla
 
    if File( cFileName )
       ::cFileName = cFileName
+      ::cFilePath = cFilePath( ::cFileName )
       ::SetText( MemoRead( cFileName ) )
       ::SetSavePoint() // unmodified state
    endif
@@ -961,7 +964,8 @@ METHOD Save() CLASS TScintilla
    local hFile
 
    if Empty( ::cFileName )
-      ::cFileName = cGetFile( "*.prg", "Save as" )
+      ::cFileName = SaveFile( "Save as...", "*.prg")
+      ::cFilePath = cFilePath( ::cFileName )
    endif
 
    hFile = FCreate( ::cFileName, "w" )
@@ -969,6 +973,25 @@ METHOD Save() CLASS TScintilla
    FClose( hFile )
 
    ::SetSavePoint() // unmodified state
+
+return nil
+//----------------------------------------------------------------------------//
+
+METHOD SaveAS( cFileName ) CLASS TScintilla
+
+local hFile
+
+if Empty( cFileName )
+   cFileName = SaveFile( "Save as...", "*.prg" )
+endif
+
+hFile = FCreate( cFileName, "w" )
+FWrite( hFile, ::GetText() )
+FClose( hFile )
+
+::SetSavePoint() // unmodified state
+::cFileName := cFileName
+::cFilePath = cFilePath( ::cFileName )
 
 return nil
 
@@ -1340,7 +1363,7 @@ return nil
 
 METHOD DlgOpen() CLASS TScintilla
 
-   local cFileName := cGetFile( "*.prg", "Select a file" )
+   local cFileName := cGetfile("Select a file" , "prg" )
 
    if ! Empty( cFileName ) .and. File( cFileName )
       ::Open( cFileName )

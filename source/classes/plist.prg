@@ -79,16 +79,20 @@ loca cValue
 return aArray
 
 //----------------------------------------------------------------------------//
-Function CreateInfoFile(cProg,cPath,cIcon)
-local lpost:= .f.
-local cFile:= cPath+cProg+".app"+"/Contents/"+"Info.plist" 
- 
 
-oInfo:=TPlist():new(cfile)
+Function CreateInfoFile( cProg, cPath, cIcon )
+local lpost:= .f.
+local cFile:= cPath + cProg + ".app" + "/Contents/" + "Info.plist"
+
+if Empty( cIcon )
+   cIcon := "fivetech.icns"
+endif
+
+oInfo:=TPlist():new( cfile )
 
  WITH OBJECT oInfo  
    :SetItemByName ( "CFBundleExecutable" , cProg , lpost ) 
-   :SetItemByName ( "CFBundleName" , cProg,lpost ) 
+   :SetItemByName ( "CFBundleName" , cProg, lpost )
    :SetItemByName ( "CFBundleIdentifier" , "com.fivetech."+cProg , lpost  ) 
    :SetItemByName ( "CFBundlePackageType" , "APPL" , lpost  ) 
    :SetItemByName ( "CFBundleInfoDictionaryVersion" , "6.0" , lpost  ) 
@@ -96,4 +100,5 @@ oInfo:=TPlist():new(cfile)
  END
 
 Return nil
+
 

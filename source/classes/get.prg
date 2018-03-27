@@ -89,7 +89,7 @@ CLASS TGet FROM TControl
 
    METHOD SetNOSelect() INLINE TxtSetNOSelect( ::hWnd )
 
-   METHOD OpenSheet( cDir ) INLINE ChooseSheetTxt( ::hWnd, cDir )
+METHOD OpenSheet( cDir ) INLINE  ( ChooseSheetTxt( ::hWnd, cDir ), ::Assign() )
 
    METHOD SetNumeric() INLINE GetSetNumeric( ::hWnd )
 

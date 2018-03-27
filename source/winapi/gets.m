@@ -538,6 +538,20 @@ HB_FUNC( CHOOSESHEETTXT )
     {   
        [ panel setDirectoryURL: [ NSURL fileURLWithPath: string ] ];
     }
+    
+    panel.canChooseDirectories = YES ;
+    panel.message = @"Importe Texto" ;
+    if  ( panel.runModal == NSModalResponseOK )
+       {
+        NSString *source =  [[[[panel URLs] objectAtIndex:0]  path]
+                             stringByRemovingPercentEncoding ];
+        
+        [ texto setStringValue : source ];
+        
+    }
+    
+/*
+ 
     [ panel setCanChooseDirectories: YES ];
     [ panel setMessage:@"Importe el Archivo"];
     [ panel beginSheetModalForWindow: [ texto window ] completionHandler:^(NSInteger result){
@@ -549,6 +563,8 @@ HB_FUNC( CHOOSESHEETTXT )
             [ texto setStringValue : source ];
             
         } } ];
+ */
+ 
    #endif
 }
 

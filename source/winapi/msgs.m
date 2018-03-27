@@ -231,22 +231,28 @@ HB_FUNC( MSGYESNO ) // cMsg --> lYesNo
 
 }
 
-
 HB_FUNC( MSGNOYES ) // cMsg --> lYesNo
 {
-    CocoaInit();
-    ValToChar( hb_param( 2, HB_IT_ANY ) );
-    NSString * texto= hb_NSSTRING_par( -1 ) ;
     
-    if( ! [ texto isEqualToString : @"" ] )
-        texto = @"Please select" ;
-    
-    ValToChar( hb_param( 1, HB_IT_ANY ) );
-    
+    NSString * texto;
     NSAlert * alert = [ [ NSAlert alloc ] init ];
     
+    CocoaInit();
+    
+    ValToChar( hb_param( 2, HB_IT_ANY ) );
+    texto = hb_NSSTRING_par( -1 ) ;
+    if( [ texto isEqualToString : @"" ] )
+        texto = @"Please select" ;
+    
     alert.messageText = texto;
-    alert.informativeText = hb_NSSTRING_par( -1 ) ;
+    
+    ValToChar( hb_param( 1, HB_IT_ANY ) );
+    texto = hb_NSSTRING_par( -1 ) ;
+    if( [ texto isEqualToString : @"" ] )
+        texto = @"make a choice" ;
+    
+    alert.informativeText = texto;
+
     
     [alert addButtonWithTitle : @"NO" ] ;
     [alert addButtonWithTitle : @"YES" ] ;

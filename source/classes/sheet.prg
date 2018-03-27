@@ -10,8 +10,8 @@
 
 //----------------------------------------------------------------------------//
 
-Function cGetfile(cMsg)
-Return CHOOSEFILE(cMsg)
+Function cGetfile( cMsg, cFile )
+Return CHOOSEFILE( cMsg, cFile )
 
 //----------------------------------------------------------------------------//
 
