@@ -29,12 +29,25 @@ HB_FUNC( CURRENTPATH )
    hb_retc( [ currentpath cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
 }
 
+HB_FUNC( SETCURRENTPATH )
+{
+   [[NSFileManager defaultManager] changeCurrentDirectoryPath : hb_NSSTRING_par( 1 ) ];
+ 
+}
+
 HB_FUNC( PATH )
 {
    NSString * buPath = [ [ NSBundle mainBundle ] bundlePath ];
    NSString * secondParentPath = [ buPath stringByDeletingLastPathComponent ];
 
    hb_retc( [ secondParentPath cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+}
+
+HB_FUNC( HOMETPATH )
+{
+   NSURL * homepath = [[NSFileManager defaultManager] homeDirectoryForCurrentUser ];
+   NSString *string = homepath.absoluteString;
+   hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
 }
 
 HB_FUNC( PARENTPATH )
@@ -127,38 +140,20 @@ HB_FUNC( CREATEDIR )
       NSLog( @"Error: Create folder failed %@", cDirName );
 }
 
-/*
-HB_FUNC( MACEXEC )
-{
-   NSString * appName  = hb_NSSTRING_par( 1 );
-   NSString * fileName = hb_NSSTRING_par( 2 );
-   NSWorkspace * theProcess;
-
-   if( hb_pcount() > 1 )
-      hb_retl( [ [ NSWorkspace sharedWorkspace ] openFile: fileName withApplication: appName ] );
-   else   	
-   {
-      theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
-      	 
-      hb_retl( [ theProcess launchApplication: appName ] );
-   }
-}
-*/
-
 HB_FUNC( MACEXEC )
 {
     NSWorkspace * workspace;
     
-    if( hb_pcount() > 1 )
+    if( hb_pcount() >= 1 )
     {
         workspace = [ [ [ NSWorkspace alloc ] init ] autorelease ];
         
         if( hb_pcount() == 1 )
-            hb_retl( [ workspace launchApplication: hb_NSSTRING_par( 1 ) ] );
+           hb_retl( [ workspace launchApplication: hb_NSSTRING_par( 1 ) ] );
         
         if( hb_pcount() == 2 )
         {
-             NSURL * url = [ NSURL fileURLWithPath: [ workspace fullPathForApplication: hb_NSSTRING_par( 1 ) ] ];
+            NSURL * url = [ NSURL fileURLWithPath: [ workspace fullPathForApplication: hb_NSSTRING_par( 1 ) ] ];
             NSArray * arguments = [ NSArray arrayWithObjects: hb_NSSTRING_par( 2 ), nil ];
             NSError * error = nil;
             [ workspace launchApplicationAtURL: url options:NSWorkspaceLaunchDefault
@@ -169,6 +164,7 @@ HB_FUNC( MACEXEC )
         }
     }
 }
+
 
 HB_FUNC( SCREENWIDTH )
 {
@@ -233,12 +229,33 @@ HB_FUNC( SYSTEM )
    hb_retnl( system( hb_parc( 1 ) ) );
 }   	
 
-HB_FUNC( OPENFILE )
+HB_FUNC( FM_OPENFILE )
 {
-   NSString * string = hb_NSSTRING_par( 1 ) ;
-   NSWorkspace * theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
-     
-   hb_retl( [ theProcess openFile : string ] );    
+    
+    if( hb_pcount() < 1 )
+    {
+        hb_retl( NO );
+    }
+    
+    if( hb_pcount() == 1 )
+    {
+         NSLog(@"1");
+        
+        NSString * fileName = hb_NSSTRING_par( 1 );
+        NSWorkspace * theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
+        hb_retl( [ theProcess openFile : fileName ] );
+    }
+    
+    if( hb_pcount() == 2 )
+    {
+         NSLog(@"2");
+        NSString * fileName = hb_NSSTRING_par( 1 );
+        NSString * appName  = hb_NSSTRING_par( 2 );
+        NSWorkspace * theProcess = [ [ [ NSWorkspace alloc ] init ] autorelease ];
+        hb_retl( [ theProcess openFile: fileName withApplication: appName ] );
+        
+    }
+    
 } 
 
 
@@ -319,6 +336,10 @@ HB_FUNC( TASKEXECARRAY )
     
 	NSTask * task = [ [ NSTask alloc ] init ];
 	
+ //   NSURL * urlFile = [ NSURL fileURLWithPath: comando ];
+    
+     [task setCurrentDirectoryURL : [ [ NSBundle mainBundle ] bundleURL ] ] ;
+    
     [ task setLaunchPath: comando ];
 	
     NSArray *arguments = ( NSArray * ) hb_parnl(2) ;
@@ -344,16 +365,27 @@ HB_FUNC( BUILD )
    NSTask * build = [ [ NSTask alloc ] init ];
 	 
 	 NSString * buPath = [ [ NSBundle mainBundle ] bundlePath ]; 
-   NSString * secondParentPath = [ buPath stringByDeletingLastPathComponent ]; 
- 
-   secondParentPath  = [secondParentPath  stringByAppendingString: @"/build.sh"] ;
-	 
+     NSString * secondParentPath = [ buPath stringByDeletingLastPathComponent ];
+    
+    
+    
+   secondParentPath  = [secondParentPath  stringByAppendingString: @"/fivebuild.sh"] ;
+    
+    
+  //  NSURL * urlFile = [ NSURL fileURLWithPath: secondParentPath ];
+    
+  //  NSURL * urlFile = [ NSURL fileURLWithPath: secondParentPath ];
+    
+  //  [ build setCurrentDirectoryURL : [ urlFile filePathURL ] ] ;
+    
+    
 	[ build setLaunchPath: @"/bin/sh" ];
 	[ build setArguments: [ NSArray arrayWithObjects: secondParentPath , cFileName, nil ] ];	
 	 
 	NSPipe *pipe = [ NSPipe pipe ];
   [ build setStandardOutput: pipe ];
-	
+  [ build setStandardError: pipe ];
+    
   NSFileHandle * file = [ pipe fileHandleForReading ];
 	 
 	[ build launch ];

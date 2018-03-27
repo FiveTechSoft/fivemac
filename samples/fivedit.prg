@@ -28,7 +28,7 @@ function Main()
    BuildScriptDbf()
    BuildMenu()
 
-   DEFINE WINDOW oWnd FROM 100, 100 TO 800, 1200 FULL
+    DEFINE WINDOW oWnd FROM 100, 100 TO 800, 1200 FULL
 
    BuildButtonBar()
 
@@ -178,7 +178,7 @@ function BuildEditor()
    oEditor:nAutoResize = 18
 
    oEditor:bChange = { || EditorChange() }
-   oEditor:SetColor( , nRgb( 167, 167, 167 ) , .t. )
+//   oEditor:SetColor( , nRgb( 167, 167, 167 ) , .t. )
 
    AAdd( aEditors, oEditor )
 
@@ -195,7 +195,7 @@ function BuildPreferences()
        SetPlistValue( cPrefFile, "PathFiveMac", "./../../fivemac", .T. )
        SetPlistValue( cPrefFile, "PathSDK", ;
        "/Applications/Xcode.app/Contents/Developer/Platforms/" + ;
-           "MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk", .T. )
+           "MacOSX.platform/Developer/SDKs/MacOSX.sdk", .T. )
    endif
 
    CreatePlistHarblib()
@@ -340,14 +340,17 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-Function RunScript(oEditor )
+Function RunScript( oEditor )
 
 local oHrb, cResult, bOldError
+local cPrefFile := Path() + "/sciedit.plist"
+local cFivePath := GetPlistValue( cPrefFile, "PathFiveMac" )
+local cHarbourPath := GetPlistValue( cPrefFile, "PathHarbour" )
 
 FReOpen_Stderr( "comp.log", "w" )
 
 oHrb = HB_CompileFromBuf( StrTran( oEditor:GetText(), "Main", "__Main" ),;
-"-n", "-I/Volumes/Macintosh HD/Usuarios/Manuel/fivemac/include", "-I/Volumes/Macintosh HD/Usuarios/Manuel/harbour/include" )
+"-n", "-I" + alltrim( cFivePath ) + "/include", "-I" + alltrim( cHarbourPath ) + "/include" )
 
 if "error" $ MemoRead( "comp.log" )
     MsgInfo( MemoRead( "comp.log" ), "Error" )
@@ -1180,7 +1183,11 @@ function Run()
    local i, n
    local cFinText
    local cFileName := cFileNoExt( oEditor:cFileName )
-   local cCurrentPath := CurrentPath() + "/"
+   local cCurrentPath := Path() + "/"
+
+   local oArrayArguments
+
+   FM_openFile( "/Users/Manuel/Desktop/THaruPDF.prg" , "/Applications/TextEdit.app" )
 
    n = Len( aFrameworks )
    for i = 1 to n
@@ -1206,7 +1213,7 @@ function Run()
    cText = cText + "PRG compiling..." + Chr( 13 )
    oGet:GoBottom()
 
-   cText += RunHarbour( cFileName ) + Chr( 13 )
+  cText += RunHarbour( cCurrentPath + cFileName ) + Chr( 13 )
 
    oGet:SetText( cText )
    oGet:GoBottom()
@@ -1220,44 +1227,66 @@ function Run()
    oGet:SetText( cText )
    oGet:GoBottom()
 
-   cText += RunGcc( cFileName ) + Chr( 13 )
+   cText += RunGcc( cCurrentPath + cFileName )
    oGet:SetText( cText )
    oGet:GoBottom()
 
-   if ! IsFile( cCurrentPath + cFileName + ".o" )
-      Msginfo( "C compile error, please review the reported errors" )
-      return nil
+   if ! IsFile( cCurrentPath + cfileName + ".o" )
+      cText +=  Chr( 13 )+ "C compile error, no object file generate. please review the reported errors" + Chr( 13 )
+      Return nil
+   else
+      cText += "OK" + Chr( 13 )
+      oGet:SetText( cText )
+      oGet:GoBottom()
    endif
 
    // System( "./build.sh " + cFileNoExt( oEditor:cFileName ) + " > build.log" )
 
    if ! IsFile( cCurrentPath + cFileName + ".app" )
-      CreateDir( cCurrentPath + cfileName + ".app" )
+      CreateDir( cCurrentPath + cFileName + ".app" )
    endif
 
    cText += "building the app..." + Chr( 13 )
    oGet:SetText( cText )
+   oGet:GoBottom()
+
+   //---------- incluye info.plist -----------
 
    if  ! IsFile( cCurrentPath + cFileName + ".app/Contents" )
-      CreateDir( cCurrentPath + cFileName + ".app/Contents" )
-      CreateInfoFile( cFileName, cCurrentPath, FileNoPath( IconPath ) )
+        CreateDir( cCurrentPath + cFileName + ".app/Contents" )
    endif
+
+   CreateInfoFile( cFileName, cCurrentPath, FileNoPath( IconPath ) )
 
    cText += "building info.plist" + Chr( 13 )
    oGet:SetText( cText )
+   oGet:GoBottom()
+
+   //----------- crea dir de exe --------------
 
    if ! IsFile(  cCurrentPath + cFileName + ".app/Contents/MacOS" )
       CreateDir( cCurrentPath + cFileName + ".app/Contents/MacOS" )
    endif
 
-   if  ! IsFile( cCurrentPath + cFileName + ".app/Contents/Resources" )
-      CreateDir( cCurrentPath + cFileName + ".app/Contents/Resources" )
-      CopyFileTo(IconPath, cCurrentPath + cFileName + ".app/Contents/Resources/" + FileNoPath( IconPath ) )
+  //------------- incluir icono ------------
+
+   if Empty( IconPath )
+      IconPath := FivePath + "/icons/fivetech.icns"
    endif
 
-   cText += "including app icon..." + Chr( 13 )
+   if  ! IsFile( cCurrentPath + cFileName + ".app/Contents/Resources" )
+        CreateDir( cCurrentPath + cFileName + ".app/Contents/Resources" )
+   endif
+
+   if( CopyFileTo( IconPath, cCurrentPath + cFileName + ".app/Contents/Resources/" + FileNoPath( IconPath ) ) )
+        cText += "including app icon..." + Chr( 13 )
+   else
+        cText += " NO including app icon..." + Chr( 13 )
+   endif
    oGet:SetText( cText )
    oGet:GoBottom()
+
+   //-----------  incluir frameworks ------------
 
    if Len( aExtraFrameworks ) > 0
       if  ! IsFile( cCurrentPath + cFileName + ".app/Contents/frameworks" )
@@ -1271,37 +1300,46 @@ function Run()
       next
    endif
 
+MakeshFile("/"+cFileName+".sh")
+SETEXECUTABLE( cCurrentPath+"/"+cFileName+".sh")
 
-    MakeshFile("/"+cFileName+".sh")
-    SETEXECUTABLE(cCurrentPath+"/"+cFileName+".sh")
+cText+= "creando archivo sh" + Chr( 13 )
+oGet:SetText( cText )
+oGet:GoBottom()
 
-   cText:=cText+ MakeExec("/"+cFileName+".sh", cFileName ,SdkPath,framework,HarbLibs,HarbPath,FivePath,ExtraFramework )
+ oArrayArguments := ArrayCreateEmpty()
 
 
-  // cText += LinkGcc( cFileName )
+ArrayAddString( oArrayArguments, cCurrentPath+"/"+cFileName+".sh"  )
+ArrayAddString( oArrayArguments, cFilename  )
 
-  // cText:=cText+ MakeExec( cFileName ,SdkPath,framework,HarbLibs,HarbPath,FivePath,ExtraFramework )
+cText += TaskExecArray( "/bin/sh", oArrayArguments )
+
+//   cText += LinkGcc( cFileName )
 
    oGet:SetText( cText )
    oGet:GoBottom()
 
+
+
    cFinText = AllTrim( SubStr( cText, Len( ctext ) - 5, 5 ) )
 
    if cFinText = "done!"
-        MoveToTrash(cCurrentPath +"/"+cFileName+".sh" )
+        MoveToTrash( cCurrentPath +"/"+cFileName+".sh" )
 
       if IsFile( cCurrentPath + cFileName + ".o" )
-         MoveToTrash( cFileName + ".c" )
-         MoveToTrash( cFileName + ".o" )
+         MoveToTrash( cCurrentPath + cFileName + ".c" )
+         MoveToTrash( cCurrentPath + cFileName + ".o" )
          if IsFile( cCurrentPath + cFileName + ".app/Contents/MacOS/" + cFileName )
-            MacExec( cFileName +".app" )
+           ?"si"
+            MacExec( cCurrentPath + cFileName +".app" )
+
          endif
       else
          MoveToTrash( cFileName + ".app" )
          MsgInfo( "app creation error" )
       endif
    endif
-
 
 return nil
 
@@ -1319,7 +1357,8 @@ function RunHarbour( cFileName )
    local i
    local oArrayArguments := ArrayCreateEmpty()
 
-   ArrayAddString( oArrayArguments, cFilename )
+
+   ArrayAddString( oArrayArguments, cFilename  )
 
    if Len( aHarbFlags ) > 0
       for i = 1 to Len( aHarbFlags )
@@ -1329,7 +1368,19 @@ function RunHarbour( cFileName )
 
    ArrayAddString( oArrayArguments, cIncludes )
 
-   cText = TaskExecArray( cHarbour, oArrayArguments )
+   ArrayAddString( oArrayArguments, "-o"+ cFilename +".c" )
+
+  if !file(  cFilename+".prg" )
+       msginfo( "el archivo no existe "+ cFilename )
+   endif
+
+   //"//"+${USER}+"/Fivemac/harbour/bin/harbour"
+
+   if !File( cHarbour )
+       msginfo( "Harbour no existe "+ cHarbour )
+   else
+       cText = TaskExecArray( cHarbour, oArrayArguments )
+   endif
 
 return cText
 
@@ -1345,11 +1396,15 @@ function RunGcc(cFileName )
    local cGcc := "/usr/bin/gcc"
    local oArrayArguments :=  ArrayCreateEmpty()
 
+   local HEADERS := SdkPath + "/usr/include"
+   local FRAMEPATH := sdkPath + "/System/Library/Frameworks"
+
    ArrayAddString( oArrayArguments, cFileName + ".c" )
    ArrayAddString( oArrayArguments, "-c" )
-   ArrayAddString( oArrayArguments, "-I" + FivePath + "/include" )
+   ArrayAddString( oArrayArguments, "-o"+ cFileName + ".o" )
    ArrayAddString( oArrayArguments, "-I" + HarbPath + "/include" )
-   ArrayAddString( oArrayArguments, "-I" + sdkPath  + "/usr/include" )
+   ArrayAddString( oArrayArguments, "-I" + HEADERS )
+   ArrayAddString( oArrayArguments, "-I" + FRAMEPATH )
 
 return TaskExecArray( cGcc, oArrayArguments )
 
@@ -1358,7 +1413,7 @@ return TaskExecArray( cGcc, oArrayArguments )
 function LinkGcc(cFileName )
 
    local oPlist := TPlist():New( cPrefFile  )
-   local cCurrentPath := CurrentPath() + "/"
+   local cCurrentPath := Path() + "/"
    local HarbPath  := oPlist:GetItemByName( "PathHarbour" )
    local FivePath  := oPlist:GetItemByName( "PathFiveMac" )
    local SdkPath   := oPlist:GetItemByName( "PathSDK"  )
@@ -1368,13 +1423,21 @@ function LinkGcc(cFileName )
    local aFrameworks := oPlist:GetArrayByName( "FrameWorks" )
    local aHarbLibs := oPlist:GetArrayByName( "HarbLibs" )
    local aExtraFrameworks := oPlist:GetArrayByName( "ExtraFrameWorks" )
+   local cFrame:= ""
    local oArrayArguments := ArrayCreateEmpty()
+
+   local HEADERS := SdkPath + "/usr/include"
+
+   local FRAMEPATH := SdkPath +"/System/Library/Frameworks"
+   local FRAMEWORKS :='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'
+
+//   local HRBLIBS := '-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'
 
    ArrayAddString( oArrayArguments, cFileName + ".o" )
    ArrayAddString( oArrayArguments, "-o" )
    ArrayAddString( oArrayArguments, cCurrentPath + cFileName + ".app/Contents/MacOS/" + cFileName )
 
-   ArrayAddString( oArrayArguments, "-L" + sdkPath + "/usr/lib" )
+   ArrayAddString( oArrayArguments, "-L" + "/" + sdkPath + "/usr/lib" )
    ArrayAddString( oArrayArguments, "-L" + FivePath + "/lib" )
    ArrayAddString( oArrayArguments, "-L" + HarbPath + "/lib" )
 
@@ -1382,26 +1445,32 @@ function LinkGcc(cFileName )
    ArrayAddString( oArrayArguments, "-lfivec" )
 
    n:= Len( aHarbLibs )
+
    for i=1 to n
       ArrayAddString(oArrayArguments, "-l"+alltrim(aHarbLibs[i]))
    next
 
-
    n = Len( aFrameworks )
 
-     ArrayAddString( oArrayArguments, "-F" + sdkPath + "/System/Library/Frameworks" )
+  // ? "-F" + "/"+ FRAMEPATH
 
+  // ArrayAddString( oArrayArguments, "-F" + "/"+ FRAMEPATH )
 
-  // ArrayAddFramework( oArrayArguments, "Cocoa" )
-  // ArrayAddString( oArrayArguments, "-framework QTkit" )
-  // ArrayAddString( oArrayArguments, "-framework AppKit" )
-  // ArrayAddString( oArrayArguments, "-framework Foundation" )
+  // ArrayAddString( oArrayArguments, FRAMEWORKS )
+
+ //  ArrayAddFramework( oArrayArguments, "Cocoa" )
+  // ArrayAddString( oArrayArguments, "-framework QTkit.framework" )
+   ArrayAddString( oArrayArguments, "-framework AppKit.framework" )
+  // ArrayAddString( oArrayArguments, "-framework Foundation.framework" )
+
    for i = 1 to n
-      // cFrame += "-framework " + AllTrim( aFrameworks[ i ] ) + " "
-      // msginfo("-framework " + AllTrim( aFrameworks[ i ] ))
-     // ArrayAddFramework( oArrayArguments,  AllTrim( aFrameworks[ i ] ) )
+    //  cFrame := "-framework " + AllTrim( aFrameworks[ i ] ) //+ " "
+    //   msginfo("-framework " + AllTrim( aFrameworks[ i ] ))
+    //   ArrayAddString( oArrayArguments, cFrame )
+      // ArrayAddFramework( oArrayArguments,  cFrame )
    next
 
+//  ArrayAddString( oArrayArguments, cFrame )
 
 
    /*
@@ -1420,10 +1489,22 @@ return TaskExecArray( cGcc, oArrayArguments )
 
 function MakeShFile( cShFile )
 
-   local cCurrentPath := CurrentPath()
-   local cText := "gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$SDKPATH/usr/lib -L$FIVEPATH/lib -lfive -lfivec -L$HARBPATH/lib $HRBLIBS $FRAMEWORKS  -F$FIVEPATH/frameworks $EXTRAFRAMEWORKS"
+   local cCurrentPath := Path()
+   local cText
+local cMPath := strTran( cCurrentPath, " ","\ ")
 
-   ShFileFromString( cText, cCurrentPath + cShFile )
+cText := "SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" + hb_eol() + ;
+         "HEADERS=$SDKPATH/usr/include"+ hb_eol() +;
+         "CRTLIB=$SDKPATH/usr/lib"+ hb_eol()+;
+         "HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'"+ hb_eol() +;
+         "FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'"+ hb_eol()+;
+         "FIVEPATH=/Users/Manuel/Fivemac/fivemac"+ hb_eol() +;
+         "HARBPATH=/Users/Manuel/Fivemac/harbour"+hb_eol()
+
+
+cText +="gcc "+cMPath+"/$1.o -o "+cMPath+"/$1.app/Contents/MacOS/$1 -L$CRTLIB -L$FIVEPATH/lib -lfive -lfivec -L$HARBPATH/lib $HRBLIBS $FRAMEWORKS -F$FIVEPATH/frameworks -framework Scintilla"
+
+ ShFileFromString( cText, cCurrentPath + cShFile )
 
 return nil
 
