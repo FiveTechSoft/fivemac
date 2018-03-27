@@ -17,7 +17,7 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 all : ./lib/libfive.a ./lib/libfivec.a
 
 PRG_OBJS = \
-  ./obj/applicat.o \
+  	./obj/applicat.o \
 	./obj/browse.o	\
 	./obj/button.o	\
 	./obj/btnbmp.o	\
@@ -32,36 +32,36 @@ PRG_OBJS = \
 	./obj/coverflow.o \
 	./obj/database.o \
 	./obj/datepicker.o \
-  ./obj/dbtools.o \
+  	./obj/dbtools.o \
 	./obj/dialog.o	\
 	./obj/errsysm.o \
 	./obj/filename.o \
 	./obj/folder.o	\
 	./obj/folditem.o \
 	./obj/font.o \
-  ./obj/form.o \
-  ./obj/get.o \
+  	./obj/form.o \
+  	./obj/get.o \
 	./obj/group.o \
 	./obj/harbour.o \
 	./obj/image.o \
 	./obj/inspect.o \
-  ./obj/itunes.o \
-   ./obj/locale.o \
-  ./obj/mail.o \
-  ./obj/memoedit.o \
+  	./obj/itunes.o \
+   	./obj/locale.o \
+  	./obj/mail.o \
+  	./obj/memoedit.o \
 	./obj/menu.o \
 	./obj/menuitem.o \
 	./obj/mget.o \
 	./obj/movie.o \
-  ./obj/multiview.o \
+  	./obj/multiview.o \
 	./obj/nodo.o \
     ./obj/notification.o \
   	./obj/nsobject.o \
-  ./obj/picture.o \
-  ./obj/printer.o \
+  	./obj/picture.o \
+  	./obj/printer.o \
 	./obj/pdfview.o	\
 	./obj/pdmenu.o	\
-  ./obj/plist.o	\
+  	./obj/plist.o	\
 	./obj/progres.o \
 	./obj/radio.o	\
 	./obj/radmenu.o	\
@@ -75,26 +75,26 @@ PRG_OBJS = \
 	./obj/splash.o \
 	./obj/split.o \
 	./obj/splitItem.o \
-  ./obj/strings.o	\
+  	./obj/strings.o	\
 	./obj/sheet.o \
 	./obj/Tsound.o \
 	./obj/tabview.o \
 	./obj/tabItem.o \
     ./obj/tclipget.o \
-     ./obj/textbox.o \
+    ./obj/textbox.o \
 	./obj/Ttimer.o	\
 	./obj/toolbar.o	\
 	./obj/toolbtn.o	\
-   ./obj/valblank.o	\
-  ./obj/View.o	\
-  ./obj/window.o	\
+   	./obj/valblank.o	\
+  	./obj/View.o	\
+  	./obj/window.o	\
 	./obj/webview.o
 
 C_OBJS = ./objc/browses.o	\
 	./objc/buttons.o	\
 	./objc/checkboxes.o \
 	./objc/colors.o \
-  ./objc/colorton.o	\
+  	./objc/colorton.o	\
 	./objc/comboboxes.o \
 	./objc/constants.o \
     ./objc/coverflows.o \
@@ -103,14 +103,14 @@ C_OBJS = ./objc/browses.o	\
 	./objc/dialogs.o	\
 	./objc/encript.o \
 	./objc/fonts.o	\
-  ./objc/formatters.o	\
-  ./objc/funcs.o \
+  	./objc/formatters.o	\
+  	./objc/funcs.o \
 	./objc/gets.o \
 	./objc/groups.o \
     ./objc/IKImabr.o \
 	./objc/images.o	\
 	./objc/ImageAndTextCell.o	\
-  ./objc/ituness.o	\
+  	./objc/ituness.o	\
 	./objc/menus.o	\
 	./objc/mgets.o	\
 	./objc/movies.o	\
@@ -120,32 +120,32 @@ C_OBJS = ./objc/browses.o	\
 	./objc/objc.o \
 	./objc/or.o	\
 	./objc/outlines.o	\
-  ./objc/pdfviews.o \
-  ./objc/popover.o \
+  	./objc/pdfviews.o \
+  	./objc/popover.o \
 	./objc/preferences.o	\
 	./objc/printers.o \
 	./objc/progress.o \
 	./objc/says.o	\
 	./objc/scintillas.o	\
-./objc/simages.o	\
-  ./objc/searchgets.o	\
-  ./objc/segments.o	\
-  ./objc/sgets.o \
-  ./objc/sheets.o	\
-  ./objc/sliders.o	\
-  ./objc/sounds.o \
-  ./objc/splits.o	\
+	./objc/simages.o	\
+  	./objc/searchgets.o	\
+  	./objc/segments.o	\
+  	./objc/sgets.o \
+  	./objc/sheets.o	\
+  	./objc/sliders.o	\
+  	./objc/sounds.o \
+  	./objc/splits.o	\
 	./objc/strtoken.o	\
-  ./objc/system.o \
+  	./objc/system.o \
 	./objc/timers.o	\
-  ./objc/tarrays.o	\
+  	./objc/tarrays.o	\
 	./objc/transparent.o \
 	./objc/toolbars.o	\
 	./objc/valtochr.o	\
-  ./objc/RoundedView.o	\
-  ./objc/urls.o	\
-  ./objc/tabviews.o	\
-  ./objc/views.o \
+  	./objc/RoundedView.o	\
+  	./objc/urls.o	\
+  	./objc/tabviews.o	\
+  	./objc/views.o \
 	./objc/webviews.o \
     ./objc/windows.o
 
@@ -171,11 +171,11 @@ SWIFT_OBJS =
 ./objs/%.o : ./source/swift/%.swift
 	if [ ! -d "objs" ]; then mkdir objs; fi
 	swiftc -frontend -c -color-diagnostics -primary-file $<  \
--module-name Bridgette \
-$(SWIFTFLAGS) -emit-module -emit-module-path ./source/swift/$*.swiftmodule \
--emit-objc-header-path ./source/swift/$*-Swift.h \
--enable-testing -enable-objc-interop -parse-as-library \
--o $@
+	-module-name Bridgette \
+	$(SWIFTFLAGS) -emit-module -emit-module-path ./source/swift/$*.swiftmodule \
+	-emit-objc-header-path ./source/swift/$*-Swift.h \
+	-enable-testing -enable-objc-interop -parse-as-library \
+	-o $@
 	if [ ! -d "lib" ]; then mkdir lib; fi
 	ar rc ./lib/libfivec.a $@
 
