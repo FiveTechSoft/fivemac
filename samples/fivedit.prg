@@ -1529,23 +1529,41 @@ return TaskExecArray( cGcc, oArrayArguments )
 //----------------------------------------------------------------------------//
 
 function MakeShFile( cShFile )
+    local oPlist := TPlist():New( cPrefFile  )
+    local cHarbPath  := oPlist:GetItemByName( "PathHarbour" )
+    local cFivePath  := oPlist:GetItemByName( "PathFiveMac" )
+    local SdkPath   := oPlist:GetItemByName( "PathSDK"  )
 
-   local cCurrentPath := cFilePath( cShFile )
-   local cText
-   local cMPath := strTran( cCurrentPath, " ","\ ")
+    local cCurrentPath := cFilePath( cShFile )
+    local cText
+    local cMPath := strTran( cCurrentPath, " ","\ ")
+    
+    local n, cUsrPath
 
+
+     //-------- cortamos los path --------------------
+     
+     cFivePath := strTran( cFivePath, "/Usuarios", "/Users" )
+     cHarbPath := strTran( cHarbPath, "/Usuarios", "/Users" )
+     
+     cFivePath:= substr( cFivePath, hb_at("/Users", cFivePath ) )
+     cHarbPath= substr( cHarbPath, hb_at("/Users", cHarbPath ) )
+     
+     
 cText := "SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" + hb_eol() + ;
          "HEADERS=$SDKPATH/usr/include"+ hb_eol() +;
          "CRTLIB=$SDKPATH/usr/lib"+ hb_eol()+;
          "HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'"+ hb_eol() +;
          "FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'"+ hb_eol()+;
-         "FIVEPATH=/Users/Manuel/Fivemac/fivemac"+ hb_eol() +;
-         "HARBPATH=/Users/Manuel/Fivemac/harbour"+hb_eol()
+         "FIVEPATH="+ cFivePath + hb_eol() +;
+         "HARBPATH=" + cHarbPath + hb_eol()
 
 
 cText +="gcc "+cMPath+"/$1.o -o "+cMPath+"/$1.app/Contents/MacOS/$1 -L$CRTLIB -L$FIVEPATH/lib -lfive -lfivec -L$HARBPATH/lib $HRBLIBS $FRAMEWORKS -F$FIVEPATH/frameworks -framework Scintilla"
 
- ShFileFromString( cText, cCurrentPath + cShFile )
+//? cCurrentPath + cFileNoPath( cShFile )
+
+ ShFileFromString( cText, cCurrentPath + cFileNoPath( cShFile ) )
 
 return nil
 
