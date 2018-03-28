@@ -28,7 +28,7 @@ function Main()
    BuildScriptDbf()
    BuildMenu()
 
-    DEFINE WINDOW oWnd FROM 100, 100 TO 800, 1200 FULL
+   DEFINE WINDOW oWnd FROM 100, 100 TO 800, 1200 FULL
 
    BuildButtonBar()
 
@@ -461,7 +461,7 @@ function Preferences()
    @ 0,0 MVIEW PROMPT "Fonts & Colors" SIZE 500, 382 TITLE "Fonts & Colors" OF oMulti ;
          TOOLTIP "Fonts & Colors" IMAGE "ColorPanel" 
 
-   @ 0,0 MVIEW PROMPT "WorkSpace" SIZE 440, 370 TITLE "WorkSpace" OF oMulti ;
+   @ 0,0 MVIEW PROMPT "WorkSpace" SIZE 500, 382 TITLE "WorkSpace" OF oMulti ;
          TOOLTIP "WorkSpace" IMAGE cBmpPath+"WorkSpace2.tiff"
 
    @ 0,0 MVIEW PROMPT "Frameworks" SIZE 420, 382 TITLE "Frameworks" OF oMulti ;
@@ -503,40 +503,40 @@ function Preferences()
  
    @ 224, 40 SAY "Icon app:" OF oMulti:aViews[ 2 ]
 
-   @ 230, 140 IMAGE oImg OF oMulti:aViews[ 2 ] SIZE 130, 130 FILENAME cVarIcon
+   @ 230, 160 IMAGE oImg OF oMulti:aViews[ 2 ] SIZE 130, 130 FILENAME cVarIcon
        oImg:setFrame()
 
 
-   @ 204, 40 GET oGetIcon VAR cVarIcon OF oMulti:aViews[ 2 ] SIZE 340, 20
+   @ 204, 40 GET oGetIcon VAR cVarIcon OF oMulti:aViews[ 2 ] SIZE 390, 20
 
-   @ 204, 381  BTNBMP OF oMulti:aViews[ 2 ]  ;
+   @ 204, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
      FILENAME "RevealFreestanding"  ;
     ACTION ChooseSheetTxtImg(oGetIcon:hwnd,oImg:hWnd ) SIZE 20, 20 STYLE 10
 
    oGetIcon:SetNOSelect()
 
    @ 170, 40 SAY "Fivemac Path:" OF oMulti:aViews[ 2 ]
-   @ 150, 40 GET oGet1 VAR cVar1 OF oMulti:aViews[ 2 ] SIZE 340, 20
+   @ 150, 40 GET oGet1 VAR cVar1 OF oMulti:aViews[ 2 ] SIZE 390, 20
 
 
-   @ 150, 381  BTNBMP OF oMulti:aViews[ 2 ]  ;
+   @ 150, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
       FILENAME "RevealFreestanding"  ;
-      ACTION oGet1:opensheet(ParentPath( oGet1:gettext() ) )  SIZE 20, 20 STYLE 10
+      ACTION oGet1:opensheet( ParentPath( oGet1:gettext() ) )  SIZE 20, 20 STYLE 10
 
 
    @ 120, 40 SAY "Harbour Path:" OF oMulti:aViews[ 2 ]
-   @ 100, 40 GET oGet2 VAR cVar2 OF oMulti:aViews[ 2 ] SIZE 340, 20
+   @ 100, 40 GET oGet2 VAR cVar2 OF oMulti:aViews[ 2 ] SIZE 390, 20
 
 
-   @ 100, 381  BTNBMP OF oMulti:aViews[ 2 ]  ;
+   @ 100, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
       FILENAME "RevealFreestanding"  ;
       ACTION oGet2:opensheet( oGet2:gettext() )  SIZE 20, 20 STYLE 10
 
   
    @ 70, 40 SAY "SDK Path:" OF oMulti:aViews[ 2 ]
-   @ 10, 40 GET oGet3 VAR cVar3 OF oMulti:aViews[ 2 ] SIZE 340, 60
+   @ 10, 40 GET oGet3 VAR cVar3 OF oMulti:aViews[ 2 ] SIZE 390, 60
 
-   @ 10, 381  BTNBMP OF oMulti:aViews[ 2 ]  ;
+   @ 10, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
       FILENAME "RevealFreestanding"  ;
      ACTION oGet3:opensheet(ParentPath( oGet3:gettext()))  SIZE 20, 60 STYLE 10
 
@@ -652,25 +652,26 @@ function Preferences()
                 oTree2:Rebuild(), oTree2:ExpandAll(),;
                 oTree3:Rebuild(), oTree3:ExpandAll(),;
                 oTree4:Rebuild(), oTree4:ExpandAll(),;
-                oTreeFlag:Rebuild(), oTreeFlag:ExpandAll() )
+               oTreeFlag:Rebuild(), oTreeFlag:ExpandAll() ) ;
+ 
 
-   if GetPlistValue( cPrefFile, "PathFiveMac" ) != cVar1
+   if ! ( cVar1 == GetPlistValue( cPrefFile, "PathFiveMac" ) )
       SetPlistValue( cPrefFile, "PathFiveMac", cVar1, .T. )
    endif
 
-   if GetPlistValue( cPrefFile, "PathHarbour" ) != cVar2
+   if ! ( cVar2 == GetPlistValue( cPrefFile, "PathHarbour" ) )
       SetPlistValue( cPrefFile, "PathHarbour", cVar2, .T. )
-   endif
+    endif
 
-   if GetPlistValue( cPrefFile, "PathSDK" ) != cVar3
+   if ! ( cVar3 == GetPlistValue( cPrefFile, "PathSDK" ) )
       SetPlistValue( cPrefFile, "PathSDK", cVar3, .T. )
    endif
 
-    if GetPlistValue( cPrefFile, "PathIcon" ) != cVarIcon
+    if !( cVarIcon == GetPlistValue( cPrefFile, "PathIcon" ) )
        SetPlistValue( cPrefFile, "PathIcon",  cVarIcon , .T. )
     endif
 
-   if GetPlistValue( cPrefFile, "PathIcon" ) != oImg:GetFile()
+   if ! ( GetPlistValue( cPrefFile, "PathIcon" ) == oImg:GetFile() )
       SetPlistValue( cPrefFile, "PathIcon", oImg:GetFile(), .T. )
    endif
 
@@ -1130,6 +1131,7 @@ function Exit()
    local oPlist
    local n, oEditor
    local afiles:= {}
+   
    oPlist:=tplist():new( cPrefFile  )
 
    for n = 1 to Len( aEditors )
@@ -1183,11 +1185,16 @@ function Run()
    local i, n
    local cFinText
    local cFileName := cFileNoExt( oEditor:cFileName )
+   local cFilePath := cFilePath(  oEditor:cFileName )
+   
+   local cAuxFile
+   
    local cCurrentPath := Path() + "/"
+   
 
    local oArrayArguments
-
-   FM_openFile( "/Users/Manuel/Desktop/THaruPDF.prg" , "/Applications/TextEdit.app" )
+   local cResult
+   
 
    n = Len( aFrameworks )
    for i = 1 to n
@@ -1213,12 +1220,17 @@ function Run()
    cText = cText + "PRG compiling..." + Chr( 13 )
    oGet:GoBottom()
 
-  cText += RunHarbour( cCurrentPath + cFileName ) + Chr( 13 )
+   cResult := RunHarbour( oEditor:cFileName )
+   if Empty( cResult )
+      Return .f.
+   endif
+   
+   cText += cResult + Chr( 13 )
 
    oGet:SetText( cText )
    oGet:GoBottom()
 
-   if ! IsFile( cCurrentPath + cfileName + ".c" )
+   if ! IsFile( cFilePath + cfileName + ".c" )
       MsgInfo( "PRG compile error, please review the reported errors" )
       return nil
    endif
@@ -1227,11 +1239,11 @@ function Run()
    oGet:SetText( cText )
    oGet:GoBottom()
 
-   cText += RunGcc( cCurrentPath + cFileName )
+   cText += RunGcc( cFilePath + cFileName )
    oGet:SetText( cText )
    oGet:GoBottom()
 
-   if ! IsFile( cCurrentPath + cfileName + ".o" )
+   if ! IsFile( cFilePath + cfileName + ".o" )
       cText +=  Chr( 13 )+ "C compile error, no object file generate. please review the reported errors" + Chr( 13 )
       Return nil
    else
@@ -1240,10 +1252,10 @@ function Run()
       oGet:GoBottom()
    endif
 
-   // System( "./build.sh " + cFileNoExt( oEditor:cFileName ) + " > build.log" )
-
-   if ! IsFile( cCurrentPath + cFileName + ".app" )
-      CreateDir( cCurrentPath + cFileName + ".app" )
+ // System( "./build.sh " + cFileNoExt( oEditor:cFileName ) + " > build.log" )
+ 
+   if ! IsFile( cFilePath + cFileName + ".app" )
+      CreateDir( cFilePath + cFileName + ".app" )
    endif
 
    cText += "building the app..." + Chr( 13 )
@@ -1252,20 +1264,20 @@ function Run()
 
    //---------- incluye info.plist -----------
 
-   if  ! IsFile( cCurrentPath + cFileName + ".app/Contents" )
-        CreateDir( cCurrentPath + cFileName + ".app/Contents" )
+   if  ! IsFile( cFilePath + cFileName + ".app/Contents" )
+        CreateDir( cFilePath + cFileName + ".app/Contents" )
    endif
 
-   CreateInfoFile( cFileName, cCurrentPath, FileNoPath( IconPath ) )
+   CreateInfoFile( cFileName, cFilePath, FileNoPath( IconPath ) )
 
    cText += "building info.plist" + Chr( 13 )
    oGet:SetText( cText )
    oGet:GoBottom()
-
+   
    //----------- crea dir de exe --------------
 
-   if ! IsFile(  cCurrentPath + cFileName + ".app/Contents/MacOS" )
-      CreateDir( cCurrentPath + cFileName + ".app/Contents/MacOS" )
+   if ! IsFile(  cFilePath + cFileName + ".app/Contents/MacOS" )
+      CreateDir( cFilePath + cFileName + ".app/Contents/MacOS" )
    endif
 
   //------------- incluir icono ------------
@@ -1274,78 +1286,93 @@ function Run()
       IconPath := FivePath + "/icons/fivetech.icns"
    endif
 
-   if  ! IsFile( cCurrentPath + cFileName + ".app/Contents/Resources" )
-        CreateDir( cCurrentPath + cFileName + ".app/Contents/Resources" )
+   cAuxFile := cFilePath + cFileName + ".app/Contents/Resources"
+   
+   if  ! IsFile( cAuxFile )
+        CreateDir( cAuxFile )
    endif
-
-   if( CopyFileTo( IconPath, cCurrentPath + cFileName + ".app/Contents/Resources/" + FileNoPath( IconPath ) ) )
-        cText += "including app icon..." + Chr( 13 )
+  
+   cAuxFile += "/" + FileNoPath( IconPath )
+   
+   if file(  cAuxFile )
+       cText += " App icon yo existe..." + Chr( 13 )
    else
-        cText += " NO including app icon..." + Chr( 13 )
+        if ( CopyFileTo( IconPath, ccAuxFile ) )
+            cText += "including app icon..." + Chr( 13 )
+       else
+            cText += " NO including app icon..." + Chr( 13 )
+       endif
    endif
+   
    oGet:SetText( cText )
    oGet:GoBottom()
 
    //-----------  incluir frameworks ------------
 
+   cAuxFile := cFilePath + cFileName + ".app/Contents/frameworks"
+   
    if Len( aExtraFrameworks ) > 0
-      if  ! IsFile( cCurrentPath + cFileName + ".app/Contents/frameworks" )
-         CreateDir( cCurrentPath + cFileName + ".app/Contents/frameworks" )
+       
+      if  ! IsFile( cAuxFile )
+         CreateDir( cAuxFile )
       endif
+    
       for n = 1 to Len( aExtraFrameworks )
-         CopyFileTo( Fivepath + "/frameworks/" + AllTrim( aExtraFrameworks[ n ] ) + ;
-                     ".framework", cCurrentPath + cFileName + ;
-                     ".app/Contents/frameworks/" + AllTrim( aExtraFrameworks[ n ] ) + ;
-                     ".framework" )
+          CopyFileTo( Fivepath + "/frameworks/" + AllTrim( aExtraFrameworks[ n ] ) + ".framework",;
+                      cAuxFile +"/" + AllTrim( aExtraFrameworks[ n ] ) + ".framework" )
       next
+      
    endif
+   
+   //-----------  create sh file ------------
+   
+   
+   cAuxFile := cFilePath + cFileName + ".sh"
+   
+   MakeshFile( cAuxFile )
+   SETEXECUTABLE( cAuxFile )
 
-MakeshFile("/"+cFileName+".sh")
-SETEXECUTABLE( cCurrentPath+"/"+cFileName+".sh")
+    cText+= "creando archivo sh" + Chr( 13 )
+    oGet:SetText( cText )
+    oGet:GoBottom()
 
-cText+= "creando archivo sh" + Chr( 13 )
-oGet:SetText( cText )
-oGet:GoBottom()
+    oArrayArguments := ArrayCreateEmpty()
 
- oArrayArguments := ArrayCreateEmpty()
+    ArrayAddString( oArrayArguments, cAuxFile  )
+    ArrayAddString( oArrayArguments, cFilename  )
 
-
-ArrayAddString( oArrayArguments, cCurrentPath+"/"+cFileName+".sh"  )
-ArrayAddString( oArrayArguments, cFilename  )
-
-cText += TaskExecArray( "/bin/sh", oArrayArguments )
+    cText += TaskExecArray( "/bin/sh", oArrayArguments )
 
 //   cText += LinkGcc( cFileName )
 
-   oGet:SetText( cText )
-   oGet:GoBottom()
+    oGet:SetText( cText )
+    oGet:GoBottom()
 
+    cFinText = AllTrim( SubStr( cText, Len( ctext ) - 5, 5 ) )
 
+    if cFinText = "done!"
+       
+      cAuxFile := cFilePath + cFileName
+       
+      MoveToTrash( cAuxFile +".sh" )
 
-   cFinText = AllTrim( SubStr( cText, Len( ctext ) - 5, 5 ) )
-
-   if cFinText = "done!"
-        MoveToTrash( cCurrentPath +"/"+cFileName+".sh" )
-
-      if IsFile( cCurrentPath + cFileName + ".o" )
-         MoveToTrash( cCurrentPath + cFileName + ".c" )
-         MoveToTrash( cCurrentPath + cFileName + ".o" )
-         if IsFile( cCurrentPath + cFileName + ".app/Contents/MacOS/" + cFileName )
-           ?"si"
-            MacExec( cCurrentPath + cFileName +".app" )
-
+      if IsFile( cAuxFile + ".o" )
+         MoveToTrash( cAuxFile + ".c" )
+         MoveToTrash( cAuxFile + ".o" )
+         if IsFile( cAuxFile + ".app/Contents/MacOS/" + cFileName )
+            MacExec( cAuxFile + ".app" )
          endif
       else
-         MoveToTrash( cFileName + ".app" )
+         MoveToTrash( cAuxFile + ".app" )
          MsgInfo( "app creation error" )
       endif
-   endif
+    endif
 
 return nil
 
 //----------------------------------------------------------------------------//
 
-function RunHarbour( cFileName )
+function RunHarbour( cFile )
 
    local oPlist := TPlist():New( cPrefFile  )
    local aHarbFlags := oPlist:GetArrayByName( "HarbourFlags" )
@@ -1355,10 +1382,35 @@ function RunHarbour( cFileName )
    local cHarbour := HarbPath + "/bin/harbour"
    local cIncludes := "-I" + FivePath + "/include:" + HarbPath + "/include"
    local i
-   local oArrayArguments := ArrayCreateEmpty()
+   local oArrayArguments
+   
+   local cFileName := cFileNoExt( cFile )
+   local cFilePath := cFilePath( cFile )
 
+    if !file( cFile )
+       msginfo( "el archivo no existe "+ cFile )
+       Return nil
+    endif
+    
+    if !file( FivePath + "/include/FiveMac.ch" )
+        if msgYesNo( "el path de FiveMac parace no estar bien. Quiere comprobarlo ?", "Atencion" )
+            Preferences()
+            msginfo( "Vuelva a ejecutar run ")
+        endif
+        Return nil
+    endif
+    
+    if !File( cHarbour )
+       if msgYesNo( "el path de Harbour parace no estar bien. Quiere comprobarlo ?", "Atencion" )
+          Preferences()
+          msginfo( "Vuelva a ejecutar run ")
+       endif
+       Return nil
+    endif
 
-   ArrayAddString( oArrayArguments, cFilename  )
+   oArrayArguments := ArrayCreateEmpty()
+  
+   ArrayAddString( oArrayArguments, cFile  )
 
    if Len( aHarbFlags ) > 0
       for i = 1 to Len( aHarbFlags )
@@ -1367,41 +1419,30 @@ function RunHarbour( cFileName )
    endif
 
    ArrayAddString( oArrayArguments, cIncludes )
-
-   ArrayAddString( oArrayArguments, "-o"+ cFilename +".c" )
-
-  if !file(  cFilename+".prg" )
-       msginfo( "el archivo no existe "+ cFilename )
-   endif
-
-   //"//"+${USER}+"/Fivemac/harbour/bin/harbour"
-
-   if !File( cHarbour )
-       msginfo( "Harbour no existe "+ cHarbour )
-   else
-       cText = TaskExecArray( cHarbour, oArrayArguments )
-   endif
+   ArrayAddString( oArrayArguments, "-o"+ cFilePath + cFileName +".c" )
+  
+   cText = TaskExecArray( cHarbour, oArrayArguments )
 
 return cText
 
 //----------------------------------------------------------------------------//
 
-function RunGcc(cFileName )
+function RunGcc( cFile )
 
    local oPlist := TPlist():New( cPrefFile  )
    local HarbPath := oPlist:GetItemByName( "PathHarbour" )
    local FivePath := oPlist:GetItemByName( "PathFiveMac" )
    local SdkPath  := oPlist:GetItemByName( "PathSDK"  )
-   local cText
+  
    local cGcc := "/usr/bin/gcc"
-   local oArrayArguments :=  ArrayCreateEmpty()
-
-   local HEADERS := SdkPath + "/usr/include"
+   local HEADERS   := SdkPath + "/usr/include"
    local FRAMEPATH := sdkPath + "/System/Library/Frameworks"
-
-   ArrayAddString( oArrayArguments, cFileName + ".c" )
+   
+   local oArrayArguments :=  ArrayCreateEmpty()
+   
+   ArrayAddString( oArrayArguments, cFile + ".c" )
    ArrayAddString( oArrayArguments, "-c" )
-   ArrayAddString( oArrayArguments, "-o"+ cFileName + ".o" )
+   ArrayAddString( oArrayArguments, "-o"+ cFile + ".o" )
    ArrayAddString( oArrayArguments, "-I" + HarbPath + "/include" )
    ArrayAddString( oArrayArguments, "-I" + HEADERS )
    ArrayAddString( oArrayArguments, "-I" + FRAMEPATH )
@@ -1489,9 +1530,9 @@ return TaskExecArray( cGcc, oArrayArguments )
 
 function MakeShFile( cShFile )
 
-   local cCurrentPath := Path()
+   local cCurrentPath := cFilePath( cShFile )
    local cText
-local cMPath := strTran( cCurrentPath, " ","\ ")
+   local cMPath := strTran( cCurrentPath, " ","\ ")
 
 cText := "SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" + hb_eol() + ;
          "HEADERS=$SDKPATH/usr/include"+ hb_eol() +;
