@@ -713,17 +713,29 @@ function DlgAddlib( oTree, ntipo )
    local cBmp
    local cTitle := "Add Lib"
    local aTitles
+   local cVar
 
    if ntipo == 4
       cTitle:= "Add Flag"
    endif
 
    DEFINE DIALOG oDlg TITLE cTitle ;
-      FROM 220, 350 TO 340, 680
+      FROM 220, 350 TO 340, 690
 
    @ 69, 37 SAY cTitle OF oDlg SIZE 150, 17
 
    @ 67, 108 GET oGet VAR cLib OF oDlg SIZE 192, 22
+   
+   if nTipo == 1
+      
+      cVar := oPlist:GetItemByName( "PathSDK" )
+      cVar += "/System/Library/Frameworks/"
+      
+      @ 67, 306 BTNBMP OF oDlg  ;
+      FILENAME "RevealFreestanding"  ;
+      ACTION ( cGetNombreRecortado( oGet:opensheet( cVar ), oGet ) ) SIZE 22, 22 STYLE 10
+      
+   endif
 
    @ 20, 218 BUTTON "OK" OF oDlg ACTION oDlg:End()
 
@@ -757,6 +769,14 @@ function DlgAddlib( oTree, ntipo )
    endif
 
 return nil
+
+//----------------------------------------------------------------------------//
+
+Static function cGetNombreRecortado( cfile , oGet )
+   oGet:setText( cFileNoext( cFilenopath( cfile ) ) )
+   oGet:assign()
+   
+Return nil
 
 //----------------------------------------------------------------------------//
 
@@ -1326,7 +1346,6 @@ function Run()
    
    //-----------  create sh file ------------
    
-   
    cAuxFile := cFilePath + cFileName + ".sh"
    
    MakeshFile( cAuxFile )
@@ -1342,8 +1361,6 @@ function Run()
     ArrayAddString( oArrayArguments, cFilename  )
 
     cText += TaskExecArray( "/bin/sh", oArrayArguments )
-
-//   cText += LinkGcc( cFileName )
 
     oGet:SetText( cText )
     oGet:GoBottom()
@@ -1434,7 +1451,13 @@ function RunGcc( cFile )
    local FivePath := oPlist:GetItemByName( "PathFiveMac" )
    local SdkPath  := oPlist:GetItemByName( "PathSDK"  )
   
-   local cGcc := "/usr/bin/gcc"
+ //  local cGcc := "/usr/bin/gcc"
+   
+   local cGcc := "/Applications/Xcode.app/Contents/Developer/usr/bin/gcc"
+
+//   local cGcc := "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+   
+   
    local HEADERS   := SdkPath + "/usr/include"
    local FRAMEPATH := sdkPath + "/System/Library/Frameworks"
    
@@ -1450,118 +1473,90 @@ function RunGcc( cFile )
 return TaskExecArray( cGcc, oArrayArguments )
 
 //----------------------------------------------------------------------------//
-
-function LinkGcc(cFileName )
-
-   local oPlist := TPlist():New( cPrefFile  )
-   local cCurrentPath := Path() + "/"
-   local HarbPath  := oPlist:GetItemByName( "PathHarbour" )
-   local FivePath  := oPlist:GetItemByName( "PathFiveMac" )
-   local SdkPath   := oPlist:GetItemByName( "PathSDK"  )
-   local cText
-   local cGcc := "/usr/bin/gcc"
-   local n, i
-   local aFrameworks := oPlist:GetArrayByName( "FrameWorks" )
-   local aHarbLibs := oPlist:GetArrayByName( "HarbLibs" )
-   local aExtraFrameworks := oPlist:GetArrayByName( "ExtraFrameWorks" )
-   local cFrame:= ""
-   local oArrayArguments := ArrayCreateEmpty()
-
-   local HEADERS := SdkPath + "/usr/include"
-
-   local FRAMEPATH := SdkPath +"/System/Library/Frameworks"
-   local FRAMEWORKS :='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'
-
-//   local HRBLIBS := '-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'
-
-   ArrayAddString( oArrayArguments, cFileName + ".o" )
-   ArrayAddString( oArrayArguments, "-o" )
-   ArrayAddString( oArrayArguments, cCurrentPath + cFileName + ".app/Contents/MacOS/" + cFileName )
-
-   ArrayAddString( oArrayArguments, "-L" + "/" + sdkPath + "/usr/lib" )
-   ArrayAddString( oArrayArguments, "-L" + FivePath + "/lib" )
-   ArrayAddString( oArrayArguments, "-L" + HarbPath + "/lib" )
-
-   ArrayAddString( oArrayArguments, "-lfive" )
-   ArrayAddString( oArrayArguments, "-lfivec" )
-
-   n:= Len( aHarbLibs )
-
-   for i=1 to n
-      ArrayAddString(oArrayArguments, "-l"+alltrim(aHarbLibs[i]))
-   next
-
-   n = Len( aFrameworks )
-
-  // ? "-F" + "/"+ FRAMEPATH
-
-  // ArrayAddString( oArrayArguments, "-F" + "/"+ FRAMEPATH )
-
-  // ArrayAddString( oArrayArguments, FRAMEWORKS )
-
- //  ArrayAddFramework( oArrayArguments, "Cocoa" )
-  // ArrayAddString( oArrayArguments, "-framework QTkit.framework" )
-   ArrayAddString( oArrayArguments, "-framework AppKit.framework" )
-  // ArrayAddString( oArrayArguments, "-framework Foundation.framework" )
-
-   for i = 1 to n
-    //  cFrame := "-framework " + AllTrim( aFrameworks[ i ] ) //+ " "
-    //   msginfo("-framework " + AllTrim( aFrameworks[ i ] ))
-    //   ArrayAddString( oArrayArguments, cFrame )
-      // ArrayAddFramework( oArrayArguments,  cFrame )
-   next
-
-//  ArrayAddString( oArrayArguments, cFrame )
-
-
-   /*
-   if len(aExtraFrameworks)>0
-      ArrayAddString( oArrayArguments, "-F" + FivePath + "/frameworks" )
-      n = Len( aExtraFrameworks )
-      for i = 1 to n
-         ArrayAddString( oArrayArguments, "-framework " + AllTrim( aExtraFrameworks[ i ] ) )
-      next
-   endif
-   */
-
-return TaskExecArray( cGcc, oArrayArguments )
-
 //----------------------------------------------------------------------------//
 
 function MakeShFile( cShFile )
+    
     local oPlist := TPlist():New( cPrefFile  )
     local cHarbPath  := oPlist:GetItemByName( "PathHarbour" )
     local cFivePath  := oPlist:GetItemByName( "PathFiveMac" )
-    local SdkPath   := oPlist:GetItemByName( "PathSDK"  )
+    local cSdkPath   := oPlist:GetItemByName( "PathSDK"  )
 
     local cCurrentPath := cFilePath( cShFile )
     local cText
     local cMPath := strTran( cCurrentPath, " ","\ ")
     
-    local n, cUsrPath
-
+    local aHarbLibs   := oPlist:GetArrayByName( "HarbLibs" )
+    local aFrameworks := oPlist:GetArrayByName( "FrameWorks" )
+    local aExtraFrameworks := oPlist:GetArrayByName( "ExtraFrameWorks" )
+    
+    local n, i, cUsrPath
 
      //-------- cortamos los path --------------------
      
      cFivePath := strTran( cFivePath, "/Usuarios", "/Users" )
      cHarbPath := strTran( cHarbPath, "/Usuarios", "/Users" )
      
-     cFivePath:= substr( cFivePath, hb_at("/Users", cFivePath ) )
-     cHarbPath= substr( cHarbPath, hb_at("/Users", cHarbPath ) )
+     cFivePath := substr( cFivePath, hb_at("/Users", cFivePath ) )
+     cHarbPath := substr( cHarbPath, hb_at("/Users", cHarbPath ) )
+     
+     //----------------- generamos el texto ----------------------
+
+     cText := "SDKPATH="+ cSdkPath + hb_eol() + ;
+              "HEADERS=$SDKPATH/usr/include"+ hb_eol() +;
+              "CRTLIB=$SDKPATH/usr/lib"+ hb_eol()
+     
+      //--------- libs harbour ----------------------
+      
+      if len( aHarbLibs ) > 0
+             cText += "HRBLIBS='"
+              n:= Len( aHarbLibs )
+              for i=1 to n
+                  cText += " -l" + alltrim( aHarbLibs[i] )
+              next
+              cText += "' " + hb_eol()
+     else
+     
+        cText += "HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm" +;
+                         " -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'" + hb_eol()
+     
+     endif
+     
+     //---------- frameworks -----------------------
+     
+     if len( aFrameworks ) > 0
+         cText += "FRAMEWORKS='"
+          n:= Len( aFrameworks )
+         for i=1 to n
+             cText += " -framework " + alltrim( aFrameworks[i] )
+         next
+         cText += "' " + hb_eol()
+     else
+     
+         cText += "FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'"+ hb_eol()
+     
+     endif
      
      
-cText := "SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" + hb_eol() + ;
-         "HEADERS=$SDKPATH/usr/include"+ hb_eol() +;
-         "CRTLIB=$SDKPATH/usr/lib"+ hb_eol()+;
-         "HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'"+ hb_eol() +;
-         "FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'"+ hb_eol()+;
-         "FIVEPATH="+ cFivePath + hb_eol() +;
-         "HARBPATH=" + cHarbPath + hb_eol()
+    cText+= "FIVEPATH=" + cFivePath + hb_eol()
+    cText+= "HARBPATH=" + cHarbPath + hb_eol()
 
-
-cText +="gcc "+cMPath+"/$1.o -o "+cMPath+"/$1.app/Contents/MacOS/$1 -L$CRTLIB -L$FIVEPATH/lib -lfive -lfivec -L$HARBPATH/lib $HRBLIBS $FRAMEWORKS -F$FIVEPATH/frameworks -framework Scintilla"
-
-//? cCurrentPath + cFileNoPath( cShFile )
+    cText +="gcc " + cMPath + "/$1.o -o " + cMPath + "/$1.app/Contents/MacOS/$1 -L$CRTLIB " +;
+                "-L$FIVEPATH/lib -lfive -lfivec "+;
+                "-L$HARBPATH/lib $HRBLIBS "+;
+                "$FRAMEWORKS"
+    
+    //--------- Extraframeworks ----------------------
+    
+    if len( aExtraFrameworks ) > 0
+        
+        cText += " -F$FIVEPATH/frameworks"
+        n = Len( aExtraFrameworks )
+        for i = 1 to n
+           cText += " -framework "+ AllTrim( aExtraFrameworks[ i ] )
+        next
+        cText +=  hb_eol()
+    endif
 
  ShFileFromString( cText, cCurrentPath + cFileNoPath( cShFile ) )
 
@@ -2132,7 +2127,7 @@ Return  !netErr()
 #pragma BEGINDUMP
 
 #include <stdio.h>
-#include <hbapi.h>
+#include "hbapi.h"
 
 HB_FUNC( FREOPEN_STDERR )
 {
