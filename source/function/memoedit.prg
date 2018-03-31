@@ -2,7 +2,7 @@
 
 //----------------------------------------------------------------------------//
 
-function MemoEdit( cText, cTitle )
+function FM_MemoEdit( cText, cTitle )
 
    local oDlg, lChanged := .F., cTemp := cText
    

@@ -476,7 +476,7 @@ function FWMissingStrings()
    AEval( aMissing, { | cString | cResult += Space( 7 ) + '{ "' + cString + ;
                                   '", "" },;' + CRLF } )
    if ! Empty( cResult )
-         MemoEdit( cResult, FWString( "Copy and paste in" ) + ;
+         FM_MemoEdit( cResult, FWString( "Copy and paste in" ) + ;
          		 " FWH\source\function\strings.prg" )
    endif
 
