@@ -62,14 +62,16 @@ fi
 
 echo linking...
 CRTLIB=$SDKPATH/usr/lib
-HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage'
+HRBLIBS='-lhbdebug -lhbvm -lhbrtl -lhblang -lhbrdd -lhbrtl -lgttrm -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbcommon -lhbcplr -lhbcpage -lhbhsx -lhbsix  -lrddnsx'
 FRAMEWORKS='-framework Cocoa -framework WebKit -framework QTkit -framework Quartz  -framework ScriptingBridge -framework AVKit -framework AVFoundation -framework CoreMedia -framework iokit'
 
 WINNH3DLIB='-L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/ -rpath /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/ -rpath @executable_path/../Frameworks'
 
 #  add -arch ppc -arch i386 for universal binaries
 # -framework Scintilla
-gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB
+#gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB
+
+gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB $CRTLIB/libz.tbd $CRTLIB/libpcre.tbd
 
 #rm $1.c
 rm $1.o

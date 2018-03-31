@@ -12,6 +12,9 @@ static cDbfPath, popoverMas
 
 extern dbfcdx, DBCloseArea, DbUseArea, DbGoTo, OrdSetFocus
 
+#define __HBEXTREQ__
+#include "harbour.hbx"
+
 //----------------------------------------------------------------------------//
 
 function Main()
@@ -1317,7 +1320,7 @@ function Run()
    if file(  cAuxFile )
        cText += " App icon yo existe..." + Chr( 13 )
    else
-        if ( CopyFileTo( IconPath, ccAuxFile ) )
+        if ( CopyFileTo( IconPath, cAuxFile ) )
             cText += "including app icon..." + Chr( 13 )
        else
             cText += " NO including app icon..." + Chr( 13 )
