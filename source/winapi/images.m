@@ -241,6 +241,13 @@ HB_FUNC( SIZEHEIGHTIMAGE )
     
 }
 
+HB_FUNC( NSIMAGEFROMIMAGEVIEW )
+{
+ NSImageView * vista = ( NSImageView * ) hb_parnl( 1 );
+ NSImage *sourceImage = [ vista image ] ;
+ hb_retnl( ( HB_LONG ) sourceImage );
+}
+
 HB_FUNC( NSIMGFROMFILE )
 {
     NSString * fileName = hb_NSSTRING_par( 1 );

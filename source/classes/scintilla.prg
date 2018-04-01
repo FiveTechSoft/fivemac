@@ -208,6 +208,7 @@ CLASS TScintilla FROM TControl
    METHOD LineScrolldown ()              INLINE ::Send( SCI_LINESCROLLDOWN )
    METHOD LineScrollup()                 INLINE ::Send( SCI_LINESCROLLUP )
    METHOD LineTranspose ()               INLINE ::Send( SCI_LINETRANSPOSE )
+   METHOD LineSep()
    METHOD LineUp()                       INLINE ::Send( SCI_LINEUP )
 
    METHOD LineUpExtend()                 INLINE ::Send( SCI_LINEUPEXTEND )
@@ -217,7 +218,7 @@ CLASS TScintilla FROM TControl
 
    METHOD nCol()                    INLINE ::GetCurrentPos() - ::PositionFromLine( ::nLine() - 1 ) + 1
 
-  METHOD MarginClick( nMargen, nPos )
+   METHOD MarginClick( nMargen, nPos )
 
    METHOD NewLine()                 INLINE ::Send( SCI_NEWLINE )
  
@@ -714,6 +715,16 @@ METHOD SetMargin( lOn ) CLASS TScintilla
    endif
 
 return nil
+
+//----------------------------------------------------------------------------//
+
+METHOD LineSep() CLASS TScintilla
+
+local nPos   := ::GetCurrentPos()
+::InsertText( nPos, "//" + Replicate( "-", 76 ) + "//" + hb_eol() )
+::GotoLine( ::GetCurrentLine() + 2 )
+
+Return nil
 
 //----------------------------------------------------------------------------//
 
@@ -1267,7 +1278,7 @@ aMarkers := { ;
   ::Send(SCI_SETMARGINSENSITIVEN , 2 ,1 )
 
 
-  ::Send(SCI_USEPOPUP,0,0)
+  ::Send( SCI_USEPOPUP,0,0 )
 
 
 for  n= 25 to 31 // Markers 25..31 are reserved for folding.

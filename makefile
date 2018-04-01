@@ -24,6 +24,7 @@ PRG_OBJS = \
 	./obj/brImage.o	\
 	./obj/capture.o	\
 	./obj/checkbox.o \
+    ./obj/clipboard.o \
    	./obj/code.o \
 	./obj/colors.o \
 	./obj/colorwell.o \
@@ -93,7 +94,7 @@ PRG_OBJS = \
 C_OBJS = ./objc/browses.o	\
 	./objc/buttons.o	\
 	./objc/checkboxes.o \
-	./objc/colors.o \
+    ./objc/colors.o \
   	./objc/colorton.o	\
 	./objc/comboboxes.o \
 	./objc/constants.o \
