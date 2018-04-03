@@ -1,5 +1,6 @@
 #include "FiveMac.ch"
 #include "Colors.ch"
+#include "Scintilla.ch"
 
 static cPrefFile
 static oWnd, aEditors := {}, oEditor, oBtnSave, oMsgBar, oMruFiles
@@ -14,13 +15,15 @@ extern dbfcdx, DBCloseArea, DbUseArea, DbGoTo, OrdSetFocus
 
 #define __HBEXTREQ__
 #include "harbour.hbx"
+#include "fivemac.hbx"
+
 
 //----------------------------------------------------------------------------//
 
 function Main()
 
   local oSlide,oSayZoom
-
+  
    cBmpPath = ImgPath()
    cDbfPath = AppPath() + "/"
 
@@ -95,7 +98,7 @@ oSlide:bChange := {|| oSayZoom:setText("Zoom : "+ alltrim(str( ( ( oEditor:setZo
 
 
    ACTIVATE WINDOW oWnd
-
+   
 return nil
 
 //----------------------------------------------------------------------------//
@@ -511,11 +514,11 @@ function Preferences()
 
 
    @ 204, 40 GET oGetIcon VAR cVarIcon OF oMulti:aViews[ 2 ] SIZE 390, 20
-
+   
    @ 204, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
      FILENAME "RevealFreestanding"  ;
-    ACTION ChooseSheetTxtImg(oGetIcon:hwnd,oImg:hWnd ) SIZE 20, 20 STYLE 10
-
+      ACTION ChooseSheetTxtImg(oGetIcon:hwnd,oImg:hWnd ) SIZE 20, 20 STYLE 10
+      
    oGetIcon:SetNOSelect()
 
    @ 170, 40 SAY "Fivemac Path:" OF oMulti:aViews[ 2 ]
@@ -669,9 +672,9 @@ function Preferences()
    if ! ( cVar3 == GetPlistValue( cPrefFile, "PathSDK" ) )
       SetPlistValue( cPrefFile, "PathSDK", cVar3, .T. )
    endif
-
-    if !( cVarIcon == GetPlistValue( cPrefFile, "PathIcon" ) )
-       SetPlistValue( cPrefFile, "PathIcon",  cVarIcon , .T. )
+  
+    if !(  oGetIcon:getText() == GetPlistValue( cPrefFile, "PathIcon" ) )
+         SetPlistValue( cPrefFile, "PathIcon",  cVarIcon , .T. )
     endif
 
    if ! ( GetPlistValue( cPrefFile, "PathIcon" ) == oImg:GetFile() )
@@ -905,7 +908,7 @@ function BuildButtonBar()
 
    DEFINE BUTTON oBtnSave OF oBar PROMPT "Save" ;
       TOOLTIP "Save the file to disk" ;
-       IMAGE  cBmpPath + "floppy.png" ;
+      IMAGE  cBmpPath + "floppy.png" ;
        ACTION oEditor:Save(), oBtnSave:Disable()
 
    oBtnSave:Disable()
@@ -1027,7 +1030,7 @@ local lfolder:= .f.
          SEPARATOR
          MENUITEM "Preferences..." ACCELERATOR "," ACTION Preferences()
          SEPARATOR
-         MENUITEM "Exit" ACCELERATOR "q" ACTION Exit()
+         MENUITEM "Exit" ACCELERATOR "q" ACTION Exit() IMAGE "exit2.png(20x20)"
       ENDMENU
 
       MENUITEM "File"
@@ -1061,7 +1064,8 @@ local lfolder:= .f.
              ACTION oEditor:LineDuplicate() ACCELERATOR "F5"
 
        SEPARATOR
-
+       MENUITEM "Code Separator" ACTION oEditor:LineSep()
+       SEPARATOR
        MENUITEM "Set Upper" ACTION oEditor:Uppercase()
        MENUITEM "Set Lower" ACTION oEditor:Lowercase()
 
