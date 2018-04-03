@@ -346,30 +346,24 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-Function RunScript( oEditor )
+function RunScript( oEditor )
 
-local oHrb, cResult, bOldError
-local cPrefFile := Path() + "/sciedit.plist"
-local cFivePath := GetPlistValue( cPrefFile, "PathFiveMac" )
-local cHarbourPath := GetPlistValue( cPrefFile, "PathHarbour" )
+   local oHrb, cResult, bOldError
+   local cPrefFile := Path() + "/sciedit.plist"
+   local cFivePath := GetPlistValue( cPrefFile, "PathFiveMac" )
+   local cHarbourPath := GetPlistValue( cPrefFile, "PathHarbour" )
 
-FReOpen_Stderr( "comp.log", "w" )
+   oHrb = HB_CompileFromBuf( StrTran( oEditor:GetText(), "Main", "__Main" ),;
+                             .T., "-n", "-I" + alltrim( cFivePath ) + "/include",;
+                             "-I" + alltrim( cHarbourPath ) + "/include" )
 
-oHrb = HB_CompileFromBuf( StrTran( oEditor:GetText(), "Main", "__Main" ),;
-"-n", "-I" + alltrim( cFivePath ) + "/include", "-I" + alltrim( cHarbourPath ) + "/include" )
-
-if "error" $ MemoRead( "comp.log" )
-    MsgInfo( MemoRead( "comp.log" ), "Error" )
-else
-
-    if ! Empty( oHrb )
-        BEGIN SEQUENCE
-            bOldError = ErrorBlock( { | o | DoBreak( o ) } )
-            hb_HrbRun( oHrb )
-        END SEQUENCE
-        ErrorBlock( bOldError )
-    endif
-endif
+   if ! Empty( oHrb )
+      BEGIN SEQUENCE
+         bOldError = ErrorBlock( { | o | DoBreak( o ) } )
+         hb_HrbRun( oHrb )
+      END SEQUENCE
+      ErrorBlock( bOldError )
+   endif
 
 return nil
 
@@ -377,24 +371,26 @@ return nil
 
 static function DoBreak( oError )
 
-local cInfo := oError:operation, n
+   local cInfo := oError:operation, n
 
-if ValType( oError:Args ) == "A"
-cInfo += "   Args:" + CRLF
-for n = 1 to Len( oError:Args )
-MsgInfo( oError:Args[ n ] )
-cInfo += "[" + Str( n, 4 ) + "] = " + ValType( oError:Args[ n ] ) + ;
-"   " + cValToChar( oError:Args[ n ] ) + CRLF
-next
-endif
+   if ValType( oError:Args ) == "A"
+      cInfo += "   Args:" + CRLF
+      for n = 1 to Len( oError:Args )
+         MsgInfo( oError:Args[ n ] )
+         cInfo += "[" + Str( n, 4 ) + "] = " + ValType( oError:Args[ n ] ) + ;
+                  "   " + cValToChar( oError:Args[ n ] ) + CRLF
+      next
+   endif
 
-MsgStop( oError:Description + CRLF + cInfo,;
-FWString( "Script error at line:" ) + " " + ;
-AllTrim( Str( ProcLine( 2 ) ) ) )
+   MsgStop( oError:Description + CRLF + cInfo,;
+   FWString( "Script error at line:" ) + " " + ;
+             AllTrim( Str( ProcLine( 2 ) ) ) )
 
-BREAK
+   BREAK
 
 return nil
+
+//----------------------------------------------------------------------------//
 
 
 function dummy1()
