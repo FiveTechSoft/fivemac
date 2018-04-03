@@ -367,7 +367,7 @@ CLASS TScintilla FROM TControl
     METHOD Wordrightendextend ()               INLINE ::Send( SCI_WORDRIGHTENDEXTEND )
     METHOD Wordrightextend ()                  INLINE ::Send( SCI_WORDRIGHTEXTEND )
 
-
+    METHOD MenuEdit( lPopup )
  
 
 ENDCLASS
@@ -405,6 +405,27 @@ local nLine := ::GetCurrentLine()
 return lSw
 
 //----------------------------------------------------------------------------//
+
+
+METHOD MenuEdit( lPopup ) CLASS TScintilla
+
+local oMnu
+DEFAULT lPopup  := .F.
+
+if !lPopup
+MENU oMnu
+endif
+
+MENUITEM "Undo" ACTION ::Undo()
+SEPARATOR
+MENUITEM  "Code &separator" ACTION ::LineSep()
+
+if !lPopup
+ENDMENU
+endif
+
+Return oMnu
+
 //----------------------------------------------------------------------------//
 
 METHOD StyleSetColor( nClrFore, nClrBack ) CLASS TScintilla
@@ -809,7 +830,7 @@ METHOD MarginClick( nMargen, nPos ) CLASS TScintilla
   DEFAULT nMargen  := 0
   nLine    := ::Send( SCI_LINEFROMPOSITION, nPos, 0 ) + 1
   ::GotoPos( nPos )
-  Do Case
+    Do Case
      Case nMargen = 0
           ::GoToLine( nLine )
      Case nMargen = 1
@@ -844,15 +865,30 @@ endif
 return nil
 
 //----------------------------------------------------------------------------//
+#define WM_COMMAND 1001
 
 METHOD HandleEvent( nMsg, uParam1, uParam2, uParam3 )  CLASS TScintilla
 
 do case
-   case nMsg == WM_SCINOTIFY
-        ::Notify( uParam1, uParam2 )
-   case nMsg == WM_LBUTTONDOWN
-        msginfo("rclick")
-   otherwise
+
+ case nMsg ==WM_RBUTTONDOWN
+ NSLOG( "RB" )
+ case nMsg == WM_COMMAND
+
+
+
+ case nMsg == WM_LBUTTONDOWN
+ NSLOG( "LB" )
+
+//Case nMsg == WM_CONTEXTMENU
+  //  ::Send( SCI_USEPOPUP, 0 )
+  //   ? "usepop"
+
+ NSLOG( "CONTEXT" )
+case nMsg == WM_SCINOTIFY
+    ::Notify( uParam1, uParam2 )
+  otherwise
+     NSLOG ( "Super" )
      ::super:HandleEvent( nMsg, uParam1, uParam2,uParam3 )
 endcase
 
@@ -881,6 +917,11 @@ METHOD Notify( nType, pScnNotification ) CLASS TScintilla
             nPos = ScNPos( pScnNotification )
            nLine = ::LineFromPosition( nPos )
            nMargin := ScNMargin( pScnNotification )
+
+if nMargin < 0
+msginfo("yo")
+// ::Send(SCI_TOGGLEFOLD, nLine+1)
+endif
 
            if nMargin == 2
               //msginfo("yo")

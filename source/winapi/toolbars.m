@@ -125,11 +125,15 @@ HB_FUNC( TBRADDITEM )
    //[ item setPaletteLabel : label ];
    [ item setToolTip : tooltip ];
    
+   NSImage *Image  ;
+    
    if( [ filemgr fileExistsAtPath: filename ] )
-      [ item setImage : [ [ NSImage alloc ] initWithContentsOfFile : filename ] ];
+       Image = [ [ NSImage alloc ] initWithContentsOfFile : filename ] ;
    else 
-      [ item setImage : ImgTemplate( filename ) ];
+       Image = ImgTemplate( filename ) ;
    
+    [ item setImage : Image ];
+    
    //[item  setTarget:item ];
    
    [ item setAction : @selector( TbrClick: )];  // Gets routed to the window view

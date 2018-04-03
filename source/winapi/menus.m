@@ -79,11 +79,18 @@ HB_FUNC( MNUITEMSETIMAGE )
    NSMenuItem * item = ( NSMenuItem * ) hb_parnl( 1 );
    NSString * string =hb_NSSTRING_par( 2 ) ;
    NSFileManager * filemgr = [ NSFileManager defaultManager ];
+  
+   NSImage *Image  ;
     
-   if( [ filemgr fileExistsAtPath: string ] ) 
-      [ item setImage: [ [ NSImage alloc ] initWithContentsOfFile : string ] ] ; 
+   if( [ filemgr fileExistsAtPath: string ] )
+       Image =[ [ NSImage alloc ] initWithContentsOfFile : string ] ;
    else
-      [ item setImage : ImgTemplate( string ) ];
+       Image = ImgTemplate( string ) ;
+        
+   ImgResize( Image , hb_parnl( 3 ), hb_parnl( 4 )  ) ;
+    
+   [ item setImage : Image ];
+    
 }
 
 HB_FUNC( MNUITEMSETONIMAGE )

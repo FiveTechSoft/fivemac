@@ -1,6 +1,10 @@
 #include <scintilla.h>
 #include <fivemac.h>
 
+
+#define WM_COMMAND 1001
+//#define WM_NOTIFY 1002
+
 enum IBDisplay 
 {
   IBShowZoom          = 0x01,
@@ -17,12 +21,12 @@ typedef enum
 } NotificationType;
 
 @interface ScintillaView : NSView
-{
-}
-
+    {
+    }
+   
 - ( void ) rightMouseDown : ( NSEvent * ) theEvent;
-
-- (void) setGeneralProperty: (int) property 
+    
+- (void) setGeneralProperty: (int) property
 	                parameter: (long) parameter 
 	                	  value: (long) value;
 
@@ -52,7 +56,7 @@ typedef enum
 
 typedef void ( * SciNotifyFunc ) ( id window, unsigned int iMessage, unsigned long wParam, unsigned long lParam );          	
 
-- (void) registerNotifyCallback: ( id ) window value: ( SciNotifyFunc ) callback;          	
+- (void) registerNotifyCallback: ( id ) window value: ( SciNotifyFunc ) callback;
 	             	
 @end
 
@@ -87,7 +91,9 @@ void NotifyFunc( id sv, unsigned int iMessage, unsigned long wParam, unsigned lo
 
    if( symFMH == NULL )
       symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FSCI" ) );
-   
+    
+    if ( wParam == 0 )
+    {
    hb_vmPushSymbol( symFMH );
    hb_vmPushNil();
    hb_vmPushLong( ( HB_LONG ) [ sv window ] );
@@ -96,12 +102,41 @@ void NotifyFunc( id sv, unsigned int iMessage, unsigned long wParam, unsigned lo
    hb_vmPushLong( ( HB_LONG ) wParam );
    hb_vmPushLong( ( HB_LONG ) lParam );
    hb_vmDo( 5 );
+    }
+   else
+    {
+        hb_vmPushSymbol( symFMH );
+        hb_vmPushNil();
+        hb_vmPushLong( ( HB_LONG ) [ sv window ] );
+        hb_vmPushLong( WM_COMMAND );
+        hb_vmPushLong( ( HB_LONG ) sv );
+        hb_vmPushLong( ( HB_LONG ) wParam );
+        hb_vmPushLong( ( HB_LONG ) lParam );
+        hb_vmDo( 5 );
+    }
+    
 }	          	
 
-
-
-
-
+/*
+- ( void ) rightMouseDown : ( NSEvent * ) theEvent
+{
+    NSPoint point = [ theEvent locationInWindow ];
+    
+    if( symFMH == NULL )
+    symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+    
+    hb_vmPushSymbol( symFMH );
+    hb_vmPushNil();
+    hb_vmPushLong( ( HB_LONG ) [ self window ] );
+    hb_vmPushLong( WM_RBUTTONDOWN );
+    hb_vmPushLong( ( HB_LONG ) [ self window ] );
+    hb_vmPushLong( point.y );
+    hb_vmPushLong( point.x );
+    hb_vmDo( 5 );
+}
+*/
+  
+    
 
 HB_FUNC( SCICREATE ) 
 {
@@ -124,7 +159,7 @@ HB_FUNC( SCIFINDTEXT )
     bool lresult ;
     
    ScintillaView * sv = ( ScintillaView * ) hb_parnl( 1 );
-   
+    
    [ sv setGeneralProperty: SCI_SEARCHANCHOR parameter: 0 value: 0 ];
     
     long matchStart = [sv getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
@@ -133,7 +168,7 @@ HB_FUNC( SCIFINDTEXT )
     [sv setGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd ];
    // [sv setGeneralProperty: SCI_FINDINDICATORSHOW parameter: matchStart value:matchEnd ];
     
-    lresult = ( [ sv getGeneralProperty: SCI_SEARCHNEXT parameter: 0 extra: ( long ) hb_parc( 2 ) ] != -1 );
+    lresult = ( [ sv getGeneralProperty: SCI_SEARCHNEXT parameter: 0 extra: ( long ) hb_NSSTRING_par( 2 ) ] != -1 );
     
     
     hb_retl( lresult) ;

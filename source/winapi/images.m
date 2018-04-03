@@ -49,6 +49,20 @@ static PHB_SYMB symFMH = NULL;
 
 @end
 
+void ImgResize( NSImage * image , int nWidth, int nHeight  )
+{
+    NSSize newSize;
+    newSize.width = nWidth ;
+    if ( 0 == nHeight )
+        newSize.height = nWidth;
+    else
+        newSize.height = nHeight;
+   
+    image.size = newSize ;
+    
+}
+    
+
 HB_FUNC( IMGCREATE ) // hWnd
 {
 
@@ -67,6 +81,9 @@ HB_FUNC( IMGSETFILE )
    NSString * string = hb_NSSTRING_par( 2 );
    
    [ image setImage : [ [ NSImage alloc ] initWithContentsOfFile : string ] ];
+    
+    ImgResize( [ image image ] , hb_parnl( 3 ), hb_parnl( 4 )  ) ;
+    
    [ [ image image ] setName: string ]; 
 }   
 
@@ -206,6 +223,21 @@ HB_FUNC( NEWRESIZEIMAGE )
    
 }
 
+HB_FUNC( RESIZEIMAGE )
+{
+    NSImageView * vista = ( NSImageView * ) hb_parnl( 1 );
+    NSImage *image = [ vista image ] ;
+    ImgResize( image , hb_parni( 2 ), hb_parni( 3 ) ) ;
+    
+}
+
+
+
+HB_FUNC( RESIZENSIMAGE )
+{
+    NSImage * image = ( NSImage * ) hb_parnl( 1 );
+    ImgResize( image , hb_parni( 2 ), hb_parni( 3 ) ) ;
+}
 
 HB_FUNC( SIZEWIDTHIMAGE )
 {

@@ -269,3 +269,21 @@ return aDisk
 #endif
 
 //---------------------------------------------------------------------------//
+
+function ParseSize( cName, aSize )
+
+local w,h,cSize,nAt
+
+if Right( cName, 1 ) == ")" .and. ( nAt := At( "(", cName ) ) > 0
+cSize    := Lower( SubStr( cName, nAt + 1 ) )
+cName    := Trim( Left( cName, nAt - 1 ) )
+w        := Val( cSize )
+if ( nAt := At( "x", cSize ) ) > 0
+h     := Val( SubStr( cSize, nAt + 1 ) )
+else
+h     := w
+endif
+aSize     := { w, h }
+endif
+
+return aSize

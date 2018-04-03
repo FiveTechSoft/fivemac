@@ -22,6 +22,7 @@ NSString * NumToStr( NSInteger myInt );
 NSView * GetView( NSWindow * window );
 
 void ValToChar( PHB_ITEM item );
+void ImgResize( NSImage * image , int nWidth, int nHeight  ) ;
 
 NSImage * ImgTemplate( NSString * );
 

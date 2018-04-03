@@ -38,15 +38,22 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( cPrompt, cToolTip, bAction, cImage, oToolBar,lSelectable ) CLASS TToolBarBtn
+local aSize
 
    DEFAULT lSelectable:= .f.
-   
+
+   //---- no hace nada ya que los botones autoajustan su tamaño
+   //---- se coloca por si se mete en el codigo medidas acepte el archivo igual
+   aSize := ParseSize( @cImage, aSize )
+
    ::cPrompt  = cPrompt
    ::cToolTip = cToolTip
    ::bAction  = bAction
    ::cImage   = cImage
    ::oToolBar = oToolBar
-   
+
+
+
    ::hWnd     = TbrAddItem( oToolBar:hWnd, cPrompt, Len( oToolBar:aButtons ), cToolTip, cImage )
    if lSelectable
       ::Selectable()

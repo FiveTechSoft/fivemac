@@ -41,6 +41,8 @@ CLASS TImage FROM TControl
 
    METHOD GetHeight() INLINE ImgGetHeight( ::hWnd )
 
+   METHOD SetSize( nWidth, nHeight ) INLINE RESIZEIMAGE( ::hWnd, nWidth, nHeight )
+
 ENDCLASS   
 
 //----------------------------------------------------------------------------//
@@ -48,17 +50,27 @@ ENDCLASS
 METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, cFileName, cResName, cToolTip,;
             cVarName ) CLASS TImage
 
+local aSize
+
    DEFAULT nWidth := 100, nHeight := 100
 
    ::hWnd = ImgCreate( nTop, nLeft, nWidth, nHeight, oWnd:hWnd )
    ::oWnd  = oWnd
-   
+
+   aSize := ParseSize( @cFilename, aSize )
+
    if ! Empty( cFileName ) .and. File( cFileName )
-      ::cFileName = cFileName
+       ::cFileName = cFileName
+       if empty( aSize)
+         ImgSetFile( ::hWnd, cFileName )
+       else
+         ImgSetFile( ::hWnd, cFileName, asize[1], asize[2] )
+       endif
    endif   
-   
+
    if ! Empty( cResName ) .and. File( ResPath() + "/" + cResName )
-      ::SetResFile( cResName )
+        ::cResname := cResName
+        ::SetResFile( cResName )
    endif  
     
 	 if !Empty( cToolTip )
@@ -93,6 +105,8 @@ return Self
 METHOD Initiate() CLASS TImage
 
    local hWnd := WndGetControl( ::oWnd:hWnd, ::nId )   
+
+   ? ::cFilename+ "ini"
 
    if hWnd != 0
       ::hWnd = hWnd
@@ -131,3 +145,22 @@ METHOD cGenPrg() CLASS TImage
 return cCode                                
 
 //----------------------------------------------------------------------------//
+
+static function ParseSize( cName, aSize )
+
+local w,h,cSize,nAt
+
+if Right( cName, 1 ) == ")" .and. ( nAt := At( "(", cName ) ) > 0
+cSize    := Lower( SubStr( cName, nAt + 1 ) )
+cName    := Trim( Left( cName, nAt - 1 ) )
+w        := Val( cSize )
+if ( nAt := At( "x", cSize ) ) > 0
+h     := Val( SubStr( cSize, nAt + 1 ) )
+else
+h     := w
+endif
+aSize     := { w, h }
+endif
+
+return aSize
+
