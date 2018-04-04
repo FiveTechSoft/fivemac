@@ -1,15 +1,65 @@
 #include <fivemac.h>
 
+static PHB_SYMB symFMH = NULL;
+
+
+@interface colorPick : NSColorWell
+    {
+    }
+
+    - (BOOL)   acceptsFirstResponder;
+    - ( IBAction ) changeColor : ( id ) sender ;
+ 
+@end
+
+@implementation colorPick
+    
+- ( BOOL ) acceptsFirstResponder
+    {
+        if( symFMH == NULL )
+        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+        
+        hb_vmPushSymbol( symFMH );
+        hb_vmPushNil();
+        hb_vmPushLong( ( HB_LONG ) [ self window ] );
+        hb_vmPushLong( WM_WHEN );
+        hb_vmPushLong( ( HB_LONG ) self );
+        hb_vmDo( 3 );
+        
+        if( HB_ISLOG( -1 ) )
+        return hb_parl( -1 );
+        else
+        return TRUE;
+    }
+    
+    
+- ( IBAction ) changeColor : ( id ) sender
+    {
+        if( symFMH == NULL )
+        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+        
+        hb_vmPushSymbol( symFMH );
+        hb_vmPushNil();
+        hb_vmPushLong( ( HB_LONG ) [ self window ] );
+        hb_vmPushLong( WM_CLRCHANGE );
+        hb_vmPushLong( ( HB_LONG ) self );
+        hb_vmDo( 3 );
+    }
+
+    
+@end
+
+
+
 HB_FUNC( CREATECOLORWELL )
 {
-   NSColorWell * clrWell = [ [ NSColorWell alloc ]	 
+   colorPick * clrWell = [ [ colorPick alloc ]
                              initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), 
                              hb_parnl( 3 ), hb_parnl( 4 ) ) ];
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
    
    [ GetView( window ) addSubview : clrWell ];
    	
-   [ clrWell setTarget: GetView( window ) ];
    [ clrWell setAction: @selector( changeColor: ) ];		
    	
    hb_retnl( ( HB_LONG ) clrWell );
@@ -17,7 +67,7 @@ HB_FUNC( CREATECOLORWELL )
 
 HB_FUNC( CLRWSETCOLOR )
 {
-   NSColorWell * clrWell = ( NSColorWell * ) hb_parnl( 1 );
+   colorPick * clrWell = ( colorPick * ) hb_parnl( 1 );
    float fBlue = hb_parnl( 2 ) / 65536;
    float fGreen = ( hb_parnl( 2 ) - ( ( ( HB_LONG ) fBlue ) * 65536 ) ) / 256;
    float fRed = hb_parnl( 2 ) - ( ( ( HB_LONG ) fBlue ) * 65536 ) - ( ( ( HB_LONG ) fGreen ) * 256 );
@@ -31,7 +81,7 @@ HB_FUNC( CLRWSETCOLOR )
 	
 HB_FUNC( CLRWGETCOLOR )
 {
-   NSColorWell * clrWell = ( NSColorWell * ) hb_parnl( 1 );
+   colorPick * clrWell = ( colorPick * ) hb_parnl( 1 );
    NSColor * color = [ clrWell color ];
    CGFloat fRed, fGreen, fBlue, fAlpha;
    
