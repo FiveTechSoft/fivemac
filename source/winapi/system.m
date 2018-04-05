@@ -305,15 +305,24 @@ HB_FUNC( MOVETOTRASH )
 HB_FUNC( TASKEXEC )
 {
 	NSString * comando = hb_NSSTRING_par( 1 );
-	NSString * arg1 = hb_NSSTRING_par( 2 );
-	NSString * arg2 = hb_NSSTRING_par( 3 );
-	NSString * arg3 = hb_NSSTRING_par( 4 );
-    NSString * arg4 = hb_NSSTRING_par( 5 );
-	NSTask * task = [ [ NSTask alloc ] init ];
+
+    NSTask * task = [ [ NSTask alloc ] init ];
 	
   [ task setLaunchPath: comando ];
-	
-  NSArray *arguments = [ NSArray arrayWithObjects: arg1, arg2, arg3,arg4, nil ];
+    
+  NSMutableArray * arguments =  [[[ NSMutableArray alloc ] init ] autorelease ] ;
+    NSString * cArg ;
+  int n = hb_parinfa(2,0);
+  int i ;
+    
+    for( i = 0; i <= n - 1; i++ )
+    {
+      
+      cArg =  [ [ [ NSString alloc ] initWithCString: hb_parvc( 2, i+1 )  encoding:  NSWindowsCP1252StringEncoding ] autorelease ];
+        
+      [ arguments addObject: cArg ] ;
+    }
+    
   [ task setArguments: arguments ];
 	
   NSPipe * pipe = [ NSPipe pipe ];
@@ -324,7 +333,7 @@ HB_FUNC( TASKEXEC )
   [ task launch ];
 	
   NSData * data = [ file readDataToEndOfFile ];
-	NSString * string = [ [ NSString alloc ] initWithData: data encoding: NSUTF8StringEncoding ];
+  NSString * string = [ [ NSString alloc ] initWithData: data encoding: NSUTF8StringEncoding ];
  // NSLog( @"woop! got\n%@", string );
    hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );  
 }

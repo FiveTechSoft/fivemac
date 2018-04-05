@@ -22,7 +22,29 @@ HB_FUNC( ARRAYADDOBJ )
 
    [ myarray addObject: object  ] ;
 }  
- 
+
+
+HB_FUNC( STRINGARRAYTONSARRAY )
+{
+    
+  
+    NSString * string ;
+    NSMutableArray * myarray =  [[[ NSMutableArray alloc ] init ] autorelease ] ;
+    int n = hb_parinfa(1,0);
+    int i ;
+    
+    for( i = 0; i <= n - 1; i++ )
+    {
+        string =  [ [ [ NSString alloc ] initWithCString: hb_parvc( 2, i )  encoding:  NSWindowsCP1252StringEncoding ] autorelease ];
+        
+        [ myarray addObject: string ] ;
+        
+     }
+    
+   hb_retnl( ( HB_LONG ) myarray );
+    
+}
+
  
 HB_FUNC( ARRAYDELALL )
 {
