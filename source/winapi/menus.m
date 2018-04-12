@@ -62,6 +62,12 @@ HB_FUNC( MNUACTIVATE ) // hMenu
 
 #endif
 
+HB_FUNC( GETAPPMENU ) // hMenu, hSubMenu, nIndex
+{
+   hb_retnl( ( HB_LONG ) NSApp.mainMenu  );
+}
+
+
 HB_FUNC( MNUITEMTEXT )
 {
    NSMenuItem * item = ( NSMenuItem * ) hb_parnl( 1 );

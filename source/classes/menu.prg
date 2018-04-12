@@ -1,6 +1,7 @@
 #include "FiveMac.ch"
 
 static oMenu
+Static aMenus := {}
 
 //----------------------------------------------------------------------------//
 
@@ -11,12 +12,12 @@ CLASS TMenu
    DATA   lPopup INIT .F.
 
    METHOD New( cPrompt, lPopup )
-   METHOD Activate() INLINE MnuActivate( ::hMenu ) 
+   METHOD Activate() INLINE MnuActivate( ::hMenu )
    METHOD AddItem( cPrompt, bAction, cKey , cImage , cTooltip )
    METHOD AddSeparator()
    METHOD SetSubMenu( oMenu )
    METHOD Click( hMenuItem )
-   
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
@@ -32,7 +33,8 @@ METHOD New( cPrompt ,lPopup ) CLASS TMenu
    if oMenu == nil
       oMenu = Self
    endif   
-   
+   aadd( aMenus, Self )
+
 return Self   
 
 //----------------------------------------------------------------------------//
@@ -102,7 +104,23 @@ return nil
 //----------------------------------------------------------------------------//
 
 function GetMenu()
+local oFMenu :=FindMenuActive()
+   if !Empty( oFmenu )
+        Return oFmenu
+   endif
 
 return oMenu
 
 //----------------------------------------------------------------------------//
+
+function FindMenuActive()
+local n, oFMenu
+local hMenu := GETAPPMENU()
+
+ for n = 1 to Len( aMenus )
+    oFMenu :=aMenus[n]
+    if oFMenu:hMenu == hMenu
+        Return oFMenu
+    endif
+ next
+Return nil

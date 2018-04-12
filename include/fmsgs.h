@@ -42,5 +42,6 @@
 #define WM_NOTIFY         39
 #define WM_BRWCLRTEXT     40
 #define WM_MOUSEDOWN      41
-
+#define WM_GETFOCUS       42
+#define WM_LOSTFOCUS      43
 #endif

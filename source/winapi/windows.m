@@ -21,6 +21,10 @@ static NSWindow * wndMain = NULL;
 - ( BOOL ) windowShouldClose : ( NSNotification * ) notification;
 - ( void ) windowWillClose : ( NSNotification * ) notification;
 - ( BOOL ) acceptsFirstResponder ;
+
+- (void) windowDidResignKey:(NSNotification *)notification;
+- (void) windowDidBecomeKey:(NSNotification *)notification;
+
 - ( void ) windowDidUpdate : ( NSNotification * ) notification;
 - ( void ) mouseDown : ( NSEvent * ) theEvent;
 - ( void ) mouseUp : ( NSEvent * ) theEvent;
@@ -87,6 +91,50 @@ static NSWindow * wndMain = NULL;
         return TRUE;
 
 }
+
+- (void)windowDidResignKey:(NSNotification *)notification;
+{
+
+ //   NSLog(@"Lost Focus for content: %@", [[ self window ] title ] ) ;
+    
+ //    NSLog( @"%i", ( int ) [ self window ] );
+
+    if( symFMH == NULL )
+    symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+    
+    hb_vmPushSymbol( symFMH );
+    hb_vmPushNil();
+    hb_vmPushLong( ( HB_LONG ) [ self window ] );
+    hb_vmPushLong( WM_LOSTFOCUS );
+    hb_vmPushLong( ( HB_LONG ) [ self window ] );
+    hb_vmDo( 3 );
+
+  
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+
+{
+ 
+ //   NSLog(@"Get Focus for content: %@", [[ self window ] title ] ) ;
+    
+ //   NSLog( @"%i", ( int ) [ self window ] );
+    
+
+     if( symFMH == NULL )
+     symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+     
+     hb_vmPushSymbol( symFMH );
+     hb_vmPushNil();
+     hb_vmPushLong( ( HB_LONG ) [ self window ] );
+     hb_vmPushLong( WM_GETFOCUS );
+     hb_vmPushLong( ( HB_LONG ) [ self window ] );
+     hb_vmDo( 3 );
+
+    
+   
+}
+
 
 
 - ( void ) windowDidUpdate : ( NSNotification * ) notification

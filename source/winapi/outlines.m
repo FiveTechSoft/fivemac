@@ -177,6 +177,12 @@
     [(ImageAndTextCell*)cell setTitle:node.name];    
 }
 
+-(void)outlineViewSelectionDidChange:(NSNotification *)notification {
+  //   NSLog(@"selection did change");
+}
+
+
+
 @end
 
 @interface MOutlineView : NSOutlineView
@@ -185,7 +191,7 @@
 @end
 
 @implementation  MOutlineView
-   
+
 @end
 
 //----------------------------------------------------------------------------------

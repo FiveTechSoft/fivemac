@@ -11,12 +11,14 @@ CLASS TColorWell FROM TControl
 
    METHOD GetColor() INLINE ClrWGetColor( ::hWnd )
    
-   METHOD SetColor( nRGBColor ) INLINE ::nRGBColor := nRGBColor,;
-                                       ClrWSetColor( ::hWnd, nRGBColor )
-   
+   METHOD SetColor( nRGBColor ) INLINE ( ::nRGBColor := nRGBColor,;
+                                       ClrWSetColor( ::hWnd, nRGBColor ) )
+
    METHOD Change() INLINE ::nRGBColor := ::GetColor(),;
                           If( ! Empty( ::bChange ), Eval( ::bChange, Self ),)
-   
+
+   METHOD close() INLINE CLOSECOLORWELL( ::hWnd )
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//

@@ -7,6 +7,8 @@
 
 #include "fmsgs.h"
 
+#define CLR_VSBAR  Rgb( 207, 214, 228 )
+
 //----------------------------------------------------------------------------//
 
 CLASS TScintilla FROM TControl
@@ -15,7 +17,13 @@ CLASS TScintilla FROM TControl
    
    DATA aCopys
    DATA aKey             AS ARRAY INIT {}
-   
+
+   DATA nTextColor       INIT CLR_BLUE
+   DATA nBackColor       INIT nRgb(230,230,230)
+
+   DATA nTColorLin       INIT CLR_BLUE
+   DATA nBColorLin       INIT CLR_VSBAR
+
    DATA cFileName
    DATA cFilePath
    
@@ -292,6 +300,8 @@ CLASS TScintilla FROM TControl
 
    METHOD SetLexerProp ( cProp, cValue) INLINE SciSetLexerProp( ::hWnd, cProp, cValue  )
 
+   METHOD SetLinColor( nClrText, nClrPane )
+   
    METHOD SetLineIndentation( nLine, nSize ) INLINE ::Send( SCI_SETLINEINDENTATION, nLine, nSize )
 
    METHOD SetLinIndent( lOnOff, lSinc )
@@ -437,7 +447,7 @@ METHOD StyleSetColor( nClrFore, nClrBack ) CLASS TScintilla
    if Valtype( nClrBack ) == 'N'
       ::Send( SCI_STYLESETBACK, ::nSetStyle, nClrBack )
    endif
-
+   
 return nil
 
 //----------------------------------------------------------------------------//
@@ -446,25 +456,34 @@ return nil
 METHOD SetColor( nClrText, nClrPane, lIni ) CLASS TScintilla
 
 local x
-//DEFAULT nClrText  := ::nClrText
-//DEFAULT nClrPane  := ::nClrPane
-DEFAULT lIni      := .F.
 
-//::nClrText = nClrText
-//::nClrPane = nClrPane
 
-if lIni
-//::StylereSetDefault()
-For x = 0 to 31 //255
-::StyleSet( x )
-::StyleSetColor( nClrText, nClrPane )
-Next x
-endif
+ if !empty(nClrText)
+   :: nTextColor := nClrText
+ endif
+ if !empty(nClrPane )
+   ::nBackColor := nClrPane
+ endif
+::setup()
 
-::Send( SCI_STYLESETFORE, STYLE_DEFAULT, nClrText )
-::Send( SCI_STYLESETBACK, STYLE_DEFAULT, nClrPane )
 
 return nil
+
+//----------------------------------------------------------------------------//
+
+METHOD SetLinColor( nClrText, nClrPane ) CLASS TScintilla
+ 
+if !empty(nClrText)
+:: nTColorLin := nClrText
+endif
+if !empty(nClrPane )
+::nBColorLin := nClrPane
+endif
+::setup()
+
+
+return nil
+
 
 //----------------------------------------------------------------------------//
 
@@ -1208,9 +1227,12 @@ aMarkers := { ;
 */
 
   ::Send( SCI_COLOURISE, 0, -1 )
-  ::Send( SCI_STYLESETBACK, STYLE_DEFAULT, rgb( 255,255,255 ) )
-  ::Send( SCI_STYLECLEARALL, 0, 0 )
+  
+  ::Send( SCI_STYLESETFORE, STYLE_DEFAULT, ::nTextColor )  // texto gernerico
+  ::Send( SCI_STYLESETBACK, STYLE_DEFAULT, ::nBackColor )  // Color fondo editor
 
+  ::Send( SCI_STYLECLEARALL, 0, 0 )
+ 
    ::Send( SCI_STYLESETFORE, STYLE_BRACELIGHT, CLR_WHITE )
    ::Send( SCI_STYLESETBACK, STYLE_BRACELIGHT, RGB( 0, 179, 179 ) )
 
@@ -1218,11 +1240,8 @@ aMarkers := { ;
    ::Send( SCI_STYLESETFONT, STYLE_BRACELIGHT, "Courier" )
    ::Send( SCI_STYLESETSIZE, STYLE_BRACELIGHT, 16 )
 
-
-    ::Send(SCI_SETFOLDMARGINCOLOUR,1, rgb(210,210,210) )  // fondo margen
-    ::Send(SCI_SETFOLDMARGINHICOLOUR,1, rgb(210,210,210) )  // fondo margen
-
-
+   ::Send(SCI_SETFOLDMARGINCOLOUR,1, rgb(210,210,210) )  // fondo margen
+   ::Send(SCI_SETFOLDMARGINHICOLOUR,1, rgb(210,210,210) )  // fondo margen
 
    // ::Send( SCI_MARKERDEFINE, 1, SC_MARK_ARROW )
     ::Send( SCI_MARKERSETFORE, 1, CLR_BLUE )
@@ -1248,10 +1267,10 @@ aMarkers := { ;
 
   // ::Send(SCI_BRACEHIGHLIGHTINDICATOR,0,2)
 
-// Line number style.
+// ----------------Line number style.  ---------------------------
 
-  ::Send( SCI_STYLESETFORE, STYLE_LINENUMBER, rgb(240,240,240 ) )
-  ::Send( SCI_STYLESETBACK, STYLE_LINENUMBER, rgb(128,128,128 ) )
+  ::Send( SCI_STYLESETFORE, STYLE_LINENUMBER, ::nTColorLin )
+  ::Send( SCI_STYLESETBACK, STYLE_LINENUMBER, ::nBColorLin )
   ::Send( SCI_SETMARGINTYPEN, 0, SC_MARGIN_NUMBER )
   ::Send( SCI_SETMARGINWIDTHN, 0, 35 )
 
@@ -1354,10 +1373,6 @@ NEXT
 
 //::Send( SCI_SETMARGINTYPEN, 0, SC_MARGIN_BACK)
 
-//::Send( SCI_STYLESETBACK,STYLE_DEFAULT, CLR_GREEN)
-//::Send( SCI_STYLESETFORE,STYLE_DEFAULT, CLR_YELLOW)
-
-
 
 //Set autoindentation con 4 spaces
 ::Send( SCI_SETINDENT, 4, 0  )
@@ -1381,7 +1396,6 @@ NEXT
 
    ::SetUseTabs( .F. )
 
-  ::SetColor( , rgb( 255,255,255 ) )
 
 return nil
 

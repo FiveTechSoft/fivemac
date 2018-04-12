@@ -65,35 +65,80 @@ HB_FUNC( CREATECOLORWELL )
    hb_retnl( ( HB_LONG ) clrWell );
 }
 
+HB_FUNC( CLOSECOLORWELL )
+{
+   colorPick * clrWell = ( colorPick * ) hb_parnl( 1 );
+   [[NSColorPanel sharedColorPanel] close];
+   [ clrWell deactivate ];
+    
+}
+
 HB_FUNC( CLRWSETCOLOR )
 {
    colorPick * clrWell = ( colorPick * ) hb_parnl( 1 );
    float fBlue = hb_parnl( 2 ) / 65536;
    float fGreen = ( hb_parnl( 2 ) - ( ( ( HB_LONG ) fBlue ) * 65536 ) ) / 256;
    float fRed = hb_parnl( 2 ) - ( ( ( HB_LONG ) fBlue ) * 65536 ) - ( ( ( HB_LONG ) fGreen ) * 256 );
-   NSColor * color = [ NSColor colorWithDeviceRed : fRed / 255.0 
+   NSColor * color = [ NSColor colorWithCalibratedRed : fRed / 255.0
                        green : fGreen / 255.0
 					             blue : fBlue / 255.0
                        alpha: 1.0 ];   
-   
-   [ clrWell setColor: color ];
-}   		 
+
+    clrWell.color = color ;
+}
 	
 HB_FUNC( CLRWGETCOLOR )
 {
    colorPick * clrWell = ( colorPick * ) hb_parnl( 1 );
    NSColor * color = [ clrWell color ];
-   CGFloat fRed, fGreen, fBlue, fAlpha;
+   int iRed   = ( int ) ( color.redComponent * 255 ) ;
+   int iGreen = ( int ) ( color.greenComponent * 255 ) ;
+   int iBlue  = ( int ) ( color.blueComponent * 255 ) ;
    
-   [ color getRed: &fRed green: &fGreen blue: &fBlue alpha: &fAlpha ];
-   	
-   hb_retnl( ( HB_LONG ) RGB( fRed * 255, fGreen * 255, fBlue * 255 ) );	
+   hb_retnl( ( HB_LONG ) RGB( iRed, iGreen, iBlue ) );
 } 	   	
+
+
+HB_FUNC( CLRWGETNSCOLOR )
+{
+   colorPick * clrWell = ( colorPick * ) hb_parnl( 1 );
+   hb_retnl( ( HB_LONG ) [ clrWell color ]  );
+}
+
+HB_FUNC( GETCOLORRGB )
+{
+    NSColor * color =  (NSColor *) hb_parnl(1);
+    int iRed   = ( int ) ( color.redComponent * 255 ) ;
+    int iGreen = ( int ) ( color.greenComponent * 255 ) ;
+    int iBlue  = ( int ) ( color.blueComponent * 255 ) ;
+    
+    hb_retnl( ( HB_LONG ) RGB( iRed, iGreen, iBlue ) );
+}
+
+
+HB_FUNC( GETBLUENSCOLOR )
+{
+    NSColor * color =  (NSColor *) hb_parnl(1);
+    hb_retni( ( int ) ( color.blueComponent * 255 ) )  ;
+}
+
+HB_FUNC( GETGREENNSCOLOR )
+{
+    NSColor * color =  (NSColor *) hb_parnl(1);
+    hb_retni( ( int ) ( color.greenComponent * 255 ) )  ;
+}
+
+HB_FUNC( GETREDNSCOLOR )
+{
+    NSColor * color =  (NSColor *) hb_parnl(1);
+    hb_retni( ( int ) ( color.redComponent * 255 ) )  ;
+}
+
 
 
 HB_FUNC( COLORFROMNRGB )
 {
-    
+   
     float fBlue = hb_parnl( 1 ) / 65536;
     float fGreen = ( hb_parnl( 1 ) - ( ( ( HB_LONG ) fBlue ) * 65536 ) ) / 256;
     float fRed = hb_parnl( 1 ) - ( ( ( HB_LONG ) fBlue ) * 65536 ) - ( ( ( HB_LONG ) fGreen ) * 256 );
@@ -101,7 +146,7 @@ HB_FUNC( COLORFROMNRGB )
                                                     green : fGreen / 255.0
                                                      blue : fBlue / 255.0
                                                       alpha: 1.0 ];  
-    
+
   hb_retnl( ( HB_LONG ) color ) ;	
 }    
 
@@ -176,9 +221,9 @@ HB_FUNC( COLORFROMNRGB2 )
    float fBlue =  hb_parnl( 3 ) / 255.0 ;
    float fGreen = hb_parnl( 2 ) / 255.0 ;
    float fRed =   hb_parnl( 1 ) / 255.0 ;
-   NSColor * color = [ NSColor colorWithCalibratedRed : fRed / 255.0 
-                                                        green : fGreen / 255.0
-                                                        blue : fBlue / 255.0
+   NSColor * color = [ NSColor colorWithCalibratedRed : fRed
+                                                        green : fGreen
+                                                        blue : fBlue
                                                         alpha: 1.0 ];   
    hb_retnl( ( HB_LONG ) color );
 }   

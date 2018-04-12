@@ -39,6 +39,7 @@ CLASS TWindow
    DATA  oPopup
    DATA  lFlipped INIT .F.
    DATA  cCursor
+   DATA  bLostFocus, bGetFocus
 
    CLASSDATA aProps INIT { "nTop", "nLeft", "nWidth", "nHeight", "cText", "cVarName" }
    
@@ -183,7 +184,11 @@ CLASS TWindow
    METHOD cGenPrg()
    
    METHOD SetHideOnDeactivate( lValue ) INLINE WNDSETHIDEONDEACTIVATE ( ::hWnd, lValue )
-   
+
+  METHOD lostFocus()
+
+  METHOD GetFocus()
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
@@ -387,8 +392,8 @@ METHOD MenuItemClick( hMenuItem ) CLASS TWindow
 	    ::oPopup:Click( hMenuItem )
 	 
 	 elseif GetMenu() != nil
-	    GetMenu():Click( hMenuItem )   
-   
+	    GetMenu():Click( hMenuItem )
+
    endif
 
 return nil
@@ -527,8 +532,8 @@ return nil
 METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
 
    local oControl := If( nSender != nil, ::FindControl( nSender ),), oCtrl
-  
-   if oControl == nil
+
+     if oControl == nil
       if nMsg == WM_BRWROWS // the request is sent before its hWnd has been assigned
          for each oCtrl in ::aControls
             if oCtrl:IsKindOf( "TWBROWSE" ) .and. Empty( oCtrl:hWnd )
@@ -610,7 +615,7 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
 	          endif
 	
        case nMsg == WM_MENUITEM
-            ::MenuItemClick( nSender )
+           ::MenuItemClick( nSender )
 
 	    case nMsg == WM_BRWROWS
 	         if oControl != nil
@@ -688,8 +693,32 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
            if oControl != nil
               oControl:Change( uParam1 )
            endif   
-                    				
+
+      case nMsg == WM_GETFOCUS
+            ::GetFocus()
+       
+      case nMsg == WM_LOSTFOCUS
+            ::LostFocus()
    endcase
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+METHOD GetFocus() CLASS TWindow
+if ! Empty( ::bGetFocus )
+     return Eval( ::bGetFocus, Self )
+endif
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+
+METHOD lostFocus() CLASS TWindow
+if ! Empty( ::blostFocus )
+     return Eval( ::bLostFocus, Self )
+endif
 
 return nil
 
@@ -723,7 +752,7 @@ function _FMO( hWnd, nMsg, hSender, uParam1, uParam2 )
 
    local oControl, nAt := AScan( aWindows, { | o | o:hWnd == hWnd } )
 
-   if nAt != 0
+  if nAt != 0
       oControl := aWindows[ nAt ]:FindControl( hSender )
       if oControl != nil
          return oControl:HandleEvent( nMsg, uParam1, uParam2 )

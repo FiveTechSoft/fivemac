@@ -8,6 +8,7 @@ CLASS TMultiview FROM TControl
    DATA   oToolbar
    DATA   lwndresize
    DATA   nHeight,nWidth
+   DATA   bChange
 
    METHOD New(  oWnd, lWndResize,  lToolBar )
    METHOD AddView(  nTop, nLeft, nWidth, nHeight, cTitle, cPrompt, cToolTip,cImage )
@@ -65,7 +66,9 @@ METHOD SetView( nButton ) CLASS TMultiView
    local nWndHeight
 
    if Len( ::aviews ) > 0
-	   
+        if !empty( ::bChange)
+            eval( ::bChange ,nButton )
+        endif
 	    for i = 1 to Len( ::aViews )
 		     if i == nButton
             view = ::aViews[ i ]

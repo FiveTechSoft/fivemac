@@ -140,6 +140,12 @@ HB_FUNC( NSLOG )
   NSLog( @"%@", hb_NSSTRING_par( 1 ) );
 }   
 
+HB_FUNC( NSNLOG )
+{
+    NSLog( @"%i", hb_parni( 1 ) );
+}
+
+
 HB_FUNC( ISCAPSLOCKDOWN )
 {
  bool wasCapsLockDown = CGEventSourceKeyState(kCGEventSourceStateHIDSystemState, 57) ;
