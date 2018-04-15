@@ -2,6 +2,11 @@
 #include "Scintilla.ch"
 #include "Colors.ch"
 
+#define SCI_AUTOCSETCASEINSENSITIVEBEHAVIOUR 2634
+#define SC_CASEINSENSITIVEBEHAVIOUR_IGNORECASE 1
+#define SCI_SETAUTOMATICFOLD 2663
+#define SC_AUTOMATICFOLD_CLICK 0x0002
+
 #define markerBookmark    1
 #define IBNCaretChanged 1
 
@@ -20,10 +25,15 @@ CLASS TScintilla FROM TControl
 
    DATA nTextColor       INIT CLR_BLUE
    DATA nBackColor       INIT nRgb(230,230,230)
+   DATA nClrPane
 
    DATA nTColorLin       INIT CLR_BLUE
    DATA nBColorLin       INIT CLR_VSBAR
 
+   DATA nMargLeft
+   DATA nMargRight
+   DATA nSpacLin
+   
    DATA cFileName
    DATA cFilePath
    
@@ -38,6 +48,11 @@ CLASS TScintilla FROM TControl
    DATA aMarkerHand      INIT {}
 
    DATA lIndicators      INIT .F.
+   
+   DATA lFolding
+   
+   DATA cLexer
+   DATA cListFuncs
 
    DATA cCComment        INIT { CLR_GRAY, CLR_WHITE, SC_CASE_MIXED, } //HGRAY
    DATA cCCommentLin     INIT { CLR_GRAY, CLR_WHITE, SC_CASE_MIXED, }
@@ -133,20 +148,25 @@ CLASS TScintilla FROM TControl
    METHOD FoldLineSt()                        INLINE ::Send( SCI_SETFOLDFLAGS, 128, 0 )
    
    METHOD GetAnchor()                         INLINE SciGetProp( ::hWnd, SCI_GETANCHOR )
+   METHOD GetCaretInLine()
    METHOD GetCaretLineBack()                  INLINE SciGetProp( ::hWnd, SCI_GETCARETLINEBACK )
    
    METHOD GetCharAt( nPos ) INLINE SciGetProp( ::hWnd, SCI_GETCHARAT, nPos )
 
    METHOD GetTextColor( cType )
-
-   METHOD GetCurrentLine()  INLINE SciGetProp( ::hWnd, SCI_LINEFROMPOSITION, ::GetCurrentPos() )
-
-   METHOD GetCurrentPos()   INLINE SciGetProp( ::hWnd, SCI_GETCURRENTPOS )
-
+   
+   METHOD GetCurLine()
+   
+   METHOD GetCurrentLine()                   INLINE SciGetProp( ::hWnd, SCI_LINEFROMPOSITION, ::GetCurrentPos() )
+   METHOD GetCurrentPos()                    INLINE SciGetProp( ::hWnd, SCI_GETCURRENTPOS )
+   METHOD GetCurrentLineNumber()             INLINE SciGetProp( ::hWnd, SCI_LINEFROMPOSITION, ::GetCurrentPos() )
+   
+   METHOD GetCurrentStyle()  INLINE SciGetProp( ::hWnd, SCI_GETSTYLEAT, ::GetCurrentPos() )
+   
    METHOD GetFuncList()
 
    METHOD GetIndent()       INLINE SciGetProp( ::hWnd, SCI_GETINDENT )
-
+   METHOD GetLexer()        INLINE SciGetProp( ::hWnd, SCI_GETLEXER )
    METHOD GetLine( nLine )  INLINE SciGetLine( ::hWnd, nLine )
 
    METHOD GetLineCount()    INLINE SciGetProp( ::hWnd, SCI_GETLINECOUNT )
@@ -159,7 +179,9 @@ CLASS TScintilla FROM TControl
 
    METHOD GetSelText()      INLINE SciGetSelText( ::hWnd )
 
-   METHOD GetText()         INLINE SciGetText( ::hWnd )
+   METHOD GetStyleAt( nPos )                   INLINE SciGetProp( ::hWnd, SCI_GETSTYLEAT, nPos )
+
+   METHOD GetText()                            INLINE SciGetText( ::hWnd )
 
     METHOD GoDown()                            INLINE ::Send( SCI_LINEDOWN )
     METHOD GoTop()                             INLINE ::Send( SCI_HOME )
@@ -190,6 +212,8 @@ CLASS TScintilla FROM TControl
     METHOD Homewrap ()                   INLINE ::Send( SCI_HOMEWRAP )
     METHOD Homewrapextend ()             INLINE ::Send( SCI_HOMEWRAPEXTEND )
 
+    METHOD InitEdt()
+    
     METHOD InsertText( nPos, cText )     INLINE ::Send( SCI_INSERTTEXT, nPos, cText )
 
     METHOD IntelliSense( nChar )
@@ -277,6 +301,9 @@ CLASS TScintilla FROM TControl
 
    METHOD SetColor( nClrText, nClrPane )
    METHOD SetColourise( lOnOff )
+
+
+   METHOD SetHighlightColors()
 
    METHOD SetCurrentPos( nPos ) INLINE ::Send( SCI_SETCURRENTPOS, nPos )
    METHOD SetCursor( nMode )    INLINE ::Send( SCI_SETCURSOR, nMode, 0 )
@@ -378,25 +405,49 @@ CLASS TScintilla FROM TControl
     METHOD Wordrightextend ()                  INLINE ::Send( SCI_WORDRIGHTEXTEND )
 
     METHOD MenuEdit( lPopup )
- 
+    
+    METHOD ValidChar( c ) INLINE  Lower( c ) $ "abcdefghijklmnopqrstuvwxyz1234567890ñ"
 
 ENDCLASS
 
 //----------------------------------------------------------------------------//
 
-METHOD New( nTop, nLeft, nBottom, nRight, oWnd ) CLASS TScintilla
-   ::hWnd = SciCreate( nTop, nLeft, nBottom, nRight, oWnd:hWnd )
-   ::oWnd = oWnd
+METHOD New( nTop, nLeft, nBottom, nRight, oWnd , cLex ) CLASS TScintilla
+    
+    DEFAULT cLex :=  "flagship"
+    
+    ::hWnd = SciCreate( nTop, nLeft, nBottom, nRight, oWnd:hWnd )
+    ::oWnd = oWnd
 
-   oWnd:AddControl( Self )
+    oWnd:AddControl( Self )
 
-   ::Setup()
-   ::brclicked:= { ||  msginfo("rclick")    }
+  //  ::cCKeyw1       := { METRO_ORANGE, ::nClrPane, SC_CASE_MIXED, } //CYAN
+  //  ::cCKeyw2       := { METRO_ORANGE, ::nClrPane, SC_CASE_MIXED, } // METRO_BROWN
   
-   ::cCBraces      := { CLR_BLUE, CLR_YELLOW, SC_CASE_MIXED, }
-   ::cCBraceBad    := { CLR_HRED, CLR_YELLOW, SC_CASE_MIXED, }
+    ::cCKeyw1       := { rgb(185,53,163), ::nClrPane, SC_CASE_MIXED, } //CYAN
+    ::cCKeyw2       := { rgb(185,53,163), ::nClrPane, SC_CASE_MIXED, } // METRO_BROWN
   
+    ::cCKeyw3       := { METRO_BROWN, ::nClrPane, SC_CASE_MIXED, }  // CLR_BLUE
+    ::cCKeyw4       := { CLR_BLUE,    ::nClrPane, SC_CASE_MIXED, }     //METRO_CYAN
+    ::cCKeyw5       := { METRO_CYAN,  ::nClrPane, SC_CASE_MIXED, }   //METRO_MAUVE   // STEEL
 
+    ::cCComment     := { CLR_GRAY, ::nClrPane, SC_CASE_MIXED, }    //HGRAY
+    ::cCCommentLin  := { CLR_GRAY, ::nClrPane, SC_CASE_MIXED, }
+    ::cCString      := { CLR_HRED, ::nClrPane, SC_CASE_MIXED, }
+    ::cCNumber      := { CLR_RED,  ::nClrPane, SC_CASE_MIXED, }
+    ::cCOperator    := { CLR_BLUE, ::nClrPane, SC_CASE_MIXED, }
+    ::cCBraces      := { CLR_BLUE, CLR_YELLOW, SC_CASE_MIXED, }
+    ::cCBraceBad    := { CLR_HRED, CLR_YELLOW, SC_CASE_MIXED, }
+    ::cCIdentif     := { CLR_GREEN, ::nClrPane, SC_CASE_MIXED, }    //MAGENTA
+    
+    ::lFolding    := .t.
+    
+    ::cLexer   := cLex
+
+    ::Setup()
+    ::brclicked:= { ||  msginfo("rclick")    }
+    
+  
 return Self
 
 //----------------------------------------------------------------------------//
@@ -404,7 +455,7 @@ return Self
 
 METHOD SetToggle() CLASS TScintilla
 Local lSw   := .F.
-local nLine := ::GetCurrentLine()
+local nLine := ::GetCurrentLineNumber()
    msginfo(nLine)
    if SciGetProp( ::hWnd,SCI_MARKERGET, nLine ) == 0
       ::Send( SCI_MARKERADD, nLine, markerBookmark )
@@ -484,12 +535,11 @@ endif
 
 return nil
 
-
 //----------------------------------------------------------------------------//
 
 METHOD BookmarkNext( lForwardScan, lSelect )  CLASS TScintilla
 
-   LOCAL lineno      := ::GetCurrentLine()
+   LOCAL lineno      := ::GetCurrentLineNumber()
    LOCAL sci_marker   := SCI_MARKERNEXT
    LOCAL lineStart      := lineno + 1      //Scan starting from next line
    LOCAL lineRetry      := 0            //If not found, try from the beginning
@@ -658,6 +708,16 @@ METHOD GetFuncList() CLASS TScintilla
 
 return aFunLines
 
+
+//----------------------------------------------------------------------------//
+
+METHOD GetCurLine() CLASS TScintilla
+    
+    local nLine := ::GetCurrentLineNumber()
+    local cText := ::GetLine( nLine + 1 )
+    
+RETURN cText
+
 //----------------------------------------------------------------------------//
 
 METHOD GotoLineEnsureVisible( nextline )  CLASS TScintilla
@@ -679,7 +739,7 @@ retu nil
 
 METHOD SetToggleMark() CLASS TScintilla
 Local lSw   := .F.
-Local nLine := ::GetCurrentLine()
+Local nLine := ::GetCurrentLineNumber()
 Local nPos
 
 
@@ -744,6 +804,16 @@ Return nil
 
 //----------------------------------------------------------------------------//
 
+METHOD GetCaretInLine() CLASS TScintilla
+    
+    local nCaret     := ::GetCurrentPos()
+    local nLine      := ::LineFromPosition( nCaret )
+    local nLineStart := ::PositionFromLine( nLine )
+    
+RETURN nCaret - nLineStart
+
+//----------------------------------------------------------------------------//
+
 METHOD SetMargin( lOn ) CLASS TScintilla
 
    DEFAULT lOn := .T.
@@ -762,7 +832,7 @@ METHOD LineSep() CLASS TScintilla
 
 local nPos   := ::GetCurrentPos()
 ::InsertText( nPos, "//" + Replicate( "-", 76 ) + "//" + hb_eol() )
-::GotoLine( ::GetCurrentLine() + 2 )
+::GotoLine( ::GetCurrentLineNumber() + 2 )
 
 Return nil
 
@@ -770,7 +840,7 @@ Return nil
 
 METHOD AutoIndent() CLASS TScintilla
 
-   local nCurLine     := ::GetCurrentLine()
+   local nCurLine     := ::GetCurrentLineNumber()
    local nIndentation := ::GetLineIndentation( nCurLine - 1 )
    local cLine        := LTrim( ::GetLine( nCurLine ) )
    local cToken
@@ -998,12 +1068,68 @@ METHOD Close() CLASS TScintilla
 return nil
 
 //----------------------------------------------------------------------------//
+
+
+METHOD InitEdt() CLASS TScintilla
+    
+    local oCrs
+    
+    ::nMargLeft     := 4
+    ::nMargRight    := 4
+    ::nSpacLin      := 2
+    
+/*
+    ::nWidthTab     := 3
+    ::aHCopy        := {}
+    ::aCopys        := {}
+    ::aBookMarker   := {}
+    ::aMarkerHand   := {}
+    ::aPointBreak   := {}
+    ::nMarker       := SC_MARK_SHORTARROW
+    ::lVirtSpace    := .T.
+    ::bViews        := { || .T. }
+    ::bDoubleView   := { || .T. }
+    ::cPlugIn       := ""
+    ::lLinTabs      := .F.
+    ::nMargen       := -1
+    ::nPos64        := -1
+    ::lTipFunc      := .T.
+    ::nColorSelectionB  := ::nCaretBackColor
+    ::aIndentChars  := { ;
+        { "IF", 1 },;
+        { "ENDIF", -1 },; //{ "ELSE", -1 },;
+        { "FOR", 1 },;
+        { "NEXT", -1 },;
+        { "DO", 1 },;
+        { "WITH", 1 },;
+        { "END", -1 },;
+        { "ENDDO", -1 },;
+        { "FUNCTION", 0 },;
+        { "RETURN", 0 },;
+        { "METHOD", 0 },;
+        { "CLASS", 0 },;
+        { "HB_FUNC", 0 } ;
+    }
+    
+    if ::lPtr
+        ::GetDirecPointer()
+    endif
+    if ::lMultiView
+        ::GetDocPointer()
+    endif
+*/
+
+Return nil
+
+//----------------------------------------------------------------------------//
+
+
 //----------------------------------------------------------------------------//
 
 METHOD IntelliSense( nChar ) CLASS TScintilla
 
    local nAt   := ::nCol()
-   local cLine := Lower( LTrim( ::GetLine( ::GetCurrentLine() + 1 ) ) )
+   local cLine := Lower( LTrim( ::GetLine( ::GetCurrentLineNumber() + 1 ) ) )
 
    if SubStr( cLine, 1, 8 ) $ "define window"
       ::CallTipShow( ::GetCurrentPos(), "DEFINE WINDOW <oWnd>" + Chr( 10 ) + ;
@@ -1099,33 +1225,101 @@ return If( ! SciSearchForward( ::hWnd, cText, nFlags ), MsgBeep(),)
 
 METHOD Setup() CLASS TScintilla
 local n
-local KeyWords1  := CadComand()
-Local aMarkers
+//local KeyWords1  := CadComand()
 
-// La quinta opcion es personalizada por mi
-aMarkers := { ;
-    {SC_MARKNUM_FOLDEROPEN, SC_MARKNUM_FOLDER   , SC_MARKNUM_FOLDERSUB, ;
-        SC_MARKNUM_FOLDERTAIL, SC_MARKNUM_FOLDEREND, SC_MARKNUM_FOLDEROPENMID,;
-        SC_MARKNUM_FOLDERMIDTAIL},;
-    {SC_MARK_MINUS        , SC_MARK_PLUS        , SC_MARK_EMPTY, SC_MARK_EMPTY, ;
+local cCad0 := ;
+    "action activate adjust array as autocols autosort " + ; //aadd //ascan atail
+    "bar begin bitmap bold bool bottom break brush button buttonbar byte " + ;
+    "center centered century change checkbox checked " + ; //cfilenopath
+    "click color colors columns colsizes controls " + ;
+    "combobox constructor crlf cursor " + ;
+    "default #define deleted design dialog " + ; //disable
+    "#else #endif endini entry enum epoch explorer " + ;  //enable
+    "filter folder folderex font footer " + ; //filename
+    "get group " + ;
+    "hbitmap header height hinds horizontal " + ;
+    "icon id #ifdef #ifndef image #include ini init items " + ;
+    "justify " + ;
+    "keyboard " +;
+    "left lib lines listbox local long lpstr lpwstr " + ;
+    "margin maximized mdi mdichild memo " + ;  //memoline memoread memowrit
+    "menuitem menupos message msgbar msgitem mru " + ;
+    "new noborder " + ;
+    "of on option " + ;
+    "paint pascal pixel previous private prompt prompts public " + ;
+    "radioitem radiomenu readonly recordset refresh resize resource right round " + ;
+    "say section separator sequence set setfocus size spinner splitter " + ;
+    "static style super struct " + ;
+    "tab title to tooltip top transparent typedef " + ;
+    "#undef update " + ;
+    "valid var vertical " + ;
+    "when width window " + ;
+    "xbrowse " + ;
+    "2007 2010 2013 2015"
+
+
+local cCad1 := " "
+
+local cCad2 := "function procedure return class method for while " + ;
+    "iif if else elseif do with object begindump " + ;
+    "hb_func func loop case otherwise switch menu void "
+
+local cCad3 := "endif endclass next from data classdata inline virtual "+;
+    "setget endcase endobject endmenu return "+;
+    "memvar enddo end endwhile endwith enddump endswitch hb_ret " + ;
+    "hb_retc hb_retc_nul hb_retc_buf hb_retc_con hb_retclen " + ;
+    "hb_retds hb_retd hb_retdl hb_rettd hb_rettdt hb_retl " + ;
+    "hb_retnd hb_retni hb_retnl hb_retns hb_retnint hb_retnlen "+;
+    "hb_retndlen hb_retnilen hb_retnllen hb_retnintle hb_reta " + ;
+    "hb_retptr hb_retnll hb_retnlllen "
+
+local cCad4 := "$@\\&<>#(){}[]"
+
+local KeyWords0 := ""
+local KeyWords1 := ""
+local KeyWords2 := ""
+local KeyWords3 := ""
+local KeyWords4 := ""
+
+local aMarkers := { ;
+    { SC_MARKNUM_FOLDEROPEN, SC_MARKNUM_FOLDER , SC_MARKNUM_FOLDERSUB, SC_MARKNUM_FOLDERTAIL, ;
+        SC_MARKNUM_FOLDEREND , SC_MARKNUM_FOLDEROPENMID, SC_MARKNUM_FOLDERMIDTAIL },;
+    { SC_MARK_MINUS        , SC_MARK_PLUS        , SC_MARK_EMPTY, SC_MARK_EMPTY, ;
         SC_MARK_EMPTY        , SC_MARK_EMPTY       , SC_MARK_EMPTY},;
-    {SC_MARK_ARROWDOWN    , SC_MARK_ARROW       , SC_MARK_EMPTY, SC_MARK_EMPTY, ;
+    { SC_MARK_ARROWDOWN    , SC_MARK_ARROW       , SC_MARK_EMPTY, SC_MARK_EMPTY, ;
         SC_MARK_EMPTY        , SC_MARK_EMPTY       , SC_MARK_EMPTY},;
-    {SC_MARK_CIRCLEMINUS  , SC_MARK_CIRCLEPLUS  , SC_MARK_VLINE, ;
+    { SC_MARK_CIRCLEMINUS  , SC_MARK_CIRCLEPLUS  , SC_MARK_VLINE, ;
         SC_MARK_LCORNERCURVE, ;
         SC_MARK_CIRCLEPLUSCONNECTED, SC_MARK_CIRCLEMINUSCONNECTED,;
-        SC_MARK_TCORNERCURVE},;
-    {SC_MARK_BOXMINUS,      SC_MARK_BOXPLUS,   SC_MARK_VLINE,   SC_MARK_LCORNER,;
-        SC_MARK_BOXPLUSCONNECTED,    SC_MARK_BOXMINUSCONNECTED,    SC_MARK_TCORNER},;
-    {SC_MARK_BOXMINUS,      SC_MARK_BOXPLUS,   SC_MARK_VLINE,   SC_MARK_LCORNER,;
-        SC_MARK_TCORNER,             SC_MARK_VLINE,                SC_MARK_VLINE } ;
+        SC_MARK_TCORNERCURVE },;
+    { SC_MARK_BOXMINUS,      SC_MARK_BOXPLUS,  SC_MARK_VLINE,   SC_MARK_LCORNER,;
+        SC_MARK_BOXPLUSCONNECTED, SC_MARK_BOXMINUSCONNECTED, SC_MARK_TCORNER },;
+    { SC_MARK_BOXMINUS,      SC_MARK_BOXPLUS,   SC_MARK_VLINE,   SC_MARK_LCORNER,;
+        SC_MARK_TCORNER,             SC_MARK_VLINE,                SC_MARK_VLINE }, ;
+    { SC_MARK_CIRCLEMINUS  , SC_MARK_CIRCLEPLUS  , SC_MARK_VLINE, ;
+        SC_MARK_LCORNER, ;
+        SC_MARK_CIRCLEPLUSCONNECTED, SC_MARK_CIRCLEMINUSCONNECTED,;
+        SC_MARK_TCORNER };
 }
 
 
- // Lexer type is flagship.
- // ::Send( SCI_SETLEXER, SCLEX_FLAGSHIP, 0 )
-  ::Send( SCI_SETLEXERLANGUAGE, , "flagship" )
+::nClrPane := ::nBackColor
 
+if !Empty( ::cListFuncs )
+    KeyWords0  := lower( ::cListFuncs )
+    KeyWords1  := cCad2 + cCad3
+    else
+    KeyWords0  := cCad2
+    KeyWords1  := cCad3
+endif
+
+ KeyWords2  := cCad0
+
+
+ // Lexer type is flagship.
+ ::Send( SCI_SETLEXERLANGUAGE, , ::cLexer  )
+
+ ::InitEdt()
 
 ::SetLinIndent( .t., .f. )
 
@@ -1141,8 +1335,6 @@ aMarkers := { ;
 // 4 - System variable keywords
 // 5 - Procedure keywords (keywords used in procedures like "begin" and "end")
 // 6..8 - User keywords 1..3
-
-
 /*
 [mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 0 value: major_keywords];
 [mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 5 value: procedure_keywords];
@@ -1151,80 +1343,14 @@ aMarkers := { ;
 */
 
 
-   ::Send( SCI_SETKEYWORDS, 0,;
-"class from data classdata method inline virtual setget endclass init " + ;
-"function return retu " + ;
-"define activate window title maximized color style on click paint resize " + ;
-"bitmap adjust noborder pixel design " + ;
-"brush " + ;
-"buttonbar filename button size of 2007 " + ;
-"checkbox " + ;
-"combobox var items " + ;
-"dialog center centered " + ;
-"explorerbar " + ;
-"folder prompts " + ;
-"font bold " + ;
-"group " + ;
-"icon " + ;
-"image " + ;
-"mdi mdichild menupos " + ;
-"msgbar prompt keyboard " + ;
-"menu menuitem action separator endmenu mru section " + ;
-"resource " + ;
-"splitter vertical previous controls hinds " + ;
-"tooltip message keyboard maximized " + ;
-"valid " + ;
-"when " + ;
-"xbrowse lines autocols recordset autosort " )
 
-::Send( SCI_SETKEYWORDS, 1,;
-"local public static private " + ;
-"if else endif " + ;
-"do while endwhile end " + ;
-"do case otherwise endcase " + ;
-"for next " + ;
-"super " )
+::Send( SCI_SETKEYWORDS, 0, KeyWords0 )
+::Send( SCI_SETKEYWORDS, 1, KeyWords1 )
+::Send( SCI_SETKEYWORDS, 2, KeyWords2 )
 
-/*
- 
-::SetKeyWords( "class from data classdata method inline virtual setget endclass " + ;
-                  "btnbmp " + ;
-                  "checkbox click " + ;
-                  "default flipped " + ;
-                  "define activate window title valid maximized full resized centered " + ;
-                  "buttonbar filename button size of 2007 " + ;
-                  "browse fields headers " + ;
-                  "colorwell " + ;
-                  "combobox items on change " + ;
-                  "autoresize " + ;
-                  "dialog centered " + ;
-                  "get var " + ;
-                  "group " + ;
-                  "image " + ;
-                  "listbox " + ;
-                  "msgbar prompt keyboard " + ;
-                  "multiview " + ;
-                  "menu menuitem action separator endmenu mru section " + ;
-                  "mview " + ;
-                  "progress position " + ;
-                  "say raised " + ;
-                  "slider value " + ;
-                  "splitter vertical horizontal style AUTORESIZE " + ;
-                  "tabs prompts " + ;
-                  "toolbar " + ;
-                  "tooltip message keyboard maximized " + ;
-                  "tree " + ;
-                  "view ", 0 )
+//::Send( SCI_SETKEYWORDS, 3, KeyWords3 )
+//::Send( SCI_SETKEYWORDS, 4, KeyWords4 )
 
-   ::SetKeyWords( "function return " + ;
-                  "local public static private nil " + ;
-                  "if else elseif endif " + ;
-                  "do while endwhile end " + ;
-                  "do case otherwise endcase " + ;
-                  "with object " + ;
-                  "super ", 1 )
-
-*/
 
   ::Send( SCI_COLOURISE, 0, -1 )
   
@@ -1233,6 +1359,15 @@ aMarkers := { ;
 
   ::Send( SCI_STYLECLEARALL, 0, 0 )
  
+   ::Send( SCI_AUTOCSETIGNORECASE, 1, 0 )
+   ::Send( SCI_AUTOCSETCASEINSENSITIVEBEHAVIOUR, SC_CASEINSENSITIVEBEHAVIOUR_IGNORECASE, 0 ) // -> 1
+   ::Send( SCI_AUTOCSETMAXHEIGHT, 10, 0 )
+  
+   ::Send( SCI_SETEXTRAASCENT , Max( 1.6, ::nSpacLin ) )
+   ::Send( SCI_SETEXTRADESCENT, Max( 1.6, ::nSpacLin ) )
+   ::Send( SCI_SETMARGINLEFT, 0, ::nMargLeft )
+   ::Send( SCI_SETMARGINRIGHT, 0, ::nMargRight )
+
    ::Send( SCI_STYLESETFORE, STYLE_BRACELIGHT, CLR_WHITE )
    ::Send( SCI_STYLESETBACK, STYLE_BRACELIGHT, RGB( 0, 179, 179 ) )
 
@@ -1245,8 +1380,6 @@ aMarkers := { ;
 
    // ::Send( SCI_MARKERDEFINE, 1, SC_MARK_ARROW )
     ::Send( SCI_MARKERSETFORE, 1, CLR_BLUE )
-
-
 
     ::Send( SCI_SETMARGINWIDTHN, 1, 28 )
     ::Send( SCI_SETMARGINTYPEN,  1, SC_MARGIN_SYMBOL )
@@ -1266,71 +1399,35 @@ aMarkers := { ;
    // Color parentesis
 
   // ::Send(SCI_BRACEHIGHLIGHTINDICATOR,0,2)
+  
+  
+   ::SetHighlightColors()
 
 // ----------------Line number style.  ---------------------------
 
-  ::Send( SCI_STYLESETFORE, STYLE_LINENUMBER, ::nTColorLin )
-  ::Send( SCI_STYLESETBACK, STYLE_LINENUMBER, ::nBColorLin )
   ::Send( SCI_SETMARGINTYPEN, 0, SC_MARGIN_NUMBER )
   ::Send( SCI_SETMARGINWIDTHN, 0, 35 )
 
-/*
-::Send( SCI_STYLESETBACK, SCE_FS_PREPROCESSOR, GetSysColor( COLOR_WINDOW ) )
-::Send( SCI_STYLESETBACK, SCE_FS_STRING,       GetSysColor( COLOR_WINDOW ) )
-::Send( SCI_STYLESETBACK, SCE_FS_COMMENTLINE,  GetSysColor( COLOR_WINDOW ) )
-::Send( SCI_STYLESETBACK, SCE_FS_OPERATOR,     GetSysColor( COLOR_WINDOW ) )
-::Send( SCI_STYLESETBACK, SCE_FS_KEYWORD,      GetSysColor( COLOR_WINDOW ) )
-::Send( SCI_STYLESETBACK, SCE_FS_KEYWORD2,     GetSysColor( COLOR_WINDOW ) )
-::Send( SCI_STYLESETBACK, SCE_FS_NUMBER,       GetSysColor( COLOR_WINDOW ) )
-*/
-
-
-
-::StyleSet( SCE_FS_COMMENTLINE	) ; ::StyleSetColor( CLR_GREEN	)
-::StyleSet( SCE_FS_OPERATOR   	) ; ::StyleSetColor( CLR_HBLUE	)
-::StyleSet( SCE_FS_STRING 		) ; ::StyleSetColor( rgb(210,64,54)	)
-::StyleSet( SCE_FS_PREPROCESSOR	) ; ::StyleSetColor( CLR_GREEN )
-::StyleSet( SCE_FS_NUMBER 		) ; ::StyleSetColor( rgb(53,51,215 ) )
-::StyleSet( SCE_FS_KEYWORD 		) ; ::StyleSetColor( rgb(185,53,163) )
-::StyleSet( SCE_FS_KEYWORD2 		) ; ::StyleSetColor( CLR_BLUE	)
-
-
-::SetAStyle( SCE_FS_COMMENTDOC, CLR_GREEN )
-::SetAStyle( SCE_FS_COMMENTLINEDOC, CLR_GREEN )
-::SetAStyle( SCE_FS_COMMENT, CLR_GREEN )
-::SetAStyle( SCE_FS_COMMENTLINE, CLR_GREEN )
-::SetAStyle( SCE_FS_COMMENTDOCKEYWORD, CLR_YELLOW )
-::SetAStyle( SCE_FS_COMMENTDOCKEYWORDERROR, CLR_YELLOW )
-
-
-/*
-   ::Send( SCI_STYLESETFORE, SCE_FS_STRING, CLR_YELLOW )
-   ::Send( SCI_STYLESETFORE, SCE_FS_COMMENTLINE, CLR_GREEN )
-   ::Send( SCI_STYLESETFORE, SCE_FS_OPERATOR, CLR_HCYAN )
-
-   ::Send( SCI_STYLESETFORE, SCE_FS_PREPROCESSOR, CLR_MAGENTA )
-   ::Send( SCI_STYLESETFORE, SCE_FS_NUMBER, CLR_HRED )
-   ::Send( SCI_STYLESETFORE, SCE_FS_KEYWORD, CLR_HGREEN )
-   ::Send( SCI_STYLESETFORE, SCE_FS_KEYWORD2,  CLR_BLUE	 )
-
-*/
-
-
-
+  ::SetAStyle( SCE_FS_COMMENTDOCKEYWORD, CLR_YELLOW )
+  ::SetAStyle( SCE_FS_COMMENTDOCKEYWORDERROR, CLR_YELLOW )
 
   //------------------ini foldering
+
+  if  ::lFolding
+      ::Send( SCI_SETAUTOMATICFOLD, SC_AUTOMATICFOLD_CLICK, 0 )
+  endif
+
 
   ::Send( SCI_SETMARGINWIDTHN, 2, 18 )
   ::Send( SCI_SETMARGINMASKN , 2, SC_MASK_FOLDERS )
 
-  ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPEN, SC_MARK_BOXMINUS)
+  ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPEN, SC_MARK_BOXMINUS )
   ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDER ,SC_MARK_BOXPLUS )
   ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDERSUB , SC_MARK_VLINE)
   ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDERTAIL ,SC_MARK_LCORNER )
   ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDEREND ,SC_MARK_BOXPLUSCONNECTED )
   ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDEROPENMID ,SC_MARK_BOXMINUSCONNECTED )
   ::Send( SCI_MARKERDEFINE, SC_MARKNUM_FOLDERMIDTAIL ,SC_MARK_TCORNER )
-
 
 
 
@@ -1347,9 +1444,6 @@ for  n= 25 to 31 // Markers 25..31 are reserved for folding.
     ::Send( SCI_MARKERSETBACK, n, CLR_BLACK )
 
 NEXT
-
-
-
 
 
 // Init markers & indicators for highlighting of syntax errors.
@@ -1386,16 +1480,12 @@ NEXT
 ::setLexerProp( "fold.preprocessor","1")
 
 
-
-
-
   //-------------------end
 
    ::SetEdgeColumn( 128 )
    ::SetEdgeMode( 1 )
 
    ::SetUseTabs( .F. )
-
 
 return nil
 
@@ -1495,41 +1585,116 @@ return nil
 
 //----------------------------------------------------------------------------//
 
+#define SCLEX_FLAGSHIP 73
 
-//----------------------------------------------------------------------------//
+METHOD SetHighlightColors() CLASS TScintilla
+ 
+ 
+    if ::GetLexer() == SCLEX_FLAGSHIP
+       
+       ::SetAStyle( SCE_FS_COMMENTLINE,    ::cCCommentLin[ 1 ], ::nClrPane )
+       ::SetAStyle( SCE_FS_COMMENTDOC,     ::cCComment[ 1 ]   , ::nClrPane )
+       ::SetAStyle( SCE_FS_COMMENTLINEDOC, ::cCCommentLin[ 1 ], ::nClrPane )
+       ::SetAStyle( SCE_FS_COMMENT,        ::cCComment[ 1 ]   , ::nClrPane )
+       ::SetAStyle( SCE_FS_PREPROCESSOR ,  ::cCIdentif[ 1 ]   , ::nClrPane )
+       
+        ::StyleSet( SCE_FS_OPERATOR      ) ; ::StyleSetColor( ::cCOperator[ 1 ] )
+        ::StyleSet( SCE_FS_STRING     )    ; ::StyleSetColor( ::cCString[ 1 ]  )
+        ::StyleSet( SCE_FS_NUMBER     )    ; ::StyleSetColor( ::cCNumber[ 1 ] )
+  
+        ::StyleSet( SCE_FS_KEYWORD       ) ; ::StyleSetColor( ::cCKeyw1[ 1 ] )
+        ::StyleSet( SCE_FS_KEYWORD4      ) ; ::StyleSetColor( ::cCKeyw4[ 1 ] )
+        ::StyleSet( SCE_FS_KEYWORD2     )  ; ::StyleSetColor( ::cCKeyw2[ 1 ] )
+        ::StyleSet( SCE_FS_KEYWORD3     )  ; ::StyleSetColor( ::cCKeyw3[ 1 ] )
+    
+        ::Send( SCI_STYLESETFORE, STYLE_LINENUMBER, ::nTColorLin )
+        ::Send( SCI_STYLESETBACK, STYLE_LINENUMBER, ::nBColorLin )
+    
+        ::Send( SCI_STYLESETBACK, SCE_FS_STRING,       ::nClrPane )
+        ::Send( SCI_STYLESETBACK, SCE_FS_COMMENTLINE,  ::nClrPane )
+        ::Send( SCI_STYLESETBACK, SCE_FS_OPERATOR,     ::nClrPane )
+        ::Send( SCI_STYLESETBACK, SCE_FS_NUMBER,       ::nClrPane )
+    
+        ::Send( SCI_STYLESETBACK, SCE_FS_KEYWORD,      ::nClrPane )
+        ::Send( SCI_STYLESETBACK, SCE_FS_KEYWORD4,     ::nClrPane )
+        ::Send( SCI_STYLESETBACK, SCE_FS_KEYWORD2,     ::nClrPane )
+        ::Send( SCI_STYLESETBACK, SCE_FS_KEYWORD3,     ::nClrPane )
+     /*
+        if Upper( ::oFont:cFaceName ) <> Upper( "FixedSys" )
+            ::Send( SCI_STYLESETITALIC, SCE_FS_COMMENTLINE, 1 )
+        endif
+      */
+        else
+       
+         ::SetAStyle( SCE_FS_COMMENTLINE,    ::cCCommentLin[ 1 ], ::nClrPane )
+         ::SetAStyle( SCE_FS_COMMENTDOC,     ::cCComment[ 1 ]   , ::nClrPane )
+         ::SetAStyle( SCE_FS_COMMENTLINEDOC, ::cCCommentLin[ 1 ], ::nClrPane )
+         ::SetAStyle( SCE_FS_COMMENT,        ::cCComment[ 1 ]   , ::nClrPane  )
+       
+         ::Send( SCI_STYLESETFORE, STYLE_LINENUMBER, ::nTColorLin )
+         ::Send( SCI_STYLESETBACK, STYLE_LINENUMBER, ::nBColorLin )
+     
+ 
+        ::Send( SCI_STYLESETFORE, SCE_FWH_OPERATOR, ::cCOperator[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_STRING, ::cCString[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_NUMBER, ::cCNumber[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_BRACE, ::cCBraces[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_IDENTIFIER, ::cCIdentif[ 1 ] )
+       
+        ::Send( SCI_STYLESETFORE, SCE_FWH_KEYWORD, ::cCKeyw1[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_KEYWORD1, ::cCKeyw2[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_KEYWORD2, ::cCKeyw3[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_KEYWORD3, ::cCKeyw4[ 1 ] )
+        ::Send( SCI_STYLESETFORE, SCE_FWH_KEYWORD4, ::cCKeyw5[ 1 ] )
+      
+        ::Send( SCI_STYLESETBACK, SCE_FWH_DEFAULT, ::nClrPane )
+       
+        ::Send( SCI_STYLESETBACK, SCE_FWH_OPERATOR, ::cCOperator[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_STRING, ::cCString[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_NUMBER, ::cCNumber[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_BRACE, ::cCBraces[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_IDENTIFIER, ::cCIdentif[ 2 ] )
+   
+        ::Send( SCI_STYLESETBACK, SCE_FWH_KEYWORD, ::cCKeyw1[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_KEYWORD1, ::cCKeyw2[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_KEYWORD2, ::cCKeyw3[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_KEYWORD3, ::cCKeyw4[ 2 ] )
+        ::Send( SCI_STYLESETBACK, SCE_FWH_KEYWORD4, ::cCKeyw5[ 2 ] )
+     
+        ::Send( SCI_STYLESETCASE, SCE_FWH_COMMENTDOC, ::cCComment[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_COMMENT, ::cCComment[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_COMMENTLINE, ::cCCommentLin[ 3 ] )
+        
+        ::Send( SCI_STYLESETCASE, SCE_FWH_OPERATOR, ::cCOperator[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_STRING, ::cCString[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_NUMBER, ::cCNumber[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_BRACE, ::cCBraces[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_IDENTIFIER, ::cCIdentif[ 3 ] )
+  
+        ::Send( SCI_STYLESETCASE, SCE_FWH_KEYWORD, ::cCKeyw1[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_KEYWORD1, ::cCKeyw2[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_KEYWORD2, ::cCKeyw3[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_KEYWORD3, ::cCKeyw4[ 3 ] )
+        ::Send( SCI_STYLESETCASE, SCE_FWH_KEYWORD4, ::cCKeyw5[ 3 ] )
+        
+        /*
+        //::Send( SCI_STYLESETFONT, SCE_FWH_DEFAULT , ::oFont:cFaceName ) //::oFntLin:cFaceName )
+        //::Send( SCI_STYLESETSIZE , SCE_FWH_DEFAULT, Abs( Int( ::oFont:nHeight ) * 1 ) )
+        //::Send( SCI_STYLESETFONT, SCE_FWH_COMMENT, ::oFont:cFaceName ) //::oFntLin:cFaceName )
+        //::Send( SCI_STYLESETSIZE , SCE_FWH_COMMENT, Abs( Int( ::oFont:nHeight ) * 1 ) )
+        
+        if !Empty( ::oFont )
+            if Upper( ::oFont:cFaceName ) <> Upper( "FixedSys" )
+                ::Send( SCI_STYLESETITALIC, SCE_FWH_COMMENT, 1 )
+                ::Send( SCI_STYLESETITALIC, SCE_FWH_COMMENTDOC, 1 )
+                ::Send( SCI_STYLESETITALIC, SCE_FWH_COMMENTLINE, 1 )
+            endif
+        endif
+       */
+    endif
+  
+return nil
 
-Function CadComand()
-Local cCad0 := "activate adjust color style on click paint resize " + ;
-"bitmap noborder pixel " + ;
-"brush " + ;
-"buttonbar filename button size of 2007 2010 2013 " + ;
-"center centered checkbox combobox " + ;
-"var items " + ;
-"define design default dialog " + ;
-"explorerbar " + ;
-"folder prompts " + ;
-"font bold " + ;
-"group " + ;
-"icon " + ;
-"image " + ;
-"maximized mdi mdichild menupos " + ;
-"msgbar prompt keyboard " + ;
-"menu menuitem action separator endmenu mru section " + ;
-"resource " + ;
-"splitter vertical previous controls hinds " + ;
-"title tooltip message keyboard maximized " + ;
-"valid " + ;
-"when window " + ;
-"xbrowse lines autocols recordset autosort "
-
-Local cCad1 := "local public static private " + ;
-"if else endif iif " + ;
-"for to next " + ;
-"do while endwhile end enddo loop " + ;
-"do case otherwise endcase" + ;
-"super "
-
-Return ( cCad0+cCad1 )
 
 
 //----------------------------------------------------------------------------//
