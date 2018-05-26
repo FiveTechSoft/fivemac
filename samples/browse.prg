@@ -37,9 +37,7 @@ function Main()
 
    // oBrw:bAction = { | obj, nindex |  MsgInfo( oBrw:nColPos() ) }
 
- //  oBrw:bMouseDown = { | nRow, nCol, oControl | MsgInfo( Str( nCol ) ) }
-
-//oBrw:bMouseDown = { | nRow, nCol, oControl | ShowPop( nRow, nCol , oPopUP,ownd )}
+oBrw:bMouseDown = { | nRow, nCol, oControl | MsgInfo( Str( nCol ) ) }
 
 oBrw:bRClicked := { | nRow,nCol, oControl |  ShowPop( nRow, nCol, opopUp, oBrw:oWnd ) }
 
@@ -71,7 +69,6 @@ return oMenu
 
 function ShowPop( nRow, nCol , oPopUP, oWnd )
 
-
-ACTIVATE POPUP oPopup OF oWnd AT nRow, nCol
+  ACTIVATE POPUP oPopup OF oWnd AT nRow, nCol
 
 return nil
