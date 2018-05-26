@@ -545,7 +545,7 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
       endif
    endif
 
-   do case
+      do case
         case nMsg == WM_PAINT
              return ::Paint()
 
@@ -581,8 +581,12 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
              endif
 
         case nMsg == WM_RBUTTONDOWN
-             return ::RButtonDown( uParam1, uParam2 )
-        
+             if oControl != nil
+                 oControl:RButtonDown( uParam1, uParam2 )
+             else
+                ::RButtonDown( uParam1, uParam2 )
+             endif
+
         case nMsg == WM_RESIZE
              return ::Resize()
              

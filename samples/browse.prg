@@ -1,10 +1,13 @@
 #include "FiveMac.ch"
 
+static oBrw
+
 function Main()
 
    local oWnd, oBrw
    local cpath:=Path()
-   local cImgPath := UserPath() + "/fivemac/bitmaps/" 
+   local cImgPath := UserPath() + "/fivemac/bitmaps/"
+   local oPopUp
    
    USE ( cpath+"/Test.dbf" )
 
@@ -34,8 +37,41 @@ function Main()
 
    // oBrw:bAction = { | obj, nindex |  MsgInfo( oBrw:nColPos() ) }
 
-   oBrw:bMouseDown = { | nRow, nCol, oControl | MsgInfo( Str( nCol ) ) }
+ //  oBrw:bMouseDown = { | nRow, nCol, oControl | MsgInfo( Str( nCol ) ) }
 
-   ACTIVATE WINDOW oWnd
+//oBrw:bMouseDown = { | nRow, nCol, oControl | ShowPop( nRow, nCol , oPopUP,ownd )}
+
+oBrw:bRClicked := { | nRow,nCol, oControl |  ShowPop( nRow, nCol, opopUp, oBrw:oWnd ) }
+
+   oPopup = BuildMenu(obrw )
+
+ACTIVATE WINDOW oWnd
+
+
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function BuildMenu( oBrw )
+
+local oMenu
+local cImgPath := UserPath() + "/fivemac/bitmaps/"
+
+MENU oMenu POPUP
+MENUITEM "Go bottom" ACTION  oBrw:GoBottom()
+MENUITEM "About" ACTION MsgInfo( "FiveMac sample" )
+SEPARATOR
+MENUITEM "Help"  ACTION MsgInfo( "Help" ) IMAGE "ColorPanel"
+ENDMENU
+
+return oMenu
+
+//----------------------------------------------------------------------------//
+
+function ShowPop( nRow, nCol , oPopUP, oWnd )
+
+
+ACTIVATE POPUP oPopup OF oWnd AT nRow, nCol
 
 return nil
