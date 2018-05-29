@@ -46,6 +46,11 @@ CLASS TBtnBmp FROM TControl
    METHOD SetType( nType ) INLINE BtnSetType( ::hWnd, nType )
 
    METHOD SetBmpPosition( nLayout )
+
+   METHOD Enable() INLINE BtnSetEnabled(::hWnd,.t.)
+
+   METHOD Disable() INLINE BtnSetEnabled(::hWnd,.f.)
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//

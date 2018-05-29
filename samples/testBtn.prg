@@ -23,6 +23,12 @@ function Main()
 
  @ 30, 40 BUTTON "Dialog" OF oWnd ACTION oWnd:Iconize()
 
+@  30, 150 BTNBMP obtn2 ;
+           FILENAME ( UserPath() + "/fivemac/bitmaps/VertOrigin.png") ;
+           OF oWnd ;
+           ACTION msginfo( "Hola" )  SIZE 35,35
+
+obtn2:disable()
 
   @ 80, 20 BUTTON obtn1 PROMPT "Disclusure" OF oWnd ACTION MsgInfo ("no");
         SIZE 140,40 TOOLTIP "Boton de Disclosure" AUTORESIZE AnclaTop
@@ -30,6 +36,8 @@ function Main()
   @ 70, 35 GROUP oGroup PROMPT "Test" SIZE 320, 120 OF oWnd
 
   @ 60, 14 SAY osay PROMPT "First:" OF oGroup SIZE 50, 17 TOOLTIP "say Primero"
+
+
 
 
    oBtn1:setDisclosure()
