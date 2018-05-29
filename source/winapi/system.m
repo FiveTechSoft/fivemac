@@ -174,6 +174,20 @@ HB_FUNC( SCREENWIDTH )
    hb_retnl( rect.size.width );
 }
 
+HB_FUNC( SCREENVISIBLEWIDTH )
+{
+    NSScreen * screen = [ NSScreen mainScreen ];
+    NSRect rect = [ screen visibleFrame ];
+    hb_retnl( rect.size.width );
+}
+
+HB_FUNC( STATUSBARHEIGHT )
+{
+    NSStatusBar *bar = [NSStatusBar systemStatusBar];
+    CGFloat thickness = bar.thickness ;
+    hb_retnl( thickness ) ;
+}
+
 HB_FUNC( SCREENHEIGHT )
 {
    NSScreen * screen = [ NSScreen mainScreen ];
@@ -181,6 +195,62 @@ HB_FUNC( SCREENHEIGHT )
 
    hb_retnl( rect.size.height );
 }
+
+HB_FUNC( SCREENVISIBLEHEIGHT )
+{
+    NSScreen * screen = [ NSScreen mainScreen ];
+    NSRect rect = [ screen visibleFrame ];
+    
+    hb_retnl( rect.size.height );
+}
+
+HB_FUNC( GETDOCKPOSITION )
+{
+ NSScreen * screen = [ NSScreen mainScreen ];
+ NSRect rect = [ screen visibleFrame ];
+  if ( rect.origin.y == 0 )
+    {
+     if ( rect.origin.x == 0 )
+        hb_retc( "right" ) ;
+     else
+        hb_retc( "left" ) ;
+     }
+    else
+    hb_retc( "bottom" ) ;
+}
+
+CGFloat GetDockSize( void )
+{
+    CGFloat nSize = 0 ;
+    NSScreen * screen = [ NSScreen mainScreen ];
+    NSRect rectvisible = [ screen visibleFrame ];
+    NSRect rect = [ screen frame ];
+    
+    if ( rectvisible.origin.y == 0 )
+    {
+        if ( rectvisible.origin.x == 0 )
+        nSize =  rect.size.width  - rectvisible.size.width ;
+        else
+        nSize = rectvisible.origin.x ;
+    }
+    else
+    nSize = rectvisible.origin.y ;
+    return nSize ;
+}
+
+HB_FUNC( GETDOCKSIZE )
+{
+  hb_retnl( GetDockSize()  ) ;
+}
+
+HB_FUNC( ISDOCKHIDDEN )
+{
+    CGFloat nSize = GetDockSize() ;
+    if ( nSize < 25 )
+      hb_retl( TRUE) ;
+    else
+      hb_retl( FALSE ) ;
+ }
 
 HB_FUNC( GETCLASSNAME ) // hCtrl
 {
