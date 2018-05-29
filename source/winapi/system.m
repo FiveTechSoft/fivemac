@@ -252,6 +252,7 @@ HB_FUNC( ISDOCKHIDDEN )
       hb_retl( FALSE ) ;
  }
 
+
 HB_FUNC( GETCLASSNAME ) // hCtrl
 {
    NSObject * control = ( NSObject * ) hb_parnl( 1 );
