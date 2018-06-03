@@ -18,6 +18,7 @@ static PHB_SYMB symFMH = NULL;
 - ( void ) drawRow: ( NSInteger ) row clipRect: ( NSRect ) clipRect;
 - (void) tableView:(Wbrowse *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex ;
 - (void) mouseDown: ( NSEvent * ) theEvent;
+- ( void ) rightMouseDown : ( NSEvent * ) theEvent;
 @end
 
 @implementation Wbrowse
@@ -71,6 +72,23 @@ static PHB_SYMB symFMH = NULL;
       [ super keyDown: theEvent ];
 }	
 
+- ( void ) rightMouseDown : ( NSEvent * ) theEvent
+    {
+        NSPoint point = [ theEvent locationInWindow ];
+        
+        if( symFMH == NULL )
+        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
+        
+        hb_vmPushSymbol( symFMH );
+        hb_vmPushNil();
+        hb_vmPushLong( ( HB_LONG ) [ self window ] );
+        hb_vmPushLong( WM_RBUTTONDOWN );
+        hb_vmPushLong( ( HB_LONG )  self  );
+        hb_vmPushLong( point.y );
+        hb_vmPushLong( point.x );
+        hb_vmDo( 5 );
+    }
+    
 - ( void ) mouseDown: ( NSEvent * ) theEvent 
 {
    NSPoint localLocation = [ self convertPoint: [ theEvent locationInWindow ] fromView: nil ];
