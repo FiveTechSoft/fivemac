@@ -529,7 +529,7 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
+METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3, uParam4 ) CLASS TWindow
 
    local oControl := If( nSender != nil, ::FindControl( nSender ),), oCtrl
 
@@ -582,7 +582,8 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3 ) CLASS TWindow
 
         case nMsg == WM_RBUTTONDOWN
              if oControl != nil
-                 oControl:RButtonDown( uParam1, uParam2 )
+
+                 oControl:RButtonDown( uParam1, uParam2, uParam3, uParam4 )
              else
                 ::RButtonDown( uParam1, uParam2 )
              endif
@@ -738,12 +739,12 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-function _FMH( hWnd, nMsg, hSender, uParam1, uParam2 ,uParam3 )
+function _FMH( hWnd, nMsg, hSender, uParam1, uParam2 ,uParam3, uParam4 )
 
    local nAt := AScan( aWindows, { | o | o:hWnd == hWnd } )
 
    if nAt != 0
-       return aWindows[ nAt ]:HandleEvent( nMsg, hSender, uParam1, uParam2, uParam3 )
+       return aWindows[ nAt ]:HandleEvent( nMsg, hSender, uParam1, uParam2, uParam3, uParam4 )
    // else
    //     MsgInfo( "nAt is zero in _FMH" )
    endif

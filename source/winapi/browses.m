@@ -76,6 +76,13 @@ static PHB_SYMB symFMH = NULL;
     {
         NSPoint point = [ theEvent locationInWindow ];
         
+        NSPoint localLocation = [ self convertPoint: point fromView: nil ];
+        
+        self->nRow = [ self rowAtPoint: localLocation ];
+        self->nCol = [ self columnAtPoint: localLocation ] + 1;
+        
+      //  [ super mouseDown: theEvent ];
+        
         if( symFMH == NULL )
         symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMH" ) );
         
@@ -86,7 +93,9 @@ static PHB_SYMB symFMH = NULL;
         hb_vmPushLong( ( HB_LONG )  self  );
         hb_vmPushLong( point.y );
         hb_vmPushLong( point.x );
-        hb_vmDo( 5 );
+        hb_vmPushLong( self->nRow );
+        hb_vmPushLong( self->nCol );
+        hb_vmDo( 7 );
     }
     
 - ( void ) mouseDown: ( NSEvent * ) theEvent 
@@ -108,6 +117,7 @@ static PHB_SYMB symFMH = NULL;
    hb_vmPushLong( ( HB_LONG ) self );
    hb_vmPushLong( self->nRow );
    hb_vmPushLong( self->nCol );
+
    hb_vmDo( 5 );
 }
 

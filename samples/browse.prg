@@ -8,7 +8,8 @@ function Main()
    local cpath:=Path()
    local cImgPath := UserPath() + "/fivemac/bitmaps/"
    local oPopUp
-   
+   local nBrowRowActive
+
    USE ( cpath+"/Test.dbf" )
 
    DEFINE WINDOW oWnd TITLE "DBF Browse" ;
@@ -37,9 +38,9 @@ function Main()
 
    // oBrw:bAction = { | obj, nindex |  MsgInfo( oBrw:nColPos() ) }
 
-oBrw:bMouseDown = { | nRow, nCol, oControl | MsgInfo( Str( nCol ) ) }
+   oBrw:bMouseDown = { | nRow, nCol, oControl |  MsgInfo( Str( nCol ) ) }
 
-oBrw:bRClicked := { | nRow,nCol, oControl |  ShowPop( nRow, nCol, opopUp, oBrw:oWnd ) }
+   oBrw:bRClicked := { | nRow,nCol, nRowBrw, nColBrw, oControl | (  obrw:Select( nRowBrw + 1 ), ShowPop( nRow, nCol, opopUp, oBrw:oWnd ) ) }
 
    oPopup = BuildMenu(obrw )
 

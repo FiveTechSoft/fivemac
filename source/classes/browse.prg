@@ -130,6 +130,8 @@ CLASS TWBrowse FROM TControl
 
    METHOD SetSize( nWidth, nHeight ) INLINE BrwSetSize( ::hWnd, nWidth, nHeight )
 
+   METHOD RButtonDown( nRow, nCol, nBrwRow, nBrwCol ) INLINE If( ::bRClicked != nil, Eval( ::bRClicked, nRow, nCol, nBrwRow, nBrwCol ),)
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
