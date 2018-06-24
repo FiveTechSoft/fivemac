@@ -1,5 +1,7 @@
 #include <fivemac.h>
 
+void MsgAlert( NSString *, NSString * messageText );
+
 static PHB_SYMB symFMH = NULL;
 
 @interface ImageView : NSImageView
@@ -188,7 +190,6 @@ HB_FUNC( NEWRESIZEIMAGE )
 {
   NSImageView * vista = ( NSImageView * ) hb_parnl( 1 );
     NSString * fileName = hb_NSSTRING_par( 2 );
-   
     
     NSSize newSize;
     newSize.width = hb_parnl( 3 );
@@ -215,10 +216,18 @@ HB_FUNC( NEWRESIZEIMAGE )
         NSData *imageData = [smallImage TIFFRepresentation];
         NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
         NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
-        imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
-        [imageData writeToFile:fileName atomically:NO];
+        
+        NSString *extension =  [ [fileName substringFromIndex:[fileName length] - 3] uppercaseString ];
         
         
+         if  ([extension isEqualToString:@"JPG"] )
+                     {
+                         
+                         imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+                         [imageData writeToFile:fileName atomically:NO];
+                     }
+        else
+            MsgAlert( @"Formato no soportado aún. Use jpg", @"Atention" ) ;
     }
    
 }

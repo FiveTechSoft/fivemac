@@ -41,7 +41,13 @@ CLASS TImage FROM TControl
 
    METHOD GetHeight() INLINE ImgGetHeight( ::hWnd )
 
-   METHOD SetSize( nWidth, nHeight ) INLINE RESIZEIMAGE( ::hWnd, nWidth, nHeight )
+
+   METHOD ReSize( nWidth, nHeight ) INLINE RESIZEIMAGE( ::hWnd, nWidth, nHeight )
+
+   METHOD Save( cFile, nWidth, nHeight ) INLINE NEWRESIZEIMAGE( ::hWnd, cFile ,nWidth, nHeight )
+
+
+
 
 ENDCLASS   
 
@@ -66,7 +72,8 @@ local aSize
        else
          ImgSetFile( ::hWnd, cFileName, asize[1], asize[2] )
        endif
-   endif   
+
+endif
 
    if ! Empty( cResName ) .and. File( ResPath() + "/" + cResName )
         ::cResname := cResName
