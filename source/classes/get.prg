@@ -17,6 +17,8 @@ CLASS TGet FROM TControl
    DATA   cPicture
    DATA   cType
    DATA   oGet ,cCaption , lFocused , cCuetext
+   DATA   nDec, nNumLen
+   DATA   bPreValidate
    
   
    METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
@@ -26,7 +28,7 @@ CLASS TGet FROM TControl
    METHOD Redefine( nId, oWnd, bSetGet, lUpdate, lPassword, lSearch, bChanged,;
                     cPicture )
 
-   METHOD Assign() INLINE Eval( ::bSetGet, ::GetText() )
+   METHOD Assign()
 
    METHOD Change()
 
@@ -44,7 +46,7 @@ CLASS TGet FROM TControl
 
    METHOD Enabled() INLINE TxtSetEnabled( ::hWnd )
 
-   METHOD GetDelSel( nStart, nEnd ) INLINE ::SetSel( nStart, nEnd ), GetDelSelected( ::hWnd )
+   METHOD GetDelSel( nStart, nEnd )
 
    METHOD GetPos() INLINE GetGetPos( ::hWnd )
 
@@ -89,7 +91,7 @@ CLASS TGet FROM TControl
 
    METHOD SetNOSelect() INLINE TxtSetNOSelect( ::hWnd )
 
-METHOD OpenSheet( cDir ) INLINE  ( ChooseSheetTxt( ::hWnd, cDir ), ::Assign() )
+    METHOD OpenSheet( cDir ) INLINE  ( ChooseSheetTxt( ::hWnd, cDir ), ::Assign() )
 
    METHOD SetNumeric() INLINE GetSetNumeric( ::hWnd )
 
@@ -110,13 +112,13 @@ METHOD OpenSheet( cDir ) INLINE  ( ChooseSheetTxt( ::hWnd, cDir ), ::Assign() )
    METHOD SetCurPos( nStart ) INLINE GetSetSelRange( ::hWnd, nStart - 1, 0 )
   
    METHOD SetPicture( cPicture ) INLINE ::cPicture := cPicture, GetSetPicture( ::hWnd, cPicture )
-  
+   
    METHOD SetValue( cValue )
 
    METHOD VarPut( uVal ) INLINE  If( ValType( ::bSetGet ) == "B",;
                                     Eval( ::bSetGet, uVal ),)
 
-   METHOD prevalidate( cText )
+   METHOD preValidate( cText )
 
 ENDCLASS
 
@@ -161,7 +163,7 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
    ::lUpdate   = lUpdate
    ::bChanged  = bChanged
    ::cType     = ValType( Eval( bSetGet ) )
-   
+
 
    ::oGet:SetFocus()
    ::cCaption = ::oGet:Buffer
@@ -186,6 +188,8 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
 
    if ! Empty( cPicture )
       ::SetPicture( cPicture )
+      ::nNumLen := len( cPicture )
+      ::nDec   := Len( AfterAtNum( ".", cPicture ) )
    endif
 
    DEFAULT cVarName := "oGet" + ::GetCtrlIndex()
@@ -225,12 +229,11 @@ return Self
 METHOD Change(nkey) CLASS TGet
 
    ::Assign()
-
+   
    if ! Empty( ::bChanged )
       Eval( ::bChanged, Self )
    endif
-
-
+ 
 return nil
 
 //----------------------------------------------------------------------------//
@@ -288,6 +291,33 @@ return lRet
 
 //----------------------------------------------------------------------------//
 
+
+METHOD GetDelSel( nStart, nEnd ) CLASS TGet
+    
+      //----- seleciona y borra .......
+  ::SetSel( nStart, nEnd )
+   GetDelSelected( ::hWnd )
+      
+ //------ objecto oget
+      
+ ::oGet:buffer = Left( ::oGet:buffer, Min( nEnd, nStart ) ) ;
+      + Right( ::oGet:buffer, ;
+              Len( ::oGet:buffer ) - Max( nEnd, nStart ) ) ;
+              + Space( Abs( nStart - nEnd ) )
+              
+ ::oGet:Assign()
+
+  if ::oGet:Type $ "DN"
+     ::oGet:KillFocus()
+     ::oGet:SetFocus()
+  endif
+
+::oGet:Reset()
+::oGet:pos := Min( nStart, nEnd ) + 1
+
+       
+Return nil
+  
 //----------------------------------------------------------------------------//
 
 METHOD Initiate() CLASS TGet
@@ -331,7 +361,7 @@ METHOD HandleEvent( nMsg, uParam1, uParam2, uParam3 ) CLASS TGet
            return ::KeyDown( uParam1 )
 
       case nMsg == WM_WHEN
-              ::GotFocus()
+          ::GotFocus()
           return ::lWhen()
 
       case nMsg == WM_GETGETSTRING
@@ -345,7 +375,7 @@ METHOD HandleEvent( nMsg, uParam1, uParam2, uParam3 ) CLASS TGet
            return  ::prevalidate( uParam1 )
 
       case nMsg == WM_GETLOSTFOCUS
-           
+
            ::Assign()
            return ::lvalid()
 
@@ -370,9 +400,21 @@ return 0
 
 //----------------------------------------------------------------------------//
 
+METHOD Assign() CLASS TGet
+    
+  local buffer := ::GetText()
+  
+  if ::cType == "N"
+     buffer = val( buffer )
+  Endif
+  Eval( ::bSetGet, buffer )
+  
+  
+ Return nil
+//----------------------------------------------------------------------------//
+
 METHOD LostFocus() CLASS TGet
-    
-    
+
     if ::oGet:buffer != GetWindowText( ::hWnd )  // right click popup action
        ::oGet:buffer  = GetWindowText( ::hWnd )
        ::oGet:Assign()
@@ -428,83 +470,117 @@ METHOD prevalidate( cText ) CLASS TGet
 local xValue,nFor
 local dValue
 
+local lTrue := .t.
+local aText
 
+if !Empty( ::bPreValidate )
+    Return Eval( ::bPreValidate , cText, Self )
+else
+    if ::cType == "N"
+        Return NumValidate( cText )
+    endif
 
-if ::cType == "N"
-   cText = StrTran( cText, ",", "" )
-   xValue = ""
+    if ::cType == "D"
+        Return cDateValidate( cText )
+    endif
+endif
+
+return .f.
+
+//----------------------------------------------------------------------------//
+
+Static Function NumValidate( cText )
+   local lTrue := .t.
+   
+   if len( hb_aTokens( cText , ".") ) > 2
+      Return .f.
+   endif
+   
    for nFor := 1 TO Len( cText )
-      if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890."
-         xValue += SubStr( cText, nFor, 1 )
-      endif
-   next
-   return xValue
-endif
-if ::cType == "D"
-    xValue = ""
-   for nFor := 1 TO 10
-       if nFor= 1
-          if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "0123"
-                xValue += SubStr( cText, nFor, 1 )
-          else
-                if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "456789"
-                    xValue += "0"+SubStr( cText, nFor, 1 )
-                    nFor++
-                endif
-          endif
-       elseif nFor == 2
-            if  hb_asciiUpper( SubStr( cText, nFor, 1 )) $ "/-"
-                xValue = "0"+xValue+"/"
-                nFor++
-            else
-                if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890"
-                    xValue += SubStr( cText, nFor, 1 )
-                endif
-            endif
-       elseif nFor == 3 .or. nFor == 6
-          if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "/-"
-              xValue += SubStr( cText, nFor, 1 )
-          endif
-       elseif nFor == 4
-            if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "01"
-                    xValue += SubStr( cText, nFor, 1 )
-            else
-               if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "23456789"
-                    xValue += "0"+SubStr( cText, nFor, 1 )
-                    nFor++
-                endif
+       if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $  "1234567890."
+          lTrue := .t.
+        else
+           lTrue := .f.
+           exit
+        endif
+    next
+   
+ Return lTrue
 
-            endif
-       elseif nFor == 5
-            if  hb_asciiUpper( SubStr( cText, nFor, 1 )) $ "/-"
-                xValue = Substr(xValue,1,nFor-2)+"0"+SubStr( cText, nFor-1, 1 )+"/"
-                nFor++
-            elseif hb_asciiUpper( SubStr( cText, nFor-1, 1 )) $ "1"
-                 if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "120"
-                        xValue += SubStr( cText, nFor, 1 )
-                 endif
+//----------------------------------------------------------------------------//
 
-            else
-                if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890"
-                xValue += SubStr( cText, nFor, 1 )
-                endif
-            endif
-       else
+Static Function cDateValidate( cText )
+    
+    local xValue := ""
+    local nFor
 
-          if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890"
+for nFor := 1 TO 10
+    if nFor= 1
+       if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "0123"
             xValue += SubStr( cText, nFor, 1 )
-          endif
-       endif
+       else
+            if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "456789"
+                xValue += "0"+SubStr( cText, nFor, 1 )
+                nFor++
+            endif
+        endif
+    elseif nFor == 2
+        if  hb_asciiUpper( SubStr( cText, nFor, 1 )) $ "/-"
+            xValue = "0"+xValue+"/"
+            nFor++
+        else
+            if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890"
+                xValue += SubStr( cText, nFor, 1 )
+            endif
+        endif
+    elseif nFor == 3
+        if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "/-"
+            xValue += SubStr( cText, nFor, 1 )
+        endif
+    elseif nFor == 4
+        if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "01"
+            xValue += SubStr( cText, nFor, 1 )
+        else
+            if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "23456789"
+                xValue += "0"+SubStr( cText, nFor, 1 )
+                nFor++
+            endif
 
-   next
+        endif
 
-   return xValue
+    elseif nFor == 5
 
-endif
+        if  hb_asciiUpper( SubStr( cText, nFor, 1 )) $ "/-"
+            xValue = Substr(xValue,1,nFor-2)+"0"+SubStr( cText, nFor-1, 1 )+"/"
+            nFor++
+        elseif hb_asciiUpper( SubStr( cText, nFor-1, 1 )) $ "1"
+            if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "120"
+                xValue += SubStr( cText, nFor, 1 )
+            endif
 
+        else
+            if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890"
+                xValue += SubStr( cText, nFor, 1 )
+            endif
+        endif
 
+    elseif nFor == 6
 
-return ctext
+        if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "/-"
+            xValue += SubStr( cText, nFor, 1 )
+        endif
+
+    else
+
+        if hb_asciiUpper( SubStr( cText, nFor, 1 ) ) $ "1234567890"
+            xValue += SubStr( cText, nFor, 1 )
+        endif
+    endif
+
+next
+
+Return xValue
+
 
 
 
@@ -525,9 +601,13 @@ METHOD KeyDown( nKey ) CLASS TGet
       case nKey == VK_RIGHT
            // MsgInfo( "right" )
 
-      otherwise
+       CASE nkey == 63232 // flecha arriba
+       CASE nkey == 63233 // flecha abajo
+       Case nkey == 13
 
-   endcase
+otherwise
+
+      endcase
 
 return nil
 
@@ -535,7 +615,17 @@ return nil
 
 METHOD SetValue( cValue ) CLASS TGet
 
-Eval( ::bSetGet, UnTransform( cValue, ::cPicture, ::cType ) )
+if ::ctype == "N"
+   Eval( ::bSetGet,  cValue )
+elseif ::ctype == "D"
+    Eval( ::bSetGet,  cValue )
+else
+    if Empty( ::cPicture )
+        Eval( ::bSetGet,  cValue )
+    else
+        Eval( ::bSetGet, UnTransform( cValue, ::cPicture, ::cType ) )
+    endif
+endif
 
 //::oGet:Varput( cValue )
 
@@ -564,18 +654,81 @@ return Self
 
 METHOD GetString( ) CLASS TGet
 
-local xValue  //:= Transform( Eval( ::bSetGet ), ::cPicture )
+local xValue := "" //:= Transform( Eval( ::bSetGet ), ::cPicture )
 local buffer
+local cPicture
+local nAt := 0
+local npos
+local cInt
+local nNumlen := 0
+local nFor
+
 
 if ::cType == "N"
-     buffer:= Eval( ::bSetGet )
-    xValue:=alltrim(Transform( buffer , ::cPicture ))
-    if val(xvalue) == 0
+   
+    buffer:= Eval( ::bSetGet )
+
+    if hb_isNumeric( buffer)
+         buffer = Transform( buffer, ::cPicture )
+    else
+        // ------ si tiene picture
+         if !Empty( ::cPicture )
+    
+             nNumlen := hb_at( ".", ::cPicture )
+             if nNumlen == 0
+                //  picture sin decimales
+                nNumlen := len( ::cpicture )
+                if len( buffer ) > nNumLen
+                    buffer := SUBSTR(buffer, 1,LEN(buffer)-1)
+                endif
+              
+             else
+                // picture con decimales
+                nAt := hb_at( ".",buffer )
+                if nAt == 0
+                    // escribe parte entera
+                    if len( buffer ) > nNumLen - 1
+                       buffer := SUBSTR(buffer, 1,LEN(buffer)-1)  // si se pasa recorta
+                    endif
+                else
+                   // se ha puesto un punto
+                   if nAt > 0
+                       // mira que no exceda digitis decimales
+                       IF LEN( substr( buffer, nat ) ) > ::nDec+1
+                           buffer := SUBSTR(buffer, 1,LEN(buffer)-1)
+                        endif
+                 
+                    endif
+                    
+            
+                 endif
+               
+             endif
+         ENDIF
+        
+   
+  
+     endif
+    
+     xValue :=  buffer
+   if val( xValue) == 0
+      // xValue := "0"
        ::setcurpos(1)
        ::setsel(1,2)
     endif
+    Return xValue
 else
-   xValue:= Transform( Eval( ::bSetGet ), ::cPicture )
+
+   if ::cType == "D"
+      buffer = Eval( ::bSetGet )
+      if hb_isDate( buffer)
+           buffer = Transform( buffer, ::cPicture )
+      endif
+      xValue:=  buffer
+
+   else
+     xValue:= Transform( Eval( ::bSetGet ), ::cPicture )
+   endif
 endif
 
 Return xValue
@@ -609,7 +762,7 @@ function UnTransform( cValue, cPicture, cType )
           endif
 
           xValue = Val( cValue )
-       
+
       case cType == "D"
            if "E" $ cPicture
               cValue = SubStr( cValue, 4, 3 ) + SubStr( cValue, 1, 3 ) + SubStr( cValue, 7 )
@@ -721,7 +874,13 @@ endif
 
 return .t.
 
-
-
-
+//----------------------------------------------------------------------------//
+Function AfterAtNum( cChar, cStr )
+    local nAt := hb_at( cChar, cStr )
+local cRest := ""
+    if nAt > 0
+       cRest :=  substr( cStr, nAt + 1 )
+      
+    endif
+Return cRest
 

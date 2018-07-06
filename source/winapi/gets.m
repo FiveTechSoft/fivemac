@@ -2,6 +2,9 @@
 
 static PHB_SYMB symFMH = NULL;
 
+void MsgAlert( NSString *, NSString * messageText );
+
+
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 1060	
    @interface Get : NSTextField
 #else
@@ -371,13 +374,29 @@ HB_FUNC( GETCUTSELECTED ) // hGet --> cText
     hb_vmPushString( [ partial cStringUsingEncoding: NSWindowsCP1252StringEncoding ], [ partial length ] );
     
     hb_vmDo( 4 );
+
+    BOOL lResult = YES;
     
-    
-    *newString = hb_NSSTRING_par( -1 ) ;
-  // partial = hb_NSSTRING_par( -1 ) ;
-    
-    return FALSE ;
-}
+    if (HB_ISCHAR( -1 )) {
+        *newString = hb_NSSTRING_par( -1 ) ;
+        lResult = FALSE ;
+     }
+     else {
+           if ( HB_ISLOG( -1 ) )
+           {
+             *newString = NULL ;
+               
+             if ( hb_parl( -1 )  ) {
+                 lResult = YES ;
+             }
+             else {
+                 NSBeep();
+                 lResult = NO ;
+             }
+           }
+        }
+    return lResult ;
+ }
 
 
 
@@ -397,7 +416,7 @@ HB_FUNC( GETSETPICTURE )
    NSHarbourFormatter * formatter = [ [ [ NSHarbourFormatter alloc ] init ] autorelease ];	
 
    formatter->get = get;
-
+   
    [ [ get cell ] setFormatter: formatter ];
 }  
 
@@ -608,6 +627,125 @@ HB_FUNC( GETSETTIMEFORMATMEDIUM )
     [ [get cell] setFormatter: formatter ];
 }
 
+//----------------------------------------------------------------------------//
+/*
+@interface NSOnlyNumFormatter : NSNumberFormatter
+{
+  @public NSTextField * get;
+}
+
+- ( NSString * ) stringForObjectValue: ( id ) anObject;
+- ( BOOL ) getObjectValue: ( id * ) anObject forString: ( NSString * ) string
+         errorDescription: ( NSString ** ) error;
 
 
+@end
+
+@implementation NSOnlyNumFormatter
+
+- ( NSString * ) stringForObjectValue: ( id ) obj
+
+{
+  
+    if( symFMH == NULL )
+        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMO" ) );
+    
+    hb_vmPushSymbol( symFMH );
+    hb_vmPushNil();
+    hb_vmPushLong( ( HB_LONG ) [ get window ] );
+    hb_vmPushLong( WM_GETGETSTRING );
+    hb_vmPushLong( ( HB_LONG ) get );
+    hb_vmDo( 3 );
+    
+    return hb_NSSTRING_par( -1 );
+    
+}
+
+
+- ( BOOL ) getObjectValue: ( id * ) obj forString: ( NSString * ) string
+         errorDescription: ( NSString ** ) error
+{
+ 
+    if( symFMH == NULL )
+        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMO" ) );
+    
+    hb_vmPushSymbol( symFMH );
+    hb_vmPushNil();
+    hb_vmPushLong( ( HB_LONG ) [ get window ] );
+    hb_vmPushLong( WM_GETSETVALUE );
+    hb_vmPushLong( ( HB_LONG ) get );
+    hb_vmPushString( [ string cStringUsingEncoding: NSWindowsCP1252StringEncoding ], [ string length ] );
+    hb_vmDo( 4 );
+    
+    * obj = hb_NSSTRING_par( -1 );
+    
+    return YES;
+    
+}
+
+
+- (BOOL)isPartialStringValid:(NSString **)partialStringPtr
+       proposedSelectedRange:(NSRangePointer)proposedSelRangePtr
+              originalString:(NSString *)origString
+       originalSelectedRange:(NSRange)origSelRange
+            errorDescription:(NSString **)error {
+  
+    int total;
+    NSRange inRange;
+    NSCharacterSet *allowedChars;
+    
+    // Check Original String for Decimal
+    NSArray * array = [*partialStringPtr componentsSeparatedByString:@"."];
+    total = [array count] -1;
+    
+    
+    if (total > 1) {
+        
+        // Decimal place already exists
+        allowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+    } else {
+        allowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789."] invertedSet];
+    }
+    
+    inRange = [*partialStringPtr rangeOfCharacterFromSet:allowedChars];
+    if(inRange.location != NSNotFound)
+    {
+        NSLog(@"Name input contains disallowed character.");
+        NSBeep();
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+@end
+
+
+
+
+
+
+HB_FUNC( NGETSETNUMBERFORMAT ) // hGet --> cText
+{
+    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSOnlyNumFormatter * formatter  = [[[ NSOnlyNumFormatter alloc] init] autorelease];
+    
+        [  get setFormatter: formatter ];
+}
+
+
+HB_FUNC( NGETSETDECIFORMAT ) // hGet --> cText
+{
+    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    
+ //   NSUInteger decimales =  ( NSUInteger )  [ NSNumber numberWithInt: hb_parni( 2 ) ] ;
+    
+   NSOnlyNumFormatter * formatter  = [[[ NSOnlyNumFormatter alloc] init] autorelease];
+    
+         formatter->get = get;
+    [  get setFormatter: formatter ];
+    
+}
+
+*/
 
