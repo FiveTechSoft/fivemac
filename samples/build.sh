@@ -1,4 +1,4 @@
-# ./build.sh - (c) FiveTech Software 2007-2015
+# ./build.sh - (c) FiveTech Software 2007-2018
 
 clear
 
@@ -16,11 +16,11 @@ fi
 echo compiling C module...
 #  add -arch ppc -arch i386 for universal binaries
 if [ -d /Applications/Xcode.app ]; then
-   SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
+   SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
    HEADERS=$SDKPATH/usr/include
    gcc -ObjC $1.c -c -I$HEADERS -I./../include -I./../../harbour/include 
 else
-   gcc $1.c -c -I./../include -I./../../harbour/include
+   gcc -ObjC $1.c -c -I./../include -I./../../harbour/include
 fi   
 
 if [ ! -d $1.app ]; then
