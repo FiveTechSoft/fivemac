@@ -54,3 +54,13 @@ HB_FUNC( DRAWTEXT ) // nRow, nCol, cText, hFont
    [ text drawAtPoint: NSMakePoint( hb_parnl( 1 ), hb_parnl( 2 ) ) withAttributes: attr ];
 }   	
    
+HB_FUNC( FM_AVAILABLEFONTS )
+{
+   NSArray * aFonts = [ [ NSFontManager sharedFontManager ] availableFonts ];
+   int i;
+
+   hb_reta( [ aFonts count ] );
+
+   for( i = 0; i < [ aFonts count ]; i++ )
+      hb_storvc( [ ( NSString * ) [ aFonts objectAtIndex: i ] cStringUsingEncoding : NSWindowsCP1252StringEncoding ], -1, i + 1 );
+}
