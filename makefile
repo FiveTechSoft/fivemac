@@ -94,6 +94,7 @@ PRG_OBJS = \
 C_OBJS = ./objc/browses.o	\
 	./objc/buttons.o	\
 	./objc/checkboxes.o \
+   ./objc/choosefont.o \
     ./objc/colors.o \
   	./objc/colorton.o	\
 	./objc/comboboxes.o \
@@ -112,6 +113,7 @@ C_OBJS = ./objc/browses.o	\
 	./objc/images.o	\
 	./objc/ImageAndTextCell.o	\
   	./objc/ituness.o	\
+    ./objc/mailer.o \
 	./objc/menus.o	\
 	./objc/mgets.o	\
 	./objc/movies.o	\
