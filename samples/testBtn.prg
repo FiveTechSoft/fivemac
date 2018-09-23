@@ -37,8 +37,11 @@ obtn2:disable()
 
   @ 60, 14 SAY osay PROMPT "First:" OF oGroup SIZE 50, 17 TOOLTIP "say Primero"
 
+msginfo(GETDOCKSIZE())
 
+msginfo(ISDOCKHIDDEN())
 
+msginfo(GETDOCKPOSITION() )
 
    oBtn1:setDisclosure()
 

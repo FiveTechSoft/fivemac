@@ -173,6 +173,7 @@ return nil
 
 //----------------------------------------------------------------------------//
 
+
 function BuildEditor()
 
    if oEditor != nil
@@ -404,6 +405,12 @@ Return nil
 
 //----------------------------------------------------------------------------//
 
+function OSName()
+Return TaskExec( "/usr/bin/uname", {"-s" } )
+
+//--------------------------------------------------------------------------
+
+
 function NewFile()
 
    local scriptDbf := AppPath() + "/scripts.dbf"
@@ -447,14 +454,19 @@ function Preferences()
    local oGet3, cVar3      := oPlist:GetItemByName( "PathSDK" )
    local oGetIcon,cVarIcon := oPlist:GetItemByName( "PathIcon" )
    local oImg
-
+   
    local aFrameworks      := oPlist:GetArrayByName( "FrameWorks" )
    local aHarbLibs        := oPlist:GetArrayByName( "HarbLibs" )
    local aExtraFrameworks := oPlist:GetArrayByName( "ExtraFrameWorks" )
    local aHarbourFlags    := oPlist:GetArrayByName( "HarbourFlags" )
+   
+   local cStringColor := oPlist:GetItemByName( "Color-Strings" )
 
    local i, n, obtn1, oBtn2, obtn3, obtn4, obtn8, oBtn5, oBtn6
    local oBtnaddFlag,oBtndelFlag
+
+ ? cStringColor
+
 
    DEFINE DIALOG oDlg TITLE "Preferences"
  
@@ -477,7 +489,7 @@ function Preferences()
    @ 1, 1 TREE oTree TITLE "Categories" ;
       SIZE 180, 380 OF oMulti:aViews[ 1 ]
 
-   oTree:bAction = { || ShowColor( oClr, oTree ) }
+   oTree:bAction = { || ShowColor( oClr, oTree )  }
 
    oItem = oTree:AddItem( "Colors","ColorPanel" ) //cBmpPath+"Coloring.tiff" )
       oItem:AddItem( "Strings" )
@@ -493,16 +505,15 @@ function Preferences()
       oItem:AddItem( "Name" )
       oItem:AddItem( "Size" )
 
+    oTree:Select( oTree:GetItemByName( "Strings" ))
+    oTree:refresh()
+
    @ 300, 260 COLORWELL oClr SIZE 100, 30 OF oMulti:aViews[ 1 ] ;
       ON CHANGE SetEditorColor( oTree:GetSelect():cName, oClr:GetColor() )
-
-   oItem = oTree:AddItem( "ToolBar" )
-   oItem:AddItem( "Prompts" )
 
    //------ controles en segunda vista ------------
 
 
- 
    @ 224, 40 SAY "Icon app:" OF oMulti:aViews[ 2 ]
 
    @ 230, 160 IMAGE oImg OF oMulti:aViews[ 2 ] SIZE 130, 130 FILENAME cVarIcon
@@ -654,7 +665,9 @@ function Preferences()
                 oTree2:Rebuild(), oTree2:ExpandAll(),;
                 oTree3:Rebuild(), oTree3:ExpandAll(),;
                 oTree4:Rebuild(), oTree4:ExpandAll(),;
-               oTreeFlag:Rebuild(), oTreeFlag:ExpandAll() ) ;
+               oTreeFlag:Rebuild(), oTreeFlag:ExpandAll(),;
+               oTree:Select( oTree:GetItemByName( "Strings" )),;
+               oTree:refresh() )
  
 
    if ! ( cVar1 == GetPlistValue( cPrefFile, "PathFiveMac" ) )
@@ -676,6 +689,10 @@ function Preferences()
    if ! ( GetPlistValue( cPrefFile, "PathIcon" ) == oImg:GetFile() )
       SetPlistValue( cPrefFile, "PathIcon", oImg:GetFile(), .T. )
    endif
+
+    SetPlistValue( cPrefFile, "Color-Strings", 1234, .T. )
+
+
 
 return nil
 
@@ -784,10 +801,19 @@ Return nil
 
  function SetEditorColor( cType, nRGBColor )
 
-   oEditor:SetTextColor( cType, nRGBColor )
+  oEditor:SetTextColor( cType, nRGBColor )
 
+  ? cType
+  ? "Color-" + cType
+  ? nRGBColor
+  
+  ?ISKEYPLIST( cPrefFile, "Color-" + cType)
+  
+  
    SetPlistValue( cPrefFile, "Color-" + cType, nRGBColor, .T. )
-
+  
+   ?  GetPlistValue( cPrefFile, "Color-" + cType )
+  
  return nil
 
 //----------------------------------------------------------------------------//
@@ -1358,12 +1384,15 @@ function Run()
     oGet:SetText( cText )
     oGet:GoBottom()
 
-    oArrayArguments := ArrayCreateEmpty()
 
+/*
+    oArrayArguments := ArrayCreateEmpty()
     ArrayAddString( oArrayArguments, cAuxFile  )
     ArrayAddString( oArrayArguments, cFilename  )
-
     cText += TaskExecArray( "/bin/sh", oArrayArguments )
+*/
+
+    cText += TaskExec( "/bin/sh", { cAuxFile, cFilename } )
 
     oGet:SetText( cText )
     oGet:GoBottom()
@@ -1403,6 +1432,7 @@ function RunHarbour( cFile )
    local cIncludes := "-I" + FivePath + "/include:" + HarbPath + "/include"
    local i
    local oArrayArguments
+   local aArguments := {}
    
    local cFileName := cFileNoExt( cFile )
    local cFilePath := cFilePath( cFile )
@@ -1430,19 +1460,26 @@ function RunHarbour( cFile )
 
    oArrayArguments := ArrayCreateEmpty()
   
-   ArrayAddString( oArrayArguments, cFile  )
+   aadd( aArguments, cFile )
+  
+//   ArrayAddString( oArrayArguments, cFile  )
 
    if Len( aHarbFlags ) > 0
       for i = 1 to Len( aHarbFlags )
-         ArrayAddString( oArrayArguments, "-" + AllTrim( aHarbFlags[ i ] ) )
+//         ArrayAddString( oArrayArguments, "-" + AllTrim( aHarbFlags[ i ] ) )
+          aadd( aArguments, "-" + AllTrim( aHarbFlags[ i ] ) )
       next
    endif
 
-   ArrayAddString( oArrayArguments, cIncludes )
-   ArrayAddString( oArrayArguments, "-o"+ cFilePath + cFileName +".c" )
+ //  ArrayAddString( oArrayArguments, cIncludes )
+ //  ArrayAddString( oArrayArguments, "-o"+ cFilePath + cFileName +".c" )
+//   cText = TaskExecArray( cHarbour, oArrayArguments )
   
-   cText = TaskExecArray( cHarbour, oArrayArguments )
-
+   aadd( aArguments, cIncludes )
+   aadd( aArguments, "-o"+ cFilePath + cFileName +".c" )
+   
+   cText = TaskExec( cHarbour, aArguments )
+ 
 return cText
 
 //----------------------------------------------------------------------------//
@@ -1454,17 +1491,15 @@ function RunGcc( cFile )
    local FivePath := oPlist:GetItemByName( "PathFiveMac" )
    local SdkPath  := oPlist:GetItemByName( "PathSDK"  )
   
- //  local cGcc := "/usr/bin/gcc"
-   
    local cGcc := "/Applications/Xcode.app/Contents/Developer/usr/bin/gcc"
-
-//   local cGcc := "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
-   
    
    local HEADERS   := SdkPath + "/usr/include"
    local FRAMEPATH := sdkPath + "/System/Library/Frameworks"
+
+   local aArg := {}
    
-   local oArrayArguments :=  ArrayCreateEmpty()
+/*
+local oArrayArguments :=  ArrayCreateEmpty()
    
    ArrayAddString( oArrayArguments, cFile + ".c" )
    ArrayAddString( oArrayArguments, "-c" )
@@ -1474,8 +1509,17 @@ function RunGcc( cFile )
    ArrayAddString( oArrayArguments, "-I" + FRAMEPATH )
 
 return TaskExecArray( cGcc, oArrayArguments )
+*/
 
-//----------------------------------------------------------------------------//
+aadd( aArg, cFile + ".c")
+aadd( aArg, "-c"   )
+aadd( aArg, "-o"+ cFile + ".o" )
+aadd( aArg, "-I" + HarbPath + "/include" )
+aadd( aArg, "-I" + HEADERS  )
+aadd( aArg, "-I" + FRAMEPATH  )
+
+return TaskExec( cGcc, aArg )
+
 //----------------------------------------------------------------------------//
 
 function MakeShFile( cShFile )
@@ -2126,7 +2170,7 @@ USE (cFichero) ALIAS (alias) NEW SHARED VIA "DBFCDX"
 // dbusearea(.t.,,cfichero,alias,.t.)
 Return  !netErr()
 
-
+/*
 #pragma BEGINDUMP
 
 #include <stdio.h>
@@ -2138,5 +2182,5 @@ HB_FUNC( FREOPEN_STDERR )
 }
 
 #pragma ENDDUMP
-
+*/
 

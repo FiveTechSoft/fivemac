@@ -35,7 +35,7 @@ NSAttributedString * hb_NSASTRING_par( int iParam )
 
 HB_FUNC( RANDOMMINMAX)
 {
-   hb_retni( (arc4random()%(hb_parni(2)-hb_parni(1)+1))+hb_parni(1) ) ;
+   hb_retni( ( arc4random() % ( hb_parni(2) - hb_parni(1) + 1 ) ) + hb_parni(1) ) ;
 }
 
 HB_FUNC( OSVERSION)

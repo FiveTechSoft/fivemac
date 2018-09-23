@@ -21,10 +21,9 @@ CLASS TTextbox FROM TControl
    
    METHOD Initiate()
    
-   METHOD SetNumeric() INLINE GetSetNumeric( ::hWnd )
+ //  METHOD SetNumeric() INLINE GetSetNumeric( ::hWnd )
 
    METHOD setFormatter(oFormatter) INLINE GetSetFormatter(::hWnd ,oFormatter:hwnd )
-
 
    METHOD tabbusca(bChanged,ownd)
 	   

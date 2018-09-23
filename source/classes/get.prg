@@ -19,7 +19,7 @@ CLASS TGet FROM TControl
    DATA   oGet ,cCaption , lFocused , cCuetext
    DATA   nDec, nNumLen
    DATA   bPreValidate
-   
+   DATA   nPos
   
    METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
                lPassword, lSeach, bChanged, lRounded, cTooltip, nAutoResize,;
@@ -37,7 +37,9 @@ CLASS TGet FROM TControl
    METHOD cGenPrg()
 
    METHOD Copy() INLINE GetCopySelected( ::hWnd )
-  
+
+   METHOD cText( uVal )
+
    METHOD Cut() INLINE GetCutSelected( ::hWnd )
 
    METHOD Disabled() INLINE TxtSetDisabled( ::hWnd )
@@ -104,12 +106,13 @@ CLASS TGet FROM TControl
    METHOD SetSel( nStart, nEnd ) INLINE ;
                   nStart := If( nStart == nil, 1, nStart ),;
                   nEnd   := If( nEnd == nil, nStart, nEnd ),;
-                  GetSetSelRange( ::hWnd, nStart-1 , nEnd-1 )
+                  GetSetSelRange( ::hWnd, nStart-1 , nEnd-1 ),;
+                  ::nPos := nStart
                   
    METHOD SelectAll() INLINE GetSetSelAll( ::hWnd )
   
    // SetPos() is already used to change the location of a control
-   METHOD SetCurPos( nStart ) INLINE GetSetSelRange( ::hWnd, nStart - 1, 0 )
+   METHOD SetCurPos( nStart ) INLINE ( GetSetSelRange( ::hWnd, nStart - 1, 0 ) , ::oGet:pos := ::nPos := nStart  )
   
    METHOD SetPicture( cPicture ) INLINE ::cPicture := cPicture, GetSetPicture( ::hWnd, cPicture )
    
@@ -164,9 +167,12 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
    ::bChanged  = bChanged
    ::cType     = ValType( Eval( bSetGet ) )
 
+   ::nPos      = 1
 
    ::oGet:SetFocus()
    ::cCaption = ::oGet:Buffer
+
+
    ::oGet:KillFocus()
 
    if Empty( lUtf )
@@ -229,7 +235,6 @@ return Self
 METHOD Change(nkey) CLASS TGet
 
    ::Assign()
-   
    if ! Empty( ::bChanged )
       Eval( ::bChanged, Self )
    endif
@@ -291,6 +296,16 @@ return lRet
 
 //----------------------------------------------------------------------------//
 
+METHOD GetSel() CLASS TGet
+
+
+local nStart := GetGetPos( ::hWnd ) + 1
+local nEnd   := GetGetEndSelPos( ::hWnd ) + 1
+
+return If( nStart != nEnd, SubStr( ::cText, nStart + 1, nEnd - nStart ), "" )
+
+
+//----------------------------------------------------------------------------//
 
 METHOD GetDelSel( nStart, nEnd ) CLASS TGet
     
@@ -313,7 +328,7 @@ METHOD GetDelSel( nStart, nEnd ) CLASS TGet
   endif
 
 ::oGet:Reset()
-::oGet:pos := Min( nStart, nEnd ) + 1
+::nPos := ::oGet:pos := Min( nStart, nEnd ) + 1
 
        
 Return nil
@@ -371,8 +386,7 @@ METHOD HandleEvent( nMsg, uParam1, uParam2, uParam3 ) CLASS TGet
            return ::SetValue( uParam1 )
 
       case nMsg == WM_GETPARTEVALUE
-
-           return  ::prevalidate( uParam1 )
+            return  ::prevalidate( uParam1 )
 
       case nMsg == WM_GETLOSTFOCUS
 
@@ -403,14 +417,33 @@ return 0
 METHOD Assign() CLASS TGet
     
   local buffer := ::GetText()
+
+  ::oGet:Buffer := buffer
   
+  ::oGet:Assign()
+ 
   if ::cType == "N"
      buffer = val( buffer )
   Endif
   Eval( ::bSetGet, buffer )
-  
-  
- Return nil
+
+Return nil
+
+//----------------------------------------------------------------------------//
+
+METHOD cText( uVal ) CLASS TGet
+
+local cWindowText
+
+if PCount() == 1
+::oGet:VarPut( uVal )
+::Refresh()
+endif
+
+cWindowText := GetWindowText( ::hWnd )
+
+return If( ! Empty( ::cCueText ) .and. cWindowText == "", ::oGet:buffer, cWindowText )
+
 //----------------------------------------------------------------------------//
 
 METHOD LostFocus() CLASS TGet
@@ -467,25 +500,26 @@ return nil
 //----------------------------------------------------------------------------//
 
 METHOD prevalidate( cText ) CLASS TGet
-local xValue,nFor
-local dValue
+    
+    local buffer := .f.
 
-local lTrue := .t.
-local aText
+    if !Empty( ::bPreValidate )
+        buffer := Eval( ::bPreValidate , cText, Self )
+    else
+        if ::cType == "N"
+            buffer := NumValidate( cText )
+        endif
 
-if !Empty( ::bPreValidate )
-    Return Eval( ::bPreValidate , cText, Self )
-else
-    if ::cType == "N"
-        Return NumValidate( cText )
+        if ::cType == "D"
+            buffer := cDateValidate( cText )
+            ::oGet:Setfocus()
+            ::oGet:Buffer := buffer
+          
+        endif
+        
     endif
-
-    if ::cType == "D"
-        Return cDateValidate( cText )
-    endif
-endif
-
-return .f.
+    
+return buffer
 
 //----------------------------------------------------------------------------//
 
@@ -580,9 +614,6 @@ for nFor := 1 TO 10
 next
 
 Return xValue
-
-
-
 
 //----------------------------------------------------------------------------//
 
@@ -814,6 +845,20 @@ Return nil
 
 //----------------------------------------------------------------------------//
 
+static function LastDay( dDate )
+
+    local nMonth := Month( dDate )
+
+    while Month( dDate ) == nMonth
+        dDate++
+    end
+
+    dDate--
+
+return Day( dDate )
+
+//----------------------------------------------------------------------------//
+
 METHOD GoHome() CLASS TGet
 
 ::oGet:Home()
@@ -875,6 +920,7 @@ endif
 return .t.
 
 //----------------------------------------------------------------------------//
+
 Function AfterAtNum( cChar, cStr )
     local nAt := hb_at( cChar, cStr )
 local cRest := ""

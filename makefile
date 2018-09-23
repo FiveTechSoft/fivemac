@@ -5,13 +5,14 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 
 # ifeq ( $(OS_VERSION), 10.11 )
 	# Yosemite detected
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
 # else
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+
+    SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
 	HEADERS=$(SDKPATH)/usr/include
-    SWIFTFLAGS =  -I../include -sdk $(shell xcrun --show-sdk-path -sdk macosx)
+    SWIFTFLAGS =  -I../include -sdk $(SDKPATH)
 # endif
 
 all : ./lib/libfive.a ./lib/libfivec.a
@@ -184,35 +185,35 @@ SWIFT_OBJS =
 
 # -arch i386 -arch ppc
 ./obj/%.o : ./obj/%.c
-	gcc -c -o $@ -I./../harbour/include -I$(HEADERS) -F$(FRAMEPATH) $< 
+	gcc -ObjC -c -o $@ -I./../harbour/include -I$(HEADERS) -F$(FRAMEPATH) $< 
 	if [ ! -d "lib" ]; then mkdir lib; fi	
 	ar rc ./lib/libfive.a $@ 
 
 # -arch i386 -arch ppc
 ./objc/%.o : ./source/function/%.c
 	if [ ! -d "objc" ]; then mkdir objc; fi
-	gcc -I./../harbour/include -I./include -I$(HEADERS) -F$(FRAMEPATH) -Wall -c -o $@ $<
+	gcc -ObjC -I./../harbour/include -I./include -I$(HEADERS) -F$(FRAMEPATH) -Wall -c -o $@ $<
 	if [ ! -d "lib" ]; then mkdir lib; fi
 	ar rc ./lib/libfivec.a $@
 
 # -arch i386 -arch ppc
 ./objc/%.o : ./source/winapi/%.m
 	if [ ! -d "objc" ]; then mkdir objc; fi
-	gcc -I./../harbour/include -I./include -I$(HEADERS) -Wall -c -o $@ $<
+	gcc -ObjC -I./../harbour/include -I./include -I$(HEADERS) -Wall -c -o $@ $<
 	if [ ! -d "lib" ]; then mkdir lib; fi
 	ar rc ./lib/libfivec.a $@
 
 # -arch i386 -arch ppc
 ./objc/%.o : ./source/internal/%.c
 	if [ ! -d "objc" ]; then mkdir objc; fi
-	gcc -I./../harbour/include -I./include -I$(HEADERS) -F$(FRAMEPATH) -Wall -c -o $@ $<
+	gcc -ObjC -I./../harbour/include -I./include -I$(HEADERS) -F$(FRAMEPATH) -Wall -c -o $@ $<
 	if [ ! -d "lib" ]; then mkdir lib; fi
 	ar rc ./lib/libfivec.a $@
 
 # -arch i386 -arch ppc
 ./objc/%.o : ./source/internal/%.m 
 	if [ ! -d "objc" ]; then mkdir objc; fi
-	gcc -I./../harbour/include -I./include -I$(HEADERS) -F$(FRAMEPATH) -Wall -c -o $@ $<
+	gcc -ObjC -I./../harbour/include -I./include -I$(HEADERS) -F$(FRAMEPATH) -Wall -c -o $@ $<
 	if [ ! -d "lib" ]; then mkdir lib; fi
 	ar rc ./lib/libfivec.a $@
 

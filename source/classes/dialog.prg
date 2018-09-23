@@ -79,14 +79,18 @@ METHOD Activate( bLClicked, bValid, lModeless, lCentered, bInit, bRClicked,;
    // AEval( ::aControls, { | o | o:Initiate() } )
 
    if ! Empty( bInit )
-      Eval( bInit, self )
-   endif   
+     ::bInit = bInit
+   endif
+   if ! Empty( ::bInit )
+       Eval( ::bInit, self )
+   endif
 
    if ! lModeless
       DlgModal( ::hWnd )
       ::UnLink()
    endif
 
+ 
 return nil
 
 //----------------------------------------------------------------------------//

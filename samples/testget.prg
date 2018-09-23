@@ -1,17 +1,36 @@
 #include "FiveMac.ch"
-/*
+
 function Main()
 
-   local oDlg 
-   local nTest := 123456789, cText := "Hello world", dTest := Date()
+   local oDlg
+   local oget2
+   local oBtnOk
+   local nTest := 12345.232
+   local cText := "Hello world", dTest := Date()
    
    SET DATE FRENCH
    
    DEFINE DIALOG oDlg TITLE "TestGet" SIZE 400, 200 FLIPPED
-   
+
    @ 15, 30 SAY "Number:" OF oDlg
    
-   @ 15, 90 GET nTest PICTURE "999,999,999" OF oDlg TOOLTIP "a number" 
+   
+   @ 15, 90 GET oget2 VAr nTest OF oDlg  PICTURE "9999999.99"  TOOLTIP "a number"
+
+ //NGETSETDECIFORMAT( oget2:hWnd , 2 )
+
+
+
+ //  oget2:SetNumeric()
+
+ //  oget2:SetDecimals( 1 )
+
+
+
+//@ 15, 90 GET oGet2 VAR nTest OF oDlg TOOLTIP "tik hier in" SIZE 100, 25
+//oGet2:SetNumeric()
+
+//oGet2:SetNumFormat("###0.##")    &&this does not work correct, if I enter something and then a dot everything disappears
 
    @ 45, 30 SAY "String:" OF oDlg
 
@@ -21,13 +40,16 @@ function Main()
 
    @ 75, 90 GET dTest PICTURE "@D" OF oDlg TOOLTIP "a date" 
    
-   @ 140, 150 BUTTON "Ok" OF oDlg ACTION MsgInfo( nTest ), MsgInfo( cText ), MsgInfo( dTest )
-   
-   ACTIVATE DIALOG oDlg CENTERED
-         
-return nil
-*/
+   @ 140, 150 BUTTON oBtnOk PROMPT "Ok" OF oDlg ACTION msginfo( valtype( nTest)), MsgInfo( nTest ), MsgInfo( cText ), MsgInfo( dTest ), oBtnOk:SetFocus()
 
+oget2:setfocus()
+ // oBtnOk:SetFocus()
+
+   ACTIVATE DIALOG oDlg CENTERED
+
+return nil
+
+/*
 #include "FiveMac.ch"
 
 function Main()
@@ -56,3 +78,4 @@ DEFINE DIALOG oDlg TITLE "TestGet" SIZE 400, 200 FLIPPED
 ACTIVATE DIALOG oDlg CENTERED
 
 return nil
+*/

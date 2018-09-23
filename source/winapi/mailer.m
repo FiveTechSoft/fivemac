@@ -3,7 +3,8 @@
 #import "Mail.h"
 #include <fivemac.h>
 
-@interface Mailer: NSObject 
+
+@interface Mailer: NSObject <SBApplicationDelegate>//<NSSharingServiceDelegate>
 {
     NSMutableArray *afilesAttachment;
 }
@@ -25,7 +26,8 @@
 - (void)inicial
 {
 	//Allocate some space for the data source
-	afilesAttachment =  [[NSMutableArray alloc] initWithObjects:nil];
+    afilesAttachment = [NSMutableArray new];
+  //--- old---	afilesAttachment = [[NSMutableArray alloc] initWithObjects:nil];
       
 }
 
@@ -51,8 +53,15 @@
 
 - (id)eventDidFail:(const AppleEvent *)event withError:(NSError *)error
 {
-    [[NSAlert alertWithMessageText:@"Error" defaultButton:@"OK" alternateButton:nil otherButton:nil
-         informativeTextWithFormat: @"%@", [error localizedDescription]] runModal];
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    alert.messageText = @"Error" ;
+    alert.informativeText = [error localizedDescription] ;
+    alert.alertStyle = NSAlertStyleWarning ;
+    
+    [alert addButtonWithTitle:@"OK"];
+    [alert runModal];
+    
     return nil;
 }
 
@@ -61,6 +70,57 @@
 - (IBAction)sendEmailMessage:(id)sender {
     
      int i, n;
+  
+   
+ /*
+    
+    NSSharingService *service = [NSSharingService sharingServiceNamed:NSSharingServiceNameComposeEmail];
+    service.delegate = self;
+    
+    NSArray* shareRecipients = @[ [self toField ] ];
+    
+    [service setRecipients: shareRecipients  ];
+    [service setSubject:[ self subjectField ]];
+    
+     NSString* textAttributedString = [self messageContent ] ;
+//    NSAttributedString* textAttributedString = [self messageContent ] ;
+    NSURL* tempFileURL ;
+    
+    NSString *attachmentFilePath ;
+    
+    n = [ afilesAttachment count ] ;
+    
+    NSMutableArray *shareItems = [[NSMutableArray alloc] init];
+    
+   [ shareItems addObject : textAttributedString ] ;
+    
+    for(i=0; i<n; i++)
+    {
+        
+        attachmentFilePath = [afilesAttachment objectAtIndex:i ]  ;
+        
+        //  NSRunAlertPanel( attachmentFilePath ,@"yo", @"view",  attachmentFilePath, NULL );
+        
+        //  NSLog( @"%@", attachmentFilePath  );
+        
+        if ( [attachmentFilePath length] > 0 ) {
+            
+            tempFileURL = [NSURL fileURLWithPath: attachmentFilePath ];
+            
+            [ shareItems addObject : tempFileURL ] ;
+        }
+        
+    }
+    
+  //  NSArray* shareItems = @[textAttributedString,tempFileURL];
+    
+    [service performWithItems:shareItems];
+  
+  */
+    
+
+    
+  
     
     /* create a Scripting Bridge object for talking to the Mail application */
     MailApplication *mail = [SBApplication applicationWithBundleIdentifier:@"com.apple.Mail"];
@@ -83,8 +143,8 @@
     [[mail outgoingMessages] addObject: emailMessage];
     
     /* set the sender, show the message */
-    emailMessage.sender = [self fromField ];
-    emailMessage.visible = YES;
+   emailMessage.sender = [self fromField ];
+  emailMessage.visible = YES;
     
     /* Test for errors */
     if ( [mail lastError] != nil )
@@ -97,37 +157,50 @@
                                       nil]];
     [emailMessage.toRecipients addObject: theRecipient];
     [theRecipient release];
-        
+    
+    
     /* Test for errors */
     if ( [mail lastError] != nil )
         return;
     
     /* add an attachment, if one was specified */
     
-    MailAttachment *theAttachment ;  
+    MailAttachment *theAttachment ;
+    
     NSString *attachmentFilePath ;
     
     n = [ afilesAttachment count ] ;
-        
+    
     for(i=0; i<n; i++)
     {
-        attachmentFilePath = [afilesAttachment objectAtIndex:i ]  ; 
         
-      
-        //NSLog( @"%@", attachmentFilePath  );
+         
+        attachmentFilePath = [afilesAttachment objectAtIndex:i ]  ;
+        
+       // NSRunAlertPanel( attachmentFilePath ,@"yo", @"view",  attachmentFilePath, NULL );
+        
+      //  NSLog( @"%@", attachmentFilePath  );
         
         if ( [attachmentFilePath length] > 0 ) {
             
+            /* create an attachment object */
             theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc]
-                             initWithProperties:
-                             [NSDictionary dictionaryWithObjectsAndKeys:
-                              attachmentFilePath, @"fileName",
-                              nil]];        
+                                             initWithProperties: @{@"fileName": [NSURL URLWithString:attachmentFilePath]}];
             
-            /* add it to the list of attachments */
-            [ [ emailMessage.content  attachments] addObject: theAttachment];
+           
+         //   theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
+         //                    [NSDictionary dictionaryWithObjectsAndKeys:
+         //                     [NSURL URLWithString:attachmentFilePath], @"fileName",
+         //                     nil]];
+            
+            // add it to the list of attachments
+            [[emailMessage.content attachments] addObject: theAttachment];
+            
+         //   [[emailMessage.content paragraphs] addObject: theAttachment];
             
             [theAttachment release];
+            
+          
             
             /* Test for errors */
             if ( [mail lastError] != nil )
@@ -137,6 +210,7 @@
   
     }
   
+    
     
     
  /*  NSString *attachmentFilePath = [self fileAttachmentField ];
@@ -161,11 +235,17 @@
    }
   
   */
+    
     /* send the message */
     
-    [emailMessage send];
+  
     
-    [emailMessage release];
+    
+  
+ //   [emailMessage send];
+    
+    
+ //   [emailMessage release];
 }
 
 @end

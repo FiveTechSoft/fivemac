@@ -3,7 +3,7 @@
 function Main()
 
    local oDlg   
-   local cImgPath := UserPath() + "/fivemac/bitmaps/" 
+   local cImgPath := UserPath() + "/Fivemac/bitmaps/"
    local cFile
    local cTO:="mastintin@gmail.com"
    local cAsunto:= "primer intento"
@@ -16,18 +16,21 @@ function Main()
       FROM 70, 50 TO 500, 740
       
              
-     cfile:= cImgPath+"fivetech.gif"
+  //   cfile:= cImgPath+"puerto.jpg"
      
-  //   cfile:=choosefile(,"pdf")
+     cfile:=choosefile(,"plist")
   
                     
    DEFINE MAIL oMail TO cto SUBJECT cAsunto ;
                      FROM cFrom MESSAGE cMensaje
-         
+
+   ? cFile
+
    MAIL oMail ATTACH cFile
                     
   // oMail:=TMail():new(cTo,cAsunto,cFrom,cMensaje )
-  // oMail:addAttach(cFile)
+
+ //  oMail:addAttach(cFile)
            
                          
    @ 22, 83 BUTTON "Mailme" OF oDlg ACTION  oMail:send()

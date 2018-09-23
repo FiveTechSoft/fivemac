@@ -57,6 +57,24 @@ HB_FUNC( BTNSETHIGHLIGHT )
     [button highlight : hb_parl( 2 ) ] ;
 }
 
+
+HB_FUNC( BTNSETFOCUS )
+{
+    NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
+     NSButton * button = ( NSButton * ) hb_parnl( 2 );
+   [ window makeFirstResponder: button ];
+    
+}
+
+HB_FUNC( BTNSETDEFAULT )
+{
+    NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
+    NSButton * button = ( NSButton * ) hb_parnl( 2 );
+    [window setDefaultButtonCell:[button cell]];
+  
+}
+
+
 HB_FUNC( BTNRESCREATE )
 {
    NSWindow * window = ( NSWindow * ) hb_parnl( 1 );

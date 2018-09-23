@@ -76,6 +76,14 @@ CLASS TButton FROM TControl
 
    METHOD SetImage( hImage ) INLINE BtnSetImage( ::hWnd, hImage )
 
+   METHOD SetFocus() INLINE btnSetFocus( ::oWnd:hWnd, ::hWnd )
+
+  METHOD SetDefault() INLINE BTNSETDEFAULT( ::oWnd:hWnd, ::hWnd )
+
+
+
+  // METHOD SetFocus() INLINE ::oWnd:SetFocus()
+
    METHOD Enable() INLINE BtnSetEnabled(::hWnd,.t.)
 
    METHOD Disable() INLINE BtnSetEnabled(::hWnd,.f.)

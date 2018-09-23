@@ -5,8 +5,14 @@ function Main()
    local oWnd, oImg
 
 
-   local cfile  //:= cGetfile("escoge la imagen ")
+  // local cfile  //:= cGetfile("escoge la imagen ")
    local cNewFile
+
+   local cfile := cGetfile("escoge la imagen ")
+   RK_FotoGroot(cFile)
+
+
+/*
 
    DEFINE WINDOW oWnd ;
       FROM 444, 89 TO 689, 500
@@ -24,8 +30,44 @@ function Main()
     @ 22, 250 BUTTON "Frame" OF oWnd ACTION ( MsgInfo( oImg:GetWidth() ), oImg:setFrame( ) )
 
    ACTIVATE WINDOW oWnd
-   
+  */
+
 return nil
+
+
+FUNCTION RK_FotoGroot(cFoto)
+*to show a big picture
+
+LOCAL oWndFoto, oBtnZoom
+LOCAL oFoto
+LOCAL nWidth := 0
+LOCAL nHeight := 0
+LOCAL nFotoWidth
+LOCAL nFotoHeight
+local cPathFin := UserPath()+"/Desktop/"
+
+DEFINE DIALOG oWndFoto TITLE 'grote foto' ;
+FROM 0, 0 TO 800, 800
+
+@ 40, 10 IMAGE oFoto FILENAME cFoto OF oWndFoto SIZE 500, 500
+
+nFotoWidth := oFoto:GetWidth()
+nFotoHeight := oFoto:GetHeight()
+
+//? nFotoWidth
+//? nFotoHeight
+
+oWndFoto:SetSize( nFotoWidth + 20, nFotoHeight + 40 )
+
+ oFoto:SetSize( nFotoWidth,nFotoHeight )
+oFoto:SetScaling( 1 )
+
+@ 10, 10 BUTTON oBtnZoom PROMPT 'Ok' OF oWndFoto ;
+         ACTION oFoto:Save( cPathFin +"yo.jpg", 300, 180 )
+
+ACTIVATE DIALOG oWndFoto
+
+RETURN NIL
 
 
 Function SaveImage( cType )
