@@ -17,7 +17,10 @@ echo compiling C module...
 #  add -arch ppc -arch i386 for universal binaries
 if [ -d /Applications/Xcode.app ]; then
    SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1bc046260c541ae5c8e0e2a4eb1e6d8c46835b8d
    gcc -ObjC $1.c -c -I$SDKPATH -I./../include -I./../../harbour/include 
 else
    gcc -ObjC $1.c -c -I./../include -I./../../harbour/include
