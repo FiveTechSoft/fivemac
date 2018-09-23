@@ -5,6 +5,7 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 
 # ifeq ( $(OS_VERSION), 10.11 )
 	# Yosemite detected
+
     SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
