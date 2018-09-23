@@ -273,7 +273,9 @@ METHOD Activate( bLClicked, bValid, lMaximized, bPainted, lCentered, bInit,;
 
    if ! Empty( bInit )
       ::bInit = bInit
-      Eval( bInit, self )
+   endif
+   if ! Empty( ::bInit )
+      Eval( ::bInit, self )
    endif   
 
    if Empty( ::cNibName )
