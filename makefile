@@ -5,7 +5,6 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
 
 # ifeq ( $(OS_VERSION), 10.11 )
 	# Yosemite detected
-<<<<<<< HEAD
     SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
 	HEADERS=$(SDKPATH)/usr/include
 	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
@@ -14,15 +13,6 @@ OS_VERSION=`sw_vers -productVersion | grep -o 10\..`
     SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
 	HEADERS=$(SDKPATH)/usr/include
     SWIFTFLAGS =  -I../include -sdk $(SDKPATH)
-=======
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.13.sdk
-	HEADERS=$(SDKPATH)/usr/include
-	FRAMEPATH=$(SDKPATH)/System/Library/Frameworks
-# else
-	SDKPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.13.sdk
-	HEADERS=$(SDKPATH)/usr/include
-        SWIFTFLAGS =  -I../include -sdk $(shell xcrun --show-sdk-path -sdk macosx)
->>>>>>> 1bc046260c541ae5c8e0e2a4eb1e6d8c46835b8d
 # endif
 
 all : ./lib/libfive.a ./lib/libfivec.a
@@ -102,7 +92,6 @@ PRG_OBJS = \
   	./obj/window.o	\
 	./obj/webview.o
 
-<<<<<<< HEAD
 C_OBJS = ./objc/browses.o	\
 	./objc/buttons.o	\
 	./objc/checkboxes.o \
@@ -163,69 +152,9 @@ C_OBJS = ./objc/browses.o	\
   	./objc/views.o \
 	./objc/webviews.o \
     ./objc/windows.o
-=======
-C_OBJS = ./objc/browses.o \
-	 ./objc/buttons.o \
-	 ./objc/checkboxes.o \
-         ./objc/choosefont.o \
-         ./objc/colors.o \
-  	 ./objc/colorton.o \
-	 ./objc/comboboxes.o \
-	 ./objc/constants.o \
-         ./objc/coverflows.o \
-	 ./objc/cursors.o \
-	 ./objc/datepickers.o \
-	 ./objc/dialogs.o \
-	 ./objc/encript.o \
-	 ./objc/fonts.o	\
-  	 ./objc/formatters.o \
-  	 ./objc/funcs.o \
-	 ./objc/gets.o \
-	 ./objc/groups.o \
-         ./objc/IKImabr.o \
-	 ./objc/images.o \
-	 ./objc/ImageAndTextCell.o \
-  	 ./objc/ituness.o \
-	 ./objc/menus.o	\
-	 ./objc/mgets.o	\
-	 ./objc/movies.o \
-	 ./objc/msgs.o	\
-	 ./objc/nibs.o \
-         ./objc/notifications.o \
-	 ./objc/objc.o \
-	 ./objc/or.o	\
-	 ./objc/outlines.o \
-  	 ./objc/pdfviews.o \
-  	 ./objc/popover.o \
-	 ./objc/preferences.o \
-	 ./objc/printers.o \
-	 ./objc/progress.o \
-	 ./objc/says.o	\
-	 ./objc/scintillas.o	\
-	 ./objc/simages.o	\
-  	 ./objc/searchgets.o	\
-  	 ./objc/segments.o	\
-  	 ./objc/sgets.o \
-  	 ./objc/sheets.o	\
-  	 ./objc/sliders.o	\
-  	 ./objc/sounds.o \
-  	 ./objc/splits.o	\
-	 ./objc/strtoken.o	\
-  	 ./objc/system.o \
-	 ./objc/timers.o	\
-  	 ./objc/tarrays.o	\
-	 ./objc/transparent.o \
-	 ./objc/toolbars.o	\
-	 ./objc/valtochr.o	\
-  	 ./objc/RoundedView.o	\
-  	 ./objc/urls.o	\
-  	 ./objc/tabviews.o	\
-  	 ./objc/views.o \
-	 ./objc/webviews.o \
-         ./objc/windows.o
->>>>>>> 1bc046260c541ae5c8e0e2a4eb1e6d8c46835b8d
 
 SWIFT_OBJS =
+
 
 ./lib/libfive.a  : $(PRG_OBJS)
 #	ranlib ./lib/libfive.a
