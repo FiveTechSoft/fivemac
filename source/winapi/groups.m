@@ -48,7 +48,7 @@ HB_FUNC( BOXSETBORDERWIDTH )
 {
    NSBox * box = ( NSBox * ) hb_parnl( 1 );
 
-   [ box setBorderWidth: hb_parnd( 1 ) ];
+   [ box setBorderWidth: hb_parnd( 2 ) ];
 }
 
 HB_FUNC( BOXSETTITLEPOS )
