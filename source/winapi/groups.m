@@ -44,6 +44,13 @@ HB_FUNC( BOXGETSTYLE )
    hb_retnl( [ box boxType ] );
 }
 
+HB_FUNC( BOXSETBORDERWIDTH )
+{
+   NSBox * box = ( NSBox * ) hb_parnl( 1 );
+
+   [ box setBorderWidth: hb_parnd( 1 ) ];
+}
+
 HB_FUNC( BOXSETTITLEPOS )
 {
    NSBox * box = ( NSBox * ) hb_parnl( 1 );
