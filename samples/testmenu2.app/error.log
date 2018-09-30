@@ -1,0 +1,17 @@
+FiveMac error occurred at 04/10/18, 15:40:36
+============================================
+
+Error BASE/1005
+Message not found: TWINDOW:_BFUCUS
+
+Args:
+   [   1] = O   Object ClassName: TWINDOW
+
+
+Called from:  => __ERRRT_SBASE( 0 )
+Called from: ../../../tobject.prg => TWINDOW:ERROR( 0 )
+Called from: ../../../tobject.prg => (b)HBOBJECT( 0 )
+Called from: ../../../tobject.prg => TWINDOW:MSGNOTFOUND( 0 )
+Called from: ../../../tobject.prg => TWINDOW:_BFUCUS( 0 )
+Called from: testmenu2.prg => MAIN( 20 )
+

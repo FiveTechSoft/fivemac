@@ -1,0 +1,17 @@
+FiveMac error occurred at 05/29/18, 20:39:23
+============================================
+
+Error BASE/1004
+Message not found: TBTNBMP:DISABLE
+
+Args:
+   [   1] = O   Object ClassName: TBTNBMP
+
+
+Called from:  => __ERRRT_SBASE( 0 )
+Called from: ../../../tobject.prg => TBTNBMP:ERROR( 0 )
+Called from: ../../../tobject.prg => (b)HBOBJECT( 0 )
+Called from: ../../../tobject.prg => TBTNBMP:MSGNOTFOUND( 0 )
+Called from: ../../../tobject.prg => TBTNBMP:DISABLE( 0 )
+Called from: testbtn.prg => MAIN( 37 )
+

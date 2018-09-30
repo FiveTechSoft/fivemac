@@ -3,7 +3,7 @@
 HB_FUNC( BOXCREATE )
 {
    NSBox * box = [ [ NSBox alloc ] initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), 
-   	             hb_parnl( 3 ), hb_parnl( 4 ) ) ];
+                    hb_parnl( 3 ), hb_parnl( 4 ) ) ];
    NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
    NSString * string = hb_NSSTRING_par( 6 ) ;
 
@@ -42,6 +42,13 @@ HB_FUNC( BOXGETSTYLE )
    NSBox * box = ( NSBox * ) hb_parnl( 1 );
     
    hb_retnl( [ box boxType ] );
+}
+
+HB_FUNC( BOXSETBORDERWIDTH )
+{
+   NSBox * box = ( NSBox * ) hb_parnl( 1 );
+
+   [ box setBorderWidth: hb_parnd( 2 ) ];
 }
 
 HB_FUNC( BOXSETTITLEPOS )
@@ -94,29 +101,29 @@ HB_FUNC( BOXISTRASPARENT )
 }
 HB_FUNC( BOXHIDE )
 {
-	 NSBox * box = ( NSBox * ) hb_parnl( 1 );
+     NSBox * box = ( NSBox * ) hb_parnl( 1 );
    
    [ box setHidden: YES ];
 }
 
 HB_FUNC( BOXSHOW )
 {
-	 NSBox * box = ( NSBox * ) hb_parnl( 1 );
-	 
-	 [ box setHidden: NO ];
+     NSBox * box = ( NSBox * ) hb_parnl( 1 );
+     
+     [ box setHidden: NO ];
 }
 
 HB_FUNC( BOXAUTOAJUST )
 {
    NSBox * box = ( NSBox * ) hb_parnl( 1 );
    
-   [ box setAutoresizingMask: hb_parnl( 2 )  ];	
+   [ box setAutoresizingMask: hb_parnl( 2 )  ];    
 }  
 
 HB_FUNC( BOXSETCUSTOM )
 {
     NSBox * box = ( NSBox * ) hb_parnl( 1 );
-	[ box setBoxType: NSBoxCustom ];
+    [ box setBoxType: NSBoxCustom ];
 }
 
 HB_FUNC( BOXISCUSTOM )

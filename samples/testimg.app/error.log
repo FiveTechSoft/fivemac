@@ -1,0 +1,10 @@
+FiveMac error occurred at 06/24/18, 08:18:02
+============================================
+
+Error BASE/1003
+Variable does not exist: CFOTO
+
+
+
+Called from: testimg.prg => MAIN( 12 )
+

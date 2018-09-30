@@ -1,0 +1,14 @@
+FiveMac error occurred at 06/11/18, 21:35:21
+============================================
+
+Error BASE/1003
+Variable does not exist: UPARAM4
+
+
+
+Called from: source/classes/window.prg => TWINDOW:HANDLEEVENT( 586 )
+Called from: source/classes/window.prg => _FMH( 748 )
+Called from:  => WNDRUN( 0 )
+Called from: source/classes/window.prg => TWINDOW:ACTIVATE( 280 )
+Called from: browse.prg => MAIN( 46 )
+

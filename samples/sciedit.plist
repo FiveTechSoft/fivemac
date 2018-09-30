@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Color-Numbers</key>
+	<string></string>
+	<key>Color-Strings</key>
+	<string></string>
+	<key>ExtraFrameWorks</key>
+	<array>
+		<string>Scintilla</string>
+	</array>
+	<key>FrameWorks</key>
+	<array>
+		<string>Cocoa</string>
+		<string>WebKit</string>
+		<string>QTkit</string>
+		<string>Quartz</string>
+		<string>CoreMedia</string>
+		<string>iokit</string>
+		<string>AppKit</string>
+	</array>
+	<key>HarbLibs</key>
+	<array>
+		<string>hbdebug</string>
+		<string>hbvm</string>
+		<string>hbrtl</string>
+		<string>hblang</string>
+		<string>hbrdd</string>
+		<string>hbrtl</string>
+		<string>gttrm</string>
+		<string>hbvm</string>
+		<string>hbmacro</string>
+		<string>hbpp</string>
+		<string>rddntx</string>
+		<string>rddcdx</string>
+		<string>rddfpt</string>
+		<string>hbsix</string>
+		<string>hbcommon</string>
+		<string>hbcplr</string>
+	</array>
+	<key>HarbourFlags</key>
+	<array>
+		<string>n</string>
+		<string>w</string>
+	</array>
+	<key>LastFiles</key>
+	<array>
+		<string>/Volumes/Macintosh HD/Usuarios/Manuel/Fivemac/fivemac/samples/yo.prg</string>
+		<string>/Volumes/Macintosh HD/Usuarios/Manuel/Fivemac/fivemac/samples/yo.prg</string>
+		<string></string>
+		<string></string>
+		<string></string>
+		<string></string>
+		<string></string>
+		<string></string>
+		<string></string>
+	</array>
+	<key>PathFiveMac</key>
+	<string>/Volumes/Macintosh HD/Usuarios/Manuel/Fivemac/fivemac</string>
+	<key>PathHarbour</key>
+	<string>/Volumes/Macintosh HD/Usuarios/Manuel/Fivemac/harbour</string>
+	<key>PathSDK</key>
+	<string>Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk</string>
+</dict>
+</plist>

@@ -28,6 +28,8 @@ CLASS TGroup FROM TControl
 
    METHOD Show() INLINE BoxShow( ::hWnd )
 
+   METHOD SetBorderWidth( nWidth ) INLINE BoxSetBorderWidth( ::hWnd, nWidth )
+
    METHOD SetTitlePosition( nPosition ) INLINE ;
                                         BoxSetTitlePos( ::hWnd, nPosition )
   

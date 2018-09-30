@@ -1,0 +1,18 @@
+FiveMac error occurred at 07/07/18, 15:33:37
+============================================
+
+Error BASE/1003
+Variable does not exist: OGET
+
+
+
+Called from: source/classes/get.prg => (b)TGET( 115 )
+Called from: source/classes/get.prg => TGET:SETCURPOS( 0 )
+Called from: source/classes/get.prg => TGET:GOTFOCUS( 410 )
+Called from: source/classes/get.prg => TGET:HANDLEEVENT( 378 )
+Called from: source/classes/window.prg => _FMO( 767 )
+Called from:  => TXTSETFOCUS( 0 )
+Called from: source/classes/get.prg => (b)TGET( 92 )
+Called from: source/classes/get.prg => TGET:SETFOCUS( 0 )
+Called from: testget.prg => MAIN( 45 )
+

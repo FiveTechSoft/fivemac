@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>CFBundleExecutable</key>
+   <string>testmail</string>
+   <key>CFBundleName</key>
+   <string>testmail</string>
+   <key>CFBundleIdentifier</key>
+   <string>com.fivetech.testmail</string>
+   <key>CFBundlePackageType</key>
+   <string>APPL</string>
+   <key>CFBundleInfoDictionaryVersion</key>
+   <string>6.0</string>
+   <key>CFBundleIconFile</key>
+   <string>fivetech.icns</string>
+ </dict>
+</plist>
+
+ 
+
+          
+
+
