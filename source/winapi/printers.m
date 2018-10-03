@@ -252,3 +252,14 @@ HB_FUNC( PRNSETSIZE )
     
     [ window setFrame: frame ];    
 }	
+
+HB_FUNC( PRNINFOIMAGEABLEBOUNDS )
+{
+    NSPrintInfo * pi = ( NSPrintInfo *   ) hb_parnl( 1 );
+    NSRect boundRect  = [ pi imageablePageBounds ] ;
+    
+    hb_reta(2);
+    hb_storvnl( ( long ) boundRect.size.width, -1, 1);
+    hb_storvnl( ( long ) boundRect.size.height,-1, 2);
+}
+

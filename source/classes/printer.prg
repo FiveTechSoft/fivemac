@@ -40,7 +40,10 @@ CLASS TPrinter
    METHOD SetRightMargin( nMargin ) INLINE PrnInfoPagSetRightMargin(::hPrnInfo,nMargin )
    METHOD SetTopMargin( nMargin ) INLINE PrnInfoPagSetTopMargin(::hPrnInfo,nMargin )
    METHOD SetbottomMargin( nMargin ) INLINE PrnInfoPagSetbottomMargin(::hPrnInfo,nMargin )     
-       
+
+   METHOD GetaSizePrintable() INLINE PRNINFOIMAGEABLEBOUNDS( ::hPrnInfo )
+
+
      ENDCLASS
 
 //----------------------------------------------------------------------------//
