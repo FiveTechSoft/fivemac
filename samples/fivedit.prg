@@ -41,21 +41,11 @@ function Main()
    @ 21, 0 SPLITTER oSplitV OF oWnd SIZE oWnd:nWidth, oWnd:nHeight - 92 VERTICAL ;
      AUTORESIZE 18 VIEWS 3
 
-  // oSplitV:Anclaje( 18 )
-  // oSplitV:SetStyle( 2 )
-  // DEFINE VIEW OF oSplitV
-  // DEFINE VIEW OF oSplitV
-  // DEFINE VIEW OF oSplitV
-
-
    @ 0, 0 SPLITTER oSplitH OF oSplitV:aViews[ 2 ] ;
       SIZE oSplitV:aViews[ 2 ]:nWidth, oSplitV:aViews[ 2 ]:nHeight ;
       HORIZONTAL STYLE 3 AUTORESIZE 18 VIEWS 2
 
-   //  DEFINE VIEW OF oSplitH
-   //  DEFINE VIEW OF oSplitH
-
-   oSplitV:SetPosition( 1, 140 )
+   oSplitV:SetPosition( 1, 250 )
 
    BuildLeft( oSplitV:aViews[ 1 ] )
    BuildRight( oSplitV:aViews[ 3 ] )
@@ -79,23 +69,20 @@ function Main()
 
    oWnd:Maximize()
 
-   oSplitV:SetPosition( 1, 140 )
-   oSplitV:SetPosition( 2, oWnd:nWidth - 180 )
+   oSplitV:SetPosition( 1, 250 )
+   oSplitV:SetPosition( 2, oWnd:nWidth - 300 )
    oSplitH:SetPosition( 1, oSplitV:nHeight - 120 )
 
+   @ 2, 210 BUTTON oSayZoom PROMPT "Zoom : 100%"  OF oWnd SIZE 110, 16 ;
+      ACTION oSayZoom:setText("Zoom : "+ alltrim(str( ( ( oEditor:setZoom( 0 )+10)*10 ) ) )+ "%" )
 
-@ 2, 210 BUTTON oSayZoom PROMPT "Zoom : 100%"  OF oWnd SIZE 110, 16 ;
-    ACTION oSayZoom:setText("Zoom : "+ alltrim(str( ( ( oEditor:setZoom( 0 )+10)*10 ) ) )+ "%" )
+   oSayZoom:SetBezelStyle( 13 )
 
-    oSayZoom:SetBezelStyle( 13 )
+   @ 1, 324 SLIDER oSlide SIZE 100,18 OF oWnd
 
- @ 1, 324 SLIDER oSlide SIZE 100,18 OF oWnd
-
-  oSlide:SetMinMaxValue( -9, 20 )
-
-
-oSlide:bChange := {|| oSayZoom:setText("Zoom : "+ alltrim(str( ( ( oEditor:setZoom( oSlide:GetValue() )+10)*10 ) ) )+ "%" ) }
-
+   oSlide:SetMinMaxValue( -9, 20 )
+   oSlide:bChange := { || oSayZoom:setText("Zoom : " + ;
+                          Alltrim(str( ( ( oEditor:setZoom( oSlide:GetValue() ) + 10 ) * 10 ) ) ) + "%" ) }
 
    ACTIVATE WINDOW oWnd
    
@@ -121,7 +108,7 @@ function SelectionSegmentos( oSeg2 )
       if ! lsplit1
          oSplitV:SetPosition( 1, 0 )
       else
-         oSplitV:SetPosition( 1, 140 )
+         oSplitV:SetPosition( 1, 250 )
       endif
    endif
 
@@ -130,7 +117,7 @@ function SelectionSegmentos( oSeg2 )
       if ! lsplit3
          oSplitV:SetPosition( 2, oWnd:nWidth )
       else
-         oSplitV:SetPosition( 2, oWnd:nWidth - 180 )
+         oSplitV:SetPosition( 2, oWnd:nWidth - 300 )
       endif
    endif
 
@@ -172,7 +159,6 @@ function AutoIndentation()
 return nil
 
 //----------------------------------------------------------------------------//
-
 
 function BuildEditor()
 
@@ -393,23 +379,21 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-
 function dummy1()
 
-local oMovie:= Tmovie():New()
-local oprogres:= TProgress():New()
-local afile:= {}
+   local oMovie:= Tmovie():New()
+   local oprogres:= TProgress():New()
+   local afile:= {}
 
-Return nil
-
+return nil
 
 //----------------------------------------------------------------------------//
 
 function OSName()
-Return TaskExec( "/usr/bin/uname", {"-s" } )
+
+return TaskExec( "/usr/bin/uname", {"-s" } )
 
 //--------------------------------------------------------------------------
-
 
 function NewFile()
 
@@ -465,8 +449,7 @@ function Preferences()
    local i, n, obtn1, oBtn2, obtn3, obtn4, obtn8, oBtn5, oBtn6
    local oBtnaddFlag,oBtndelFlag
 
- ? cStringColor
-
+   ? cStringColor
 
    DEFINE DIALOG oDlg TITLE "Preferences"
  
@@ -484,7 +467,7 @@ function Preferences()
    @ 0,0 MVIEW PROMPT "Harbour" SIZE 420, 382 TITLE "Harbour" OF oMulti ;
    TOOLTIP "Harbour" IMAGE cBmpPath+"Libs.tiff"
 
-     oMulti:oToolbar:SetBtnSelected( 1 )
+   oMulti:oToolbar:SetBtnSelected( 1 )
 
    @ 1, 1 TREE oTree TITLE "Categories" ;
       SIZE 180, 380 OF oMulti:aViews[ 1 ]
@@ -513,12 +496,10 @@ function Preferences()
 
    //------ controles en segunda vista ------------
 
-
    @ 224, 40 SAY "Icon app:" OF oMulti:aViews[ 2 ]
 
    @ 230, 160 IMAGE oImg OF oMulti:aViews[ 2 ] SIZE 130, 130 FILENAME cVarIcon
        oImg:setFrame()
-
 
    @ 204, 40 GET oGetIcon VAR cVarIcon OF oMulti:aViews[ 2 ] SIZE 390, 20
    
@@ -531,20 +512,16 @@ function Preferences()
    @ 170, 40 SAY "Fivemac Path:" OF oMulti:aViews[ 2 ]
    @ 150, 40 GET oGet1 VAR cVar1 OF oMulti:aViews[ 2 ] SIZE 390, 20
 
-
    @ 150, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
       FILENAME "RevealFreestanding"  ;
       ACTION oGet1:opensheet( ParentPath( oGet1:gettext() ) )  SIZE 20, 20 STYLE 10
 
-
    @ 120, 40 SAY "Harbour Path:" OF oMulti:aViews[ 2 ]
    @ 100, 40 GET oGet2 VAR cVar2 OF oMulti:aViews[ 2 ] SIZE 390, 20
-
 
    @ 100, 440  BTNBMP OF oMulti:aViews[ 2 ]  ;
       FILENAME "RevealFreestanding"  ;
       ACTION oGet2:opensheet( oGet2:gettext() )  SIZE 20, 20 STYLE 10
-
   
    @ 70, 40 SAY "SDK Path:" OF oMulti:aViews[ 2 ]
    @ 10, 40 GET oGet3 VAR cVar3 OF oMulti:aViews[ 2 ] SIZE 390, 60
@@ -667,8 +644,7 @@ function Preferences()
                 oTree4:Rebuild(), oTree4:ExpandAll(),;
                oTreeFlag:Rebuild(), oTreeFlag:ExpandAll(),;
                oTree:Select( oTree:GetItemByName( "Strings" )),;
-               oTree:refresh() )
- 
+               oTree:refresh() ) 
 
    if ! ( cVar1 == GetPlistValue( cPrefFile, "PathFiveMac" ) )
       SetPlistValue( cPrefFile, "PathFiveMac", cVar1, .T. )
@@ -692,19 +668,18 @@ function Preferences()
 
     SetPlistValue( cPrefFile, "Color-Strings", 1234, .T. )
 
-
-
 return nil
 
 //----------------------------------------------------------------------------//
 
- function DelLib( oTree, ntipo )
+function DelLib( oTree, ntipo )
 
    local i, n
    local oPlist := TPlist():New( cPrefFile )
    local aLibs := {}
    local oNodo
    local aTipo := { "FrameWorks", "HarbLibs", "ExtraFrameWorks", "HarbourFlags" }
+
    oTree:DelItem( oTree:GetSelect() )
    oTree:Expandall()
 
@@ -791,11 +766,12 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-Static function cGetNombreRecortado( cfile , oGet )
+static function cGetNombreRecortado( cfile , oGet )
+
    oGet:setText( cFileNoext( cFilenopath( cfile ) ) )
    oGet:assign()
    
-Return nil
+return nil
 
 //----------------------------------------------------------------------------//
 
@@ -807,8 +783,7 @@ Return nil
   ? "Color-" + cType
   ? nRGBColor
   
-  ?ISKEYPLIST( cPrefFile, "Color-" + cType)
-  
+  ? ISKEYPLIST( cPrefFile, "Color-" + cType )  
   
    SetPlistValue( cPrefFile, "Color-" + cType, nRGBColor, .T. )
   
@@ -996,20 +971,20 @@ function BuildButtonBar()
 
    oBar:AddSpace()
 
-DEFINE BUTTON OF oBar ;
-  IMAGE cBmpPath + "run.png"  ;
-  PROMPT FWString( "Script" ) ACTION RunScript(oEditor ) ;
-  TOOLTIP FWString( "Run as script" )
+   DEFINE BUTTON OF oBar ;
+      IMAGE cBmpPath + "run.png"  ;
+      PROMPT FWString( "Script" ) ACTION RunScript(oEditor ) ;
+      TOOLTIP FWString( "Run as script" )
 
    DEFINE BUTTON OF oBar PROMPT "Run" ;
       TOOLTIP "Build and run" ;
-       IMAGE cBmpPath + "execute.png" ;
-       ACTION Run()
+      IMAGE cBmpPath + "execute.png" ;
+      ACTION Run()
 
    DEFINE BUTTON OF oBar PROMPT "Terminal" ;
       TOOLTIP "Open a terminal window" ;
-       IMAGE  cBmpPath + "terminal.png" ;
-       ACTION MacExec( "terminal.app" )
+      IMAGE  cBmpPath + "terminal.png" ;
+      ACTION MacExec( "terminal.app" )
 
    DEFINE BUTTON OF oBar PROMPT "Dbf Builder" ;
       TOOLTIP "Create Dbf" ;
@@ -1023,8 +998,8 @@ DEFINE BUTTON OF oBar ;
       ITEMS { "", "", "" } ;
       IMAGES { cBmpPath + "ideleft.tiff", cBmpPath + "idebottom.tiff" , cBmpPath + "ideright.tiff"  } ;
       STYLE 5 ;
-        TRACKING 1 ;
-        AUTORESIZE 1
+      TRACKING 1 ;
+      AUTORESIZE 1
 
   // oSeg:Anclaje( 1 )
   // oSeg:SetStyle( 5 )
@@ -1042,7 +1017,7 @@ return nil
 function BuildMenu()
 
    local oMenu
-local lfolder:= .f.
+   local lfolder:= .f.
 
    MENU oMenu
       MENUITEM "SciEdit"
@@ -1076,24 +1051,24 @@ local lfolder:= .f.
          MENUITEM "Redo"  ACCELERATOR "Z" ACTION oEditor:ReDo()
          SEPARATOR
          MENUITEM "Cut"   ACCELERATOR "x"  ACTION oEditor:Cut()
-          MENUITEM "Copy"  ACCELERATOR "c"  ACTION oEditor:Copy()
-          MENUITEM "Paste" ACCELERATOR "v" ACTION oEditor:Paste()
-          MENUITEM "Select &All" ACTION oEditor:SelectAll()
+         MENUITEM "Copy"  ACCELERATOR "c"  ACTION oEditor:Copy()
+         MENUITEM "Paste" ACCELERATOR "v" ACTION oEditor:Paste()
+         MENUITEM "Select &All" ACTION oEditor:SelectAll()
 
          SEPARATOR
 
          MENUITEM "Duplicate line" + Chr( 9 ) + Chr( 9 ) + Chr( 9 ) + "F5" ;
-             ACTION oEditor:LineDuplicate() ACCELERATOR "F5"
+            ACTION oEditor:LineDuplicate() ACCELERATOR "F5"
 
-       SEPARATOR
-       MENUITEM "Code Separator" ACTION oEditor:LineSep()
-       SEPARATOR
-       MENUITEM "Set Upper" ACTION oEditor:Uppercase()
-       MENUITEM "Set Lower" ACTION oEditor:Lowercase()
+         SEPARATOR
+         MENUITEM "Code Separator" ACTION oEditor:LineSep()
+         SEPARATOR
+         MENUITEM "Set Upper" ACTION oEditor:Uppercase()
+         MENUITEM "Set Lower" ACTION oEditor:Lowercase()
 
       ENDMENU
 
-       MENUITEM "View"
+      MENUITEM "View"
       MENU
          MENUITEM "Whitespace" ACTION  oEditor:SetViewSpace()
          MENUITEM "&Indentation Guides"  ACTION  oEditor:SetIndent()
@@ -1110,11 +1085,11 @@ local lfolder:= .f.
       MENUITEM "Search"
       MENU
          MENUITEM "Find..."
-       MENUITEM "Find Next" ACTION oEditor:FindNext()
-       MENUITEM "Find Prev" ACTION oEditor:FindPrev()
-       MENUITEM "Replace..."
-       SEPARATOR
-       MENUITEM "Goto..." ACTION oEditor:DlgGotoLine()
+         MENUITEM "Find Next" ACTION oEditor:FindNext()
+         MENUITEM "Find Prev" ACTION oEditor:FindPrev()
+         MENUITEM "Replace..."
+         SEPARATOR
+         MENUITEM "Goto..." ACTION oEditor:DlgGotoLine()
 
          SEPARATOR
 
@@ -1124,10 +1099,10 @@ local lfolder:= .f.
       MENUITEM "Project"
       MENU
          MENUITEM "New"
-       MENUITEM "Open"
-       MENUITEM "Close"
-       SEPARATOR
-       MENUITEM "Recent projects"
+         MENUITEM "Open"
+         MENUITEM "Close"
+         SEPARATOR
+         MENUITEM "Recent projects"
       ENDMENU
 
       MENUITEM "Tools"
@@ -1177,11 +1152,12 @@ return nil
 //----------------------------------------------------------------------------//
 
 function Exit()
+
    local oPlist
    local n, oEditor
    local afiles:= {}
    
-   oPlist:=tplist():new( cPrefFile  )
+   oPlist := TPlist():new( cPrefFile  )
 
    for n = 1 to Len( aEditors )
 
@@ -1189,7 +1165,7 @@ function Exit()
 
     //  oPlist:SetItemByName("File" + AllTrim( Str( n ) ), oEditor:cFileName )
 
-      aadd(afiles,oEditor:cFileName)
+      AAdd( afiles, oEditor:cFileName )
 
       if oEditor:GetModify()
          if MsgYesNo( "Save the changes ?", "File has changed" )
@@ -1239,7 +1215,6 @@ function Run()
    local cAuxFile
    
    local cCurrentPath := Path() + "/"
-   
 
    local oArrayArguments
    local cResult
@@ -1384,7 +1359,6 @@ function Run()
     oGet:SetText( cText )
     oGet:GoBottom()
 
-
 /*
     oArrayArguments := ArrayCreateEmpty()
     ArrayAddString( oArrayArguments, cAuxFile  )
@@ -1511,12 +1485,12 @@ local oArrayArguments :=  ArrayCreateEmpty()
 return TaskExecArray( cGcc, oArrayArguments )
 */
 
-aadd( aArg, cFile + ".c")
-aadd( aArg, "-c"   )
-aadd( aArg, "-o"+ cFile + ".o" )
-aadd( aArg, "-I" + HarbPath + "/include" )
-aadd( aArg, "-I" + HEADERS  )
-aadd( aArg, "-I" + FRAMEPATH  )
+   aadd( aArg, cFile + ".c")
+   aadd( aArg, "-c"   )
+   aadd( aArg, "-o"+ cFile + ".o" )
+   aadd( aArg, "-I" + HarbPath + "/include" )
+   aadd( aArg, "-I" + HEADERS  )
+   aadd( aArg, "-I" + FRAMEPATH  )
 
 return TaskExec( cGcc, aArg )
 
@@ -1619,14 +1593,12 @@ function BuildRight( oSplit )
   local aSniped
   local oBtnAdd,oBtnDel,obtnnull
 
-
    @ 0, 0 SPLITTER oSplitH2 OF oSplit ;
       SIZE oSplit:nWidth, oSplit:nHeight-10 ;
       HORIZONTAL STYLE 3 AUTORESIZE nOr( 16, 2 ) VIEWS 2
 
   // DEFINE VIEW OF oSplitH2
   // DEFINE VIEW OF oSplitH2
-
 
    @ 0, 0 BROWSE oFunList FIELDS "" HEADERS "Functions" OF oSplitH2:aViews[ 1 ];
     SIZE oSplitH2:aViews[ 1 ]:nWidth-2, oSplitH2:aViews[ 1 ]:nHeight ;
@@ -1642,7 +1614,7 @@ function BuildRight( oSplit )
                                aFunLines[ nRow ][ 1 ], "" ) } }
       endif
 
-       :SetColEditable( 1, .F. )
+      :SetColEditable( 1, .F. )
       //:SetColWidth( 1, 180 )
       :SetRowHeight( 20 )
       :SetGridLines( 1 )
