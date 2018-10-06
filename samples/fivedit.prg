@@ -1018,7 +1018,7 @@ DEFINE BUTTON OF oBar ;
 
    oBar:AddSpace() // AddSpaceFlex()
 
-   @ 0, 0 SEGMENTBTN oSeg OF oWnd SIZE 290, 106 ;
+   @ 0, 0 SEGMENTBTN oSeg OF oWnd SIZE 290, 40 ;
       ACTION SelectionSegmentos( oSeg ) ;
       ITEMS { "", "", "" } ;
       IMAGES { cBmpPath + "ideleft.tiff", cBmpPath + "idebottom.tiff" , cBmpPath + "ideright.tiff"  } ;
