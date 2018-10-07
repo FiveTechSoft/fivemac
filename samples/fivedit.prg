@@ -181,7 +181,7 @@ return nil
 
 function BuildPreferences()
 
-   cPrefFile = Path() + "/sciedit.plist"
+   cPrefFile = Path() + "/fivedit.plist"
 
    if ! File( cPrefFile )
        SetPlistValue( cPrefFile, "PathHarbour", "./../../harbour", .T. )
@@ -336,7 +336,7 @@ return nil
 function RunScript( oEditor )
 
    local oHrb, cResult, bOldError
-   local cPrefFile := Path() + "/sciedit.plist"
+   local cPrefFile := Path() + "/fivedit.plist"
    local cFivePath := GetPlistValue( cPrefFile, "PathFiveMac" )
    local cHarbourPath := GetPlistValue( cPrefFile, "PathHarbour" )
 
@@ -1602,7 +1602,7 @@ function BuildRight( oSplit )
 
    @ 0, 0 BROWSE oFunList FIELDS "" HEADERS "Functions" OF oSplitH2:aViews[ 1 ];
     SIZE oSplitH2:aViews[ 1 ]:nWidth-2, oSplitH2:aViews[ 1 ]:nHeight ;
-    COLSIZES 180 ;
+    COLSIZES 300 ;
     AUTORESIZE nOr( 16, 2 )
 
    FillFuncList()
@@ -2117,42 +2117,39 @@ return cPrg
 
 //----------------------------------------------------------------------------//
 //-------------- functions for dbfs ---------------------------//
+
 function cCheckArea( cDbfName )
-local n      := 2
-local cAlias := cDbfName
-while Select( cAlias ) != 0
-cAlias = cDbfName + AllTrim( Str( n++ ) )
-end
+
+   local n      := 2
+   local cAlias := cDbfName
+
+   while Select( cAlias ) != 0
+      cAlias = cDbfName + AllTrim( Str( n++ ) )
+   end
+
 return cAlias
 
 //------------------------------------------------------------------------------
 
-Function Abrimos(cFile,cVia)
-if !Usamos(cFile,cCheckArea(cFile))
-   Return nil
-endif
-RETURN Alias()
+Function Abrimos( cFile, cVia )
+
+   if ! Usamos( cFile, cCheckArea( cFile ) )
+      return nil
+   endif
+
+return Alias()
 
 //------------------------------------------------------------------------------
 
-Function Usamos(fichero,alias)
-local cFichero:= cDbfPath+fichero
-Default alias:=  Fichero
-USE (cFichero) ALIAS (alias) NEW SHARED VIA "DBFCDX"
-// dbusearea(.t.,,cfichero,alias,.t.)
-Return  !netErr()
+function Usamos( fichero, alias )
 
-/*
-#pragma BEGINDUMP
+   local cFichero:= cDbfPath+fichero
 
-#include <stdio.h>
-#include "hbapi.h"
+   DEFAULT alias:=  Fichero
 
-HB_FUNC( FREOPEN_STDERR )
-{
-    hb_retnl( ( HB_ULONG ) freopen( hb_parc( 1 ), hb_parc( 2 ), stderr ) );
-}
+   USE (cFichero) ALIAS (alias) NEW SHARED VIA "DBFCDX"
+   // dbusearea(.t.,,cfichero,alias,.t.)
 
-#pragma ENDDUMP
-*/
+return  ! NetErr()
 
+//------------------------------------------------------------------------------
