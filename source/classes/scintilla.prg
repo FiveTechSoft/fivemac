@@ -24,7 +24,7 @@ CLASS TScintilla FROM TControl
    DATA aKey             AS ARRAY INIT {}
 
    DATA nTextColor       INIT CLR_BLUE
-   DATA nBackColor       INIT nRgb(230,230,230)
+   DATA nBackColor       INIT nRgb( 170, 170, 170 )
    DATA nClrPane
 
    DATA nTColorLin       INIT CLR_BLUE
@@ -1519,7 +1519,7 @@ return nil
 
 METHOD DlgOpen() CLASS TScintilla
 
-   local cFileName := cGetfile("Select a file" , "prg" )
+   local cFileName := cGetfile( "Select a file", "prg,ch,c,m,h" )
 
    if ! Empty( cFileName ) .and. File( cFileName )
       ::Open( cFileName )

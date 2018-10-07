@@ -183,8 +183,8 @@ function BuildPreferences()
    cPrefFile = Path() + "/fivedit.plist"
 
    if ! File( cPrefFile )
-       SetPlistValue( cPrefFile, "PathHarbour", "./../../harbour", .T. )
-       SetPlistValue( cPrefFile, "PathFiveMac", "./../../fivemac", .T. )
+       SetPlistValue( cPrefFile, "PathHarbour", "/Users/~/harbour", .T. )
+       SetPlistValue( cPrefFile, "PathFiveMac", "/Users/~/fivemac", .T. )
        SetPlistValue( cPrefFile, "PathSDK", ;
        "/Applications/Xcode.app/Contents/Developer/Platforms/" + ;
            "MacOSX.platform/Developer/SDKs/MacOSX.sdk", .T. )
@@ -339,9 +339,14 @@ function RunScript( oEditor )
    local cFivePath := GetPlistValue( cPrefFile, "PathFiveMac" )
    local cHarbourPath := GetPlistValue( cPrefFile, "PathHarbour" )
 
-   oHrb = HB_CompileFromBuf( StrTran( oEditor:GetText(), "Main", "__Main" ),;
-                             .T., "-n", "-I" + alltrim( cFivePath ) + "/include",;
-                             "-I" + alltrim( cHarbourPath ) + "/include" )
+   BEGIN SEQUENCE
+      bOldError = ErrorBlock( { | o | DoBreak( o ) } )
+      oHrb = HB_CompileFromBuf( StrTran( oEditor:GetText(), "Main", "__Main" ),;
+                                .T., "-n", "-I" + ;
+                                StrTran( AllTrim( cFivePath ), "~", UserName() ) + "/include",;
+                                "-I" + StrTran( AllTrim( cHarbourPath ), "~", UserName() ) + "/include" )
+   END SEQUENCE 
+   ErrorBlock( bOldError )
 
    if ! Empty( oHrb )
       BEGIN SEQUENCE

@@ -45,7 +45,6 @@ void MsgAlert( NSString * detailedInformation , NSString * messageText )
     [alert runModal];
 }
 
-
 HB_FUNC( COCOAEXIT )
 {
    CocoaExit();
@@ -166,20 +165,20 @@ HB_FUNC( MSGSTOP )
   }
 
 HB_FUNC( MSGALERT )
-{
-    
+{    
    CocoaInit();
     
-    NSAlert * dlg = [ [ NSAlert alloc ] init ];
+   NSAlert * dlg = [ [ NSAlert alloc ] init ];
     
-    ValToChar( hb_param( 1, HB_IT_ANY ) );
-    dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
-    dlg.messageText = @"Alert" ;
-    dlg.alertStyle = NSAlertStyleWarning ;
+   ValToChar( hb_param( 1, HB_IT_ANY ) );
+   dlg.informativeText =  hb_NSSTRING_par( -1 ) ;
+   dlg.messageText = @"Alert" ;
+   dlg.alertStyle = NSAlertStyleWarning ;
     
-    [ dlg addButtonWithTitle:@"OK"];
-    [ dlg runModal ];
-      hb_ret();
+   [ dlg addButtonWithTitle:@"OK"];
+   [ dlg runModal ];
+    
+   hb_ret();
 }
 
 HB_FUNC( MSGALERTSHEET )
@@ -188,79 +187,73 @@ HB_FUNC( MSGALERTSHEET )
  //  CocoaInit();
     
    ValToChar( hb_param( 1, HB_IT_ANY ) );
-    NSAlert * alert = [ [ NSAlert alloc ] init ];
-    alert.messageText = @"Alert" ;
-    alert.informativeText = hb_NSSTRING_par( -1 ) ;
+   NSAlert * alert = [ [ NSAlert alloc ] init ];
+   alert.messageText = @"Alert" ;
+   alert.informativeText = hb_NSSTRING_par( -1 ) ;
 
-    [alert addButtonWithTitle : @"OK" ] ;
+   [alert addButtonWithTitle : @"OK" ] ;
        
-    [alert runModal ] ;
+   [alert runModal ] ;
     
-  // hb_ret();
-    
+   // hb_ret();    
 }
  
-
 HB_FUNC( MSGYESNO ) // cMsg --> lYesNo
 {
-   NSString * texto;
+   NSString * text;
    NSAlert * alert = [ [ NSAlert alloc ] init ];
     
    CocoaInit();
 
    ValToChar( hb_param( 2, HB_IT_ANY ) );
-   texto = hb_NSSTRING_par( -1 ) ;
-   if( [ texto isEqualToString : @"" ] )
-      texto = @"Please select" ;
+   text = hb_NSSTRING_par( -1 ) ;
+   if( [ text isEqualToString : @"" ] )
+      text = @"Please select" ;
     
-   alert.messageText = texto;
+   alert.messageText = text;
    
    ValToChar( hb_param( 1, HB_IT_ANY ) );
-   texto = hb_NSSTRING_par( -1 ) ;
-   if( [ texto isEqualToString : @"" ] )
-      texto = @"make a choice" ;
+   text = hb_NSSTRING_par( -1 ) ;
+   if( [ text isEqualToString : @"" ] )
+      text = @"make a choice" ;
     
-   alert.informativeText = texto;
+   alert.informativeText = text;
 
-   [alert addButtonWithTitle : @"YES" ] ;
-   [alert addButtonWithTitle : @"NO" ] ;
+   [alert addButtonWithTitle : @"Yes" ] ;
+   [alert addButtonWithTitle : @"No" ] ;
     
-   hb_retl( [alert runModal] == NSAlertFirstButtonReturn );
+   hb_retl( [ alert runModal ] == NSAlertFirstButtonReturn );
         
-   [alert release];
-
+   [ alert release ];
 }
 
 HB_FUNC( MSGNOYES ) // cMsg --> lYesNo
 {
+   NSString * text;
+   NSAlert * alert = [ [ NSAlert alloc ] init ];
     
-    NSString * texto;
-    NSAlert * alert = [ [ NSAlert alloc ] init ];
+   CocoaInit();
     
-    CocoaInit();
+   ValToChar( hb_param( 2, HB_IT_ANY ) );
+   text = hb_NSSTRING_par( -1 ) ;
+   if( [ text isEqualToString : @"" ] )
+      text = @"Please select" ;
     
-    ValToChar( hb_param( 2, HB_IT_ANY ) );
-    texto = hb_NSSTRING_par( -1 ) ;
-    if( [ texto isEqualToString : @"" ] )
-        texto = @"Please select" ;
+   alert.messageText = text;
     
-    alert.messageText = texto;
+   ValToChar( hb_param( 1, HB_IT_ANY ) );
+   text = hb_NSSTRING_par( -1 ) ;
+   if( [ text isEqualToString : @"" ] )
+      text = @"make a choice" ;
     
-    ValToChar( hb_param( 1, HB_IT_ANY ) );
-    texto = hb_NSSTRING_par( -1 ) ;
-    if( [ texto isEqualToString : @"" ] )
-        texto = @"make a choice" ;
+   alert.informativeText = text;
     
-    alert.informativeText = texto;
-
+   [ alert addButtonWithTitle : @"No" ] ;
+   [ alert addButtonWithTitle : @"Yes" ] ;
     
-    [alert addButtonWithTitle : @"NO" ] ;
-    [alert addButtonWithTitle : @"YES" ] ;
+   hb_retl( [ alert runModal ] != NSAlertFirstButtonReturn );
     
-    hb_retl( [alert runModal] != NSAlertFirstButtonReturn  ) ;
-    
-    [alert release];
-    
+   [ alert release ];    
 }
 
 HB_FUNC( MSGBEEP )
@@ -270,7 +263,7 @@ HB_FUNC( MSGBEEP )
 
 HB_FUNC( CHOOSEFILE )
 {
-   NSString * type = hb_NSSTRING_par( 2 );     
+   NSString * types = hb_NSSTRING_par( 2 );     
    NSOpenPanel * op =  [NSOpenPanel openPanel];  //[ [ NSOpenPanel alloc ] init ];
     
    [ op setPrompt: @"Ok" ];
@@ -279,12 +272,21 @@ HB_FUNC( CHOOSEFILE )
       [ op setTitle: @"Please select a filename" ];
    else
       [ op setTitle: hb_NSSTRING_par( 1 ) ];
-
     
-   if( ! [ type isEqualToString : @"" ] )
+   if( ! [ types isEqualToString : @"" ] )
    {
-      NSArray * fileTypes = [ [ NSArray alloc ] initWithObjects: type, [ type uppercaseString ], nil ];
-      [ op setAllowedFileTypes:fileTypes ];
+      NSMutableArray * fileTypes;
+
+      if( [ types containsString: @"," ] )
+      {
+         fileTypes = [ [ NSMutableArray alloc ] init ]; 
+         [ fileTypes addObjectsFromArray: [ types componentsSeparatedByString: @"," ] ];
+         [ fileTypes addObjectsFromArray: [ [ types uppercaseString ] componentsSeparatedByString: @"," ] ];
+      }   
+      else
+         fileTypes = [ [ NSMutableArray alloc ] initWithObjects: types, [ types uppercaseString ], nil ];
+     
+      [ op setAllowedFileTypes: fileTypes ];
    }
         
     if( [ op runModal ] == NSModalResponseOK  )
