@@ -49,6 +49,8 @@ CLASS TOutline FROM TControl
 
    METHOD SelectorStyle( lSelector ) INLINE OutlineSelectorStyle( ::hWnd, lSelector )
 
+   METHOD SetBackColor( nColor )  INLINE OutlineSetBackColor( ::hWnd, ColorFromNRGB( nColor ) )
+
    METHOD SetDisclo( lOnOff ) INLINE OutlineSetDisclo( ::hWnd, lOnOff )
 
    METHOD SetPijama( lPijama ) INLINE OutlineSetAlternateColor( ::hWnd, lPijama )
