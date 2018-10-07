@@ -17,12 +17,11 @@ extern dbfcdx, DBCloseArea, DbUseArea, DbGoTo, OrdSetFocus
 #include "harbour.hbx"
 #include "fivemac.hbx"
 
-
 //----------------------------------------------------------------------------//
 
 function Main()
 
-  local oSlide,oSayZoom
+  local oSlide, oSayZoom
   
    cBmpPath = ImgPath()
    cDbfPath = AppPath() + "/"
@@ -92,7 +91,7 @@ return nil
 
 function SelectionSegmentos( oSeg2 )
 
-   local nselect := oSeg2:SelectedItem
+   local nSelect := oSeg2:SelectedItem
 
    if nSelect == 2
       lsplit2 = ! lsplit2
@@ -391,7 +390,7 @@ return nil
 
 function OSName()
 
-return TaskExec( "/usr/bin/uname", {"-s" } )
+return TaskExec( "/usr/bin/uname", { "-s" } )
 
 //--------------------------------------------------------------------------
 
@@ -408,7 +407,7 @@ function NewFile()
    if ! File( cFileName )
       cAlias = Abrimos( "scripts" )
       if ! Empty( cAlias )
-         MemoWrit( cFileName, (cAlias)->CODE )
+         MemoWrit( cFileName, ( cAlias )->CODE )
       endif
       // MemoWrit( cFileName, '#include "FiveMac.ch"' + CRLF + CRLF + ;
       //                       "function Main()" + CRLF + CRLF + ;
