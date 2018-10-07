@@ -341,6 +341,13 @@ HB_FUNC( OUTLINESETHEADERTITLE )
    [ [ col headerCell ] setStringValue: string ];
 }
 
+HB_FUNC( OUTLINESETBACKCOLOR )
+{
+    MOutlineView * outlineView = ( MOutlineView * ) hb_parnl( 1 );
+    NSColor * color =( NSColor * ) hb_parnl( 2 );
+    [ outlineView setBackgroundColor: color ];
+}
+
 HB_FUNC( OUTLINESETALTERNATECOLOR )
 {
    MOutlineView * outlineView = ( MOutlineView * ) hb_parnl( 1 );
