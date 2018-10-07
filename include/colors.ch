@@ -23,7 +23,7 @@
 #define CLR_BROWN         32896               // RGB( 128, 128,   0 )
 #define CLR_HGRAY      12632256               // RGB( 192, 192, 192 )
 #define CLR_LIGHTGRAY CLR_HGRAY
-#define CLR_PANE         174250               // RGB( 170, 170, 170 )
+#define CLR_PANE       11184810               // RGB( 170, 170, 170 )
 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴//
 //                       High Intensity Colors

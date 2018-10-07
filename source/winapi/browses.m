@@ -885,7 +885,7 @@ HB_FUNC( BRWSETBKCOLOR )
                                                     green: ( hb_parnl( 3 ) / 255.0 ) 
                                                      blue:  ( hb_parnl( 4 ) / 255.0 ) alpha : ( hb_parnl( 5 ) / 100.0 ) ];    
     
-    [  browse setBackgroundColor : color ] ;
+    [ browse setBackgroundColor: color ] ;
 }
 
 HB_FUNC( BRWSETTEXTCOLOR )
@@ -895,7 +895,7 @@ HB_FUNC( BRWSETTEXTCOLOR )
                                                     green: ( hb_parnl( 3 ) / 255.0 ) 
                                                      blue:  ( hb_parnl( 4 ) / 255.0 ) alpha : ( hb_parnl( 5 ) / 100.0 ) ];    
     
-    [  [ browse cell ] setTextColor : color ] ;
+    [ [ browse cell ] setTextColor : color ] ;
 }
 
 

@@ -69,7 +69,7 @@ function Main()
    oWnd:Maximize()
 
    oSplitV:SetPosition( 1, 250 )
-   oSplitV:SetPosition( 2, oWnd:nWidth - 300 )
+   oSplitV:SetPosition( 2, oWnd:nWidth - 400 )
    oSplitH:SetPosition( 1, oSplitV:nHeight - 120 )
 
    @ 2, 210 BUTTON oSayZoom PROMPT "Zoom : 100%"  OF oWnd SIZE 110, 16 ;
@@ -116,7 +116,7 @@ function SelectionSegmentos( oSeg2 )
       if ! lsplit3
          oSplitV:SetPosition( 2, oWnd:nWidth )
       else
-         oSplitV:SetPosition( 2, oWnd:nWidth - 300 )
+         oSplitV:SetPosition( 2, oWnd:nWidth - 400 )
       endif
    endif
 
@@ -858,7 +858,7 @@ static function OpenFile( cFileName )
          if oMItem == nil
             oMItem = oTree:AddItem( "M", cBmpPath + "Group.tiff" )
          endif
-         oItem = oMItem:AddItem( cFileNoPath( oEditor:cFileName ),,,, cBmpPath + "new.png" )
+         oItem = oMItem:AddItem( cFileNoPath( oEditor:cFileName ),,, cBmpPath + "new.png" )
       endif
    endif
 
@@ -1601,12 +1601,9 @@ function BuildRight( oSplit )
       SIZE oSplit:nWidth, oSplit:nHeight-10 ;
       HORIZONTAL STYLE 3 AUTORESIZE nOr( 16, 2 ) VIEWS 2
 
-  // DEFINE VIEW OF oSplitH2
-  // DEFINE VIEW OF oSplitH2
-
    @ 0, 0 BROWSE oFunList FIELDS "" HEADERS "Functions" OF oSplitH2:aViews[ 1 ];
     SIZE oSplitH2:aViews[ 1 ]:nWidth-2, oSplitH2:aViews[ 1 ]:nHeight ;
-    COLSIZES 300 ;
+    COLSIZES 400 ;
     AUTORESIZE nOr( 16, 2 )
 
    FillFuncList()
@@ -1627,6 +1624,7 @@ function BuildRight( oSplit )
 
       :bAction = { || oEditor:GotoLine( aFunLines[ oFunList:nRowPos ][ 2 ] ),;
                       oEditor:SetFocus() }
+      :SetColor( CLR_BLACK, CLR_PANE )
    END
 
    @ 22, 0 BROWSE oBrwSniped FIELDS "" HEADERS "Code Sniped" OF oSplitH2:aViews[ 2 ];
@@ -1799,13 +1797,11 @@ function BuildLeft( oSplit )
       TITLE "Files" AUTORESIZE nOr( 16, 2 ) ;
       ACTION ( SelectFile() )
 
-   oTree:SetColWidth( 90 )
+   oTree:SetColWidth( 250 )
+   oTree:SetBackColor( CLR_PANE )
 
-  // oTree:Anclaje( nOr( 16, 2 ) )
-
-   oPrgItem = oTree:AddItem( "PRG", cBmpPath + "folder.png" )
-
- //  oTree:bAction = { || SelectFile() }
+    oPrgItem = oTree:AddItem( "PRG", cBmpPath + "Group.tiff" ) // We create it here so
+                                                               // it is the first group 
 
 return nil
 

@@ -676,6 +676,7 @@ METHOD TbrSearch( bChanged, oWnd, bSetGet, bValid ) CLASS TGet
    ::bChanged = bChanged
    ::oWnd     = oWnd
    ::bValid   = bValid
+   ::oGet     = FWGetNew( 20, 20, bSetGet, "search" )
 
    oWnd:AddControl( Self )
 

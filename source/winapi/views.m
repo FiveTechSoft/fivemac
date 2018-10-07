@@ -20,6 +20,14 @@ HB_FUNC( VIEWAUTORESIZE )
 	 hb_retnl( [ view autoresizingMask ] );	
 }
 
+HB_FUNC( VIEWSETBACKCOLOR )
+{
+    NSView * view = ( NSView * ) hb_parnl( 1 );
+    NSColor * color = ( NSColor * ) hb_parnl( 2 );
+
+    [ view setBackgroundColor: color ];
+}
+
 HB_FUNC( VIEWSETSIZE )
 {
    NSView * view = ( NSView * ) hb_parnl( 1 );
