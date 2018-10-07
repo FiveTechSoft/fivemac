@@ -951,7 +951,7 @@ function BuildButtonBar()
    oBar:AddSpace()
 
    oBar:AddSearch( , "Text to find",;
-                   { | oGet | oEditor:FindText( oGet:GetText() ) } )
+                   { | oGet | oEditor:FindText( oGet:GetText(), .T. ) } )
 
    DEFINE BUTTON OF oBar PROMPT "Previous" ;
       TOOLTIP "Repeat the search backwards" ;

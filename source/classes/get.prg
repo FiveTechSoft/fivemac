@@ -416,15 +416,17 @@ return 0
 
 METHOD Assign() CLASS TGet
     
-  local buffer := ::GetText()
+   local buffer := ::GetText()
 
-  ::oGet:Buffer := buffer
-  
-  ::oGet:Assign()
- 
+   if ::oGet != nil
+      ::oGet:Buffer := buffer  
+      ::oGet:Assign()
+   endif 
+
   if ::cType == "N"
-     buffer = val( buffer )
+     buffer = Val( buffer )
   Endif
+
   Eval( ::bSetGet, buffer )
 
 Return nil
@@ -676,7 +678,7 @@ METHOD TbrSearch( bChanged, oWnd, bSetGet, bValid ) CLASS TGet
    ::bChanged = bChanged
    ::oWnd     = oWnd
    ::bValid   = bValid
-   ::oGet     = FWGetNew( 20, 20, bSetGet, "search" )
+   // ::oGet     = FWGetNew( 20, 20, bSetGet, "search" )
 
    oWnd:AddControl( Self )
 

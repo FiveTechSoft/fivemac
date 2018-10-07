@@ -138,7 +138,7 @@ CLASS TScintilla FROM TControl
 
    METHOD FindPrev() INLINE ::SearchBackward()
 
-   METHOD FindText( cText, lForward ) INLINE SciFindText( ::hWnd, cText, lForward )
+   METHOD FindText( cText, lForward ) INLINE If( lForward, ::SearchForward( cText ), ::SearchBackward( cText ) )
 
    METHOD FoldAllContract()                   INLINE ::Send( SCI_FOLDALL, SC_FOLDACTION_CONTRACT, 0 )
    METHOD FoldAllExpand()                     INLINE ::Send( SCI_FOLDALL, SC_FOLDACTION_EXPAND, 0 )

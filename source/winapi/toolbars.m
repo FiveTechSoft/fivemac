@@ -344,6 +344,15 @@ HB_FUNC( TBRADDSEARCH )
    hb_retnl( ( HB_LONG ) item );
 }   
 
+HB_FUNC( TBRSEARCHTEXT )
+{
+   NSToolbarItem * item = ( NSToolbarItem * ) hb_parnl( 1 );
+   SearchGet * edit = ( SearchGet * ) [ item view ];
+   NSString * string = [ edit stringValue ];
+   
+   hb_retc( [ string cStringUsingEncoding: NSWindowsCP1252StringEncoding ] );
+}
+
 HB_FUNC( TBRADDCONTROL )
 {
    ToolBar * toolbar = ( ToolBar * ) hb_parnl( 1 );
