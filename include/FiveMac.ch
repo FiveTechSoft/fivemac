@@ -11,8 +11,6 @@
 
 #define bSETGET(x) { | u | If( PCount()==0, x, x := u ) }
 
-#define CLR_PANE RGB( 150, 150, 150 )
-
 REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
 
 #xcommand ? <x,...> => AEval( \{ <x> \}, { | u | MsgInfo( u ) } )
