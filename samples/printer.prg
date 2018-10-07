@@ -8,7 +8,7 @@ function Main()
 
    @ 40, 40 BUTTON "Print" OF oDlg ACTION Print()
 
-   ACTIVATE DIALOG oDlg
+   ACTIVATE DIALOG oDlgAniTuner 
 
 return nil
 
