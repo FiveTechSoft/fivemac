@@ -37,7 +37,7 @@ CLASS TSay FROM TControl
 
    METHOD Disabled() INLINE TxtSetDisabled( ::hWnd ) 
    
-   METHOD SetFont( cFontName,nSize ) INLINE SaySetFont( ::hWnd, cFontName, nSize )
+   METHOD SetFont( cFontName, nSize ) INLINE SaySetFont( ::hWnd, cFontName, nSize )
          
    METHOD cGenPrg()      
          

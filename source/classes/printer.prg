@@ -27,7 +27,7 @@ CLASS TPrinter
    METHOD SetLandscape() INLINE PrnInfoPagSetOrientation( hPrnInfo, DMORIENT_LANDSCAPE )
    METHOD SetPortrait()  INLINE PrnInfoPagSetOrientation( hPrnInfo, DMORIENT_PORTRAIT )
    
-   METHOD Say( nRow, nCol, cText ) 
+   METHOD Say( nRow, nCol, cText, nClrText, nClrBack, cFontName, nFontSize ) 
    METHOD SayAttr( nRow, nCol, cText, cFontName, cFontsize, nWidth, nHeight, nClrText, nClrBk, nPad )
    METHOD AutoPage() INLINE PrnInfoAutoPage( ::hPrnInfo )   
    
@@ -87,9 +87,19 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Say( nRow, nCol, cText ) CLASS TPrinter
+METHOD Say( nRow, nCol, cText, nClrText, nClrBack, cFontName, nFontSize ) CLASS TPrinter
 
-   @ ::RowPos( nRow ), nCol SAY cText OF Self
+   local oSay
+
+   @ ::RowPos( nRow ), nCol SAY oSay PROMPT cText OF Self
+
+   if nClrText != nil .and. nClrBack != nil
+      oSay:SetColor( nClrText, nClrBack )
+   endif
+
+   if cFontName != nil .and. nFontSize != nil
+      oSay:SetFont( cFontName, nFontSize )
+   endif
 
 return nil 
 
