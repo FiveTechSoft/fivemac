@@ -24,8 +24,8 @@ HB_FUNC( VIEWSETBACKCOLOR )
 {
     NSView * view = ( NSView * ) hb_parnl( 1 );
     NSColor * color = ( NSColor * ) hb_parnl( 2 );
-
-    [ view setBackgroundColor: color ];
+    view.layer.backgroundColor = color.CGColor;
+ //   [  view setBackgroundColor: color ];
 }
 
 HB_FUNC( VIEWSETSIZE )
