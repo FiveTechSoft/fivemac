@@ -297,6 +297,8 @@ CLASS TScintilla FROM TControl
 
    METHOD SetBackspaceUnindents( nSize ) INLINE ::Send( SCI_SETBACKSPACEUNINDENTS, nSize )
 
+   METHOD SetCaretLineBack( nColor ) INLINE ::Send( SCI_SETCARETLINEBACK, nColor )
+
    METHOD SetColorCaret( nColor, lVisible )
 
    METHOD SetColor( nClrText, nClrPane )
