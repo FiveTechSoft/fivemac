@@ -1388,19 +1388,12 @@ endif
    // ::Send( SCI_MARKERSETFORE, 1, CLR_WHITE )  // color folder
    // ::Send( SCI_MARKERSETBACK, 1, CLR_BLACK )
 
-
     ::Send( SCI_MARKERDEFINE, 4, SC_MARK_BOOKMARK )
    // ::Send( SCI_SETMARGINMASKN ,1,  4 )
 
-
-   ::Send( SCI_SETCARETLINEBACK, RGB( 255, 255, 192 ) )
+   ::Send( SCI_SETCARETLINEBACK, CLR_HCYAN )
    ::Send( SCI_SETCARETLINEVISIBLE, 1 )
 
-   // Color parentesis
-
-  // ::Send(SCI_BRACEHIGHLIGHTINDICATOR,0,2)
-  
-  
    ::SetHighlightColors()
 
 // ----------------Line number style.  ---------------------------
