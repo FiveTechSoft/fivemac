@@ -1,6 +1,10 @@
 #include <fivemac.h>
 #import <iTunes.h>
 
+void MsgAlert( NSString *, NSString * messageText );
+
+//-------------------------------------------------------
+
 HB_FUNC( APPNAME )
 {
 	NSString * path = [ [ NSBundle mainBundle ] bundlePath ];
@@ -163,6 +167,24 @@ HB_FUNC( MACEXEC )
             
         }
     }
+}
+
+HB_FUNC( OPENFILEWITHAPP )
+{
+     bool lresult = false ;
+    NSWorkspace * workspace;
+    
+    if( hb_pcount() == 2 )
+    {
+        workspace = [ [ [ NSWorkspace alloc ] init ] autorelease ];
+       
+        hb_retl( [ workspace openFile: hb_NSSTRING_par( 1 ) withApplication: hb_NSSTRING_par( 2 )  ] );
+      }
+    else
+    {
+        hb_retl( lresult ) ;
+    }
+   
 }
 
 
