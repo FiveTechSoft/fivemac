@@ -8,7 +8,7 @@ if [ $# = 0 ]; then
 fi
 
 echo compiling...
-./../../harbour/bin/harbour $1 -n -w -I./../include:./../../harbour/include $2
+./../../harbour/bin/darwin/clang/harbour $1 -n -w -I./../include:./../../harbour/include $2
 if [ $? = 1 ]; then
    exit
 fi   
@@ -67,9 +67,9 @@ WINNH3DLIB='-L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault
 
 #  add -arch ppc -arch i386 for universal binaries
 # -framework Scintilla
-#gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB
+#gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib/darwin/clang $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB
 
-gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB $CRTLIB/libz.tbd $CRTLIB/libpcre.tbd
+gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib/darwin/clang $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB $CRTLIB/libz.tbd $CRTLIB/libpcre.tbd
 
 #rm $1.c
 rm $1.o

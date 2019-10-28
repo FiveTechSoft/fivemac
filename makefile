@@ -166,11 +166,11 @@ SWIFT_OBJS =
 
 ./obj/%.c : ./source/classes/%.prg
 	if [ ! -d "obj" ]; then mkdir obj; fi
-	./../harbour/bin/harbour $< -o./$@ -n -I./../harbour/include -I./include
+	./../harbour/bin/darwin/clang/harbour $< -o./$@ -n -I./../harbour/include -I./include
 
 ./obj/%.c : ./source/function/%.prg
 	if [ ! -d "obj" ]; then mkdir obj; fi
-	./../harbour/bin/harbour $< -o./$@ -n -I./../harbour/include -I./include
+	./../harbour/bin/darwin/clang/harbour $< -o./$@ -n -I./../harbour/include -I./include
 
 ./objs/%.o : ./source/swift/%.swift
 	if [ ! -d "objs" ]; then mkdir objs; fi
