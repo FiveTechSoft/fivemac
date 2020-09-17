@@ -299,6 +299,46 @@ HB_FUNC( CHOOSEFILE )
         hb_retc( "" );	   
 } 
 
+HB_FUNC( CHOOSEFOLDER )
+{
+   NSString * types = hb_NSSTRING_par( 2 );     
+   NSOpenPanel * op = [ NSOpenPanel openPanel ];  //[ [ NSOpenPanel alloc ] init ];
+
+   [ op setCanChooseFiles: NO ];
+   [ op setCanChooseDirectories: YES ];
+   [ op setPrompt: @"Ok" ];
+
+   if( ! HB_ISCHAR( 1 ) )	
+      [ op setTitle: @"Please select a folder" ];
+   else
+      [ op setTitle: hb_NSSTRING_par( 1 ) ];
+    
+   if( ! [ types isEqualToString : @"" ] )
+   {
+      NSMutableArray * fileTypes;
+
+      if( [ types containsString: @"," ] )
+      {
+         fileTypes = [ [ NSMutableArray alloc ] init ]; 
+         [ fileTypes addObjectsFromArray: [ types componentsSeparatedByString: @"," ] ];
+         [ fileTypes addObjectsFromArray: [ [ types uppercaseString ] componentsSeparatedByString: @"," ] ];
+      }   
+      else
+         fileTypes = [ [ NSMutableArray alloc ] initWithObjects: types, [ types uppercaseString ], nil ];
+     
+      [ op setAllowedFileTypes: fileTypes ];
+   }
+        
+    if( [ op runModal ] == NSModalResponseOK  )
+    {
+       NSString * source = [ [ [ [ op URLs ] objectAtIndex: 0 ] path ] stringByRemovingPercentEncoding ];
+    
+       hb_retc( [ source cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
+    }  
+    else
+        hb_retc( "" );	   
+} 
+
 HB_FUNC( CHOOSEFILEURL )
 {
    NSOpenPanel * op = [ [ NSOpenPanel alloc ] init ];
