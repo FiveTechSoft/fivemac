@@ -159,7 +159,7 @@ HB_FUNC( GETCREATE )
 {
    Get * edit = [ [ Get alloc ] 
  			  initWithFrame : NSMakeRect( hb_parnl( 2 ), hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 4 ) ) ];
-   NSWindow * window = ( NSWindow * ) hb_parnl( 5 );
+   NSWindow * window = ( NSWindow * ) hb_parnll( 5 );
 
    [ GetView( window ) addSubview : edit ];
    [ edit setDelegate: edit ];
@@ -169,17 +169,17 @@ HB_FUNC( GETCREATE )
 
 HB_FUNC( GETRESCREATE ) 
 {
-   NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
+   NSWindow * window = ( NSWindow * ) hb_parnll( 1 );
    Get * edit  = ( Get * ) [ GetView( window ) viewWithTag: hb_parnl( 2 ) ];
     
    [ edit setDelegate: edit ];
     
- 	 hb_retnl( ( HB_LONG ) edit );	 			
+ 	 hb_retnll( ( HB_LONG ) edit );	 			
 }  
 
 HB_FUNC( GETSETTEXT )
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSString * string =  hb_NSSTRING_par( 2 ) ;
   
   [ get setStringValue: string ];
@@ -187,7 +187,7 @@ HB_FUNC( GETSETTEXT )
 
 HB_FUNC( GETSETNUMBER )
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSString * string ;
     string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding :  NSWindowsCP1252StringEncoding ] autorelease ];
     
@@ -217,7 +217,7 @@ HB_FUNC( GETSETNUMBER )
 
 HB_FUNC( GETGETTEXT ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSString * string = [ get stringValue ];
    
    hb_retc( [ string cStringUsingEncoding: NSWindowsCP1252StringEncoding ] );
@@ -225,7 +225,7 @@ HB_FUNC( GETGETTEXT ) // hGet --> cText
 
 HB_FUNC( GETSETTOEND ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = { [[get stringValue ] length], 0 };
    
    [ [ get currentEditor ] setSelectedRange: range ];
@@ -234,7 +234,7 @@ HB_FUNC( GETSETTOEND ) // hGet --> cText
 HB_FUNC( GETGETPOS ) // hGet --> cText
 {
    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070	
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = [ [ get currentEditor ] selectedRange ];
    
    hb_retni( range.location );
@@ -244,7 +244,7 @@ HB_FUNC( GETGETPOS ) // hGet --> cText
 HB_FUNC( GETGETENDSELPOS ) // hGet --> cText
 {
    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1070	
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = [ [ get currentEditor ] selectedRange ];
    
    hb_retni( range.location + range.length );
@@ -253,7 +253,7 @@ HB_FUNC( GETGETENDSELPOS ) // hGet --> cText
 
 HB_FUNC( GETSETTOSTART ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = { 0, 0 };
    
    [ [ get currentEditor ] setSelectedRange: range ];
@@ -261,7 +261,7 @@ HB_FUNC( GETSETTOSTART ) // hGet --> cText
 
 HB_FUNC( GETSETTO ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = { hb_parni( 2 ), 0 };
    
    [ [ get currentEditor ] setSelectedRange: range ];
@@ -269,7 +269,7 @@ HB_FUNC( GETSETTO ) // hGet --> cText
 
 HB_FUNC( GETSETSELRANGE ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = { hb_parni( 2 ), hb_parni( 3 ) };
    
    [ [ get currentEditor ] setSelectedRange: range ];
@@ -277,7 +277,7 @@ HB_FUNC( GETSETSELRANGE ) // hGet --> cText
 
 HB_FUNC( GETSETSELALL ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = { 0, [ [ get stringValue ] length ] };
    
    [ [ get currentEditor ] setSelectedRange: range ];
@@ -285,21 +285,21 @@ HB_FUNC( GETSETSELALL ) // hGet --> cText
 
 HB_FUNC( GETDELSELECTED ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
 
    [ [ get currentEditor ] delete: nil ];
 }
 
 HB_FUNC( GETCOPYSELECTED ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    
    [ [ get currentEditor ] copy: nil ];
 }
 
 HB_FUNC( GETPASTEIN ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSRange range = { hb_parni( 2 ), 0 };
    
    [ [ get currentEditor ] setSelectedRange: range ];
@@ -308,7 +308,7 @@ HB_FUNC( GETPASTEIN ) // hGet --> cText
 
 HB_FUNC( GETCUTSELECTED ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    
    [ [ get currentEditor] cut: nil ];
 }
@@ -404,7 +404,7 @@ HB_FUNC( GETCUTSELECTED ) // hGet --> cText
 
 HB_FUNC( GETSETPLACEHOLDER )
 {
- NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+ NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
  NSString * placeHolder = hb_NSSTRING_par( 2 );
  [ [ get cell] setPlaceholderString: placeHolder ];
  }
@@ -412,7 +412,7 @@ HB_FUNC( GETSETPLACEHOLDER )
 
 HB_FUNC( GETSETPICTURE ) 
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSHarbourFormatter * formatter = [ [ [ NSHarbourFormatter alloc ] init ] autorelease ];	
 
    formatter->get = get;
@@ -422,7 +422,7 @@ HB_FUNC( GETSETPICTURE )
 
 HB_FUNC( GETSETCURRENCY ) // hGet --> cText
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSNumberFormatter * formatter = [ [ [ NSNumberFormatter alloc ] init ]
                                      autorelease ];
     [ formatter setNumberStyle: NSNumberFormatterCurrencyStyle  ];
@@ -432,7 +432,7 @@ HB_FUNC( GETSETCURRENCY ) // hGet --> cText
 
 HB_FUNC( GETSETNUMERIC ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSNumberFormatter * formatter = [ [ NSNumberFormatter alloc ] init ] ;
    [ formatter setNumberStyle: NSNumberFormatterNoStyle ];
    [ [ get cell ] setFormatter: formatter ];
@@ -440,7 +440,7 @@ HB_FUNC( GETSETNUMERIC ) // hGet --> cText
 
 HB_FUNC( GETSETNUMMAX ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSNumberFormatter * formatter = [ [get cell ] formatter ];
     
    [ formatter setMaximum: [ NSNumber numberWithInt: hb_parni( 2 ) ] ];
@@ -450,7 +450,7 @@ HB_FUNC( GETSETNUMMAX ) // hGet --> cText
 
 HB_FUNC( GETSETNUMMIN ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSNumberFormatter * formatter = [ [get cell ] formatter ];
     
    [formatter setMinimum: [ NSNumber numberWithInt: hb_parni( 2 ) ] ];
@@ -459,7 +459,7 @@ HB_FUNC( GETSETNUMMIN ) // hGet --> cText
 
 HB_FUNC( GETSETDECMAX ) // hGet --> cText
 {
-   NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
    NSNumberFormatter * formatter = [ [get cell] formatter ];
     
    [ formatter setMaximumFractionDigits: ( NSUInteger ) [ NSNumber numberWithInt: hb_parni( 2 ) ] ];
@@ -468,7 +468,7 @@ HB_FUNC( GETSETDECMAX ) // hGet --> cText
 
 HB_FUNC( GETSETNUMBERFORMAT ) // hGet --> cText
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSNumberFormatter * formatter = [ [get cell] formatter ];
     NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding : NSUTF8StringEncoding ] autorelease ];
     [ formatter setFormat: string  ];
@@ -477,7 +477,7 @@ HB_FUNC( GETSETNUMBERFORMAT ) // hGet --> cText
 
 HB_FUNC( GETGETNUMBERFORMAT ) // hGet --> cText
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSNumberFormatter * formatter = [ [get cell] formatter ];
     NSString * string = [ formatter format ];
         hb_retc( [ string cStringUsingEncoding:   NSWindowsCP1252StringEncoding  ] );
@@ -485,7 +485,7 @@ HB_FUNC( GETGETNUMBERFORMAT ) // hGet --> cText
 
 HB_FUNC( GETSETGROUPSEPARATOR ) // hGet --> cText
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSNumberFormatter * formatter = [ [get cell ] formatter ];
     NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding : NSUTF8StringEncoding ] autorelease ];
     [ formatter setGroupingSeparator: string  ];
@@ -494,7 +494,7 @@ HB_FUNC( GETSETGROUPSEPARATOR ) // hGet --> cText
 
 HB_FUNC( GETSETGROUPSIZE ) // hGet --> cText
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSNumberFormatter * formatter = [ [get cell ] formatter ];
    [ formatter setGroupingSize: hb_parni(2)  ];
     [ [get cell ] setFormatter: formatter ];
@@ -502,7 +502,7 @@ HB_FUNC( GETSETGROUPSIZE ) // hGet --> cText
 
 HB_FUNC( GETSETGROUPUSES ) // hGet --> cText
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSNumberFormatter * formatter = [ [get cell ] formatter ];
     [ formatter  setUsesGroupingSeparator : YES ];
     [ [get cell ] setFormatter: formatter ];
@@ -511,15 +511,15 @@ HB_FUNC( GETSETGROUPUSES ) // hGet --> cText
 
 HB_FUNC( TXTAUTOAJUST )
 {
-   NSTextField * texto = ( NSTextField * ) hb_parnl( 1 );
+   NSTextField * texto = ( NSTextField * ) hb_parnll( 1 );
 	 
 	 [ texto setAutoresizingMask: hb_parnl( 2 )  ];	
 }
 
 HB_FUNC( TXTSETFOCUS )
 {
-   NSWindow * window = ( NSWindow * ) hb_parnl( 1 ); 
-   NSTextField * texto = ( NSTextField * ) hb_parnl( 2 );
+   NSWindow * window = ( NSWindow * ) hb_parnll( 1 ); 
+   NSTextField * texto = ( NSTextField * ) hb_parnll( 2 );
    
    [ window makeFirstResponder: texto ];
 }
@@ -548,7 +548,7 @@ HB_FUNC( ISCONTROLKEYPRESSED )
 HB_FUNC( CHOOSESHEETTXT )
 {
    #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
-    NSTextField * texto = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * texto = ( NSTextField * ) hb_parnll( 1 );
     NSString * string = hb_NSSTRING_par( 2 );
       
     NSOpenPanel* panel = [NSOpenPanel openPanel];
@@ -589,15 +589,15 @@ HB_FUNC( CHOOSESHEETTXT )
 
 HB_FUNC( GETSETFORMATTER )
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
-    NSFormatter *formatter =( NSFormatter * ) hb_parnl( 2 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
+    NSFormatter *formatter =( NSFormatter * ) hb_parnll( 2 );
      [ [get cell] setFormatter: formatter ];
 }
 
 
 HB_FUNC( GETSETDATEFORMATSHORT )
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [ [get cell] setFormatter: formatter ];
@@ -605,7 +605,7 @@ HB_FUNC( GETSETDATEFORMATSHORT )
 
 HB_FUNC( GETSETDATEFORMATMEDIUM )
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSDateFormatter *formatter =  [[[NSDateFormatter alloc] init ] autorelease ];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [ [get cell] setFormatter: formatter ];
@@ -613,7 +613,7 @@ HB_FUNC( GETSETDATEFORMATMEDIUM )
 
 HB_FUNC( GETSETTIMEFORMATSHORT )
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     [ [get cell] setFormatter: formatter ];
@@ -621,7 +621,7 @@ HB_FUNC( GETSETTIMEFORMATSHORT )
 
 HB_FUNC( GETSETTIMEFORMATMEDIUM )
 {
-    NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
+    NSTextField * get = ( NSTextField * ) hb_parnll( 1 );
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setTimeStyle:NSDateFormatterMediumStyle];
     [ [get cell] setFormatter: formatter ];
