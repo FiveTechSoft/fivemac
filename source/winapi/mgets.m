@@ -96,6 +96,14 @@ HB_FUNC( TXTSETTEXT )
    [ memo setString : string ];
 }  
 
+HB_FUNC( TXTSETUTF8TEXT )
+{
+    TextView * memo = ( TextView * ) hb_parnl( 1 );
+    NSString * string = [ [ [ NSString alloc ] initWithCString: HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "" encoding:  NSUTF8StringEncoding ] autorelease ];
+   
+   [ memo setString : string ];
+}
+
 HB_FUNC( TXTSETATTRIBUTEDSTRING )
 {
    TextView * memo = ( TextView * ) hb_parnl( 1 );
