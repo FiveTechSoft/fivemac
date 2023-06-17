@@ -20,6 +20,8 @@ function Main()
       HEADERS "Image", "Last", "First" ;
       OF oWnd SIZE 672, 363 ALIAS Alias()
 
+   oWnd:bResized = { || oBrw:SetSize( oWnd:nWidth - 40, oWnd:nHeight - 90 ) }   
+
    @ 8,  10 BUTTON "Top"    OF oWnd ACTION oBrw:GoTop()
    @ 8, 130 BUTTON "Bottom" OF oWnd ACTION oBrw:GoBottom()
    @ 8, 250 BUTTON "Delete" OF oWnd ACTION oBrw:SetColWidth( 2, 300 )
