@@ -20,6 +20,8 @@ CLASS TCheckBox FROM TControl
    METHOD Click()
    
    METHOD GetText() INLINE BtnGetText( ::hWnd )
+
+   METHOD SetCheck( lOnOff ) INLINE ChkSetState( ::hWnd, lOnOff )
    
    METHOD SetText( cText ) INLINE BtnSetText( ::hWnd, cText )
    
