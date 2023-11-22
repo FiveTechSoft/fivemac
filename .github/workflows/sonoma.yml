@@ -1,0 +1,16 @@
+name: Sonoma Terminal Action
+
+on: [push]
+
+jobs:
+  run-sonoma:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run Sonoma Terminal
+      run: |
+        # Your Sonoma terminal commands here
+        echo "Hello from Sonoma terminal!"
