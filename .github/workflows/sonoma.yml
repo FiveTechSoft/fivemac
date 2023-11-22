@@ -1,6 +1,6 @@
 name: Sonoma Terminal Action
 
-on: [push]
+on: [workflow_dispatch]
 
 jobs:
   run-sonoma:
