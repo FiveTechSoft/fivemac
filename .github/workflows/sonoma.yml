@@ -10,6 +10,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Get macOS version and machine architecture
+      run: |
+        # Get macOS version
+        os_version=$(sw_vers -productVersion)
+        echo "macOS version: $os_version"
+
+        # Get machine architecture
+        machine_arch=$(uname -m)
+        echo "Machine architecture: $machine_arch"
+
     - name: Run Sonoma Terminal
       run: |
         # Your Sonoma terminal commands here
