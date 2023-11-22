@@ -4,7 +4,7 @@ on: [workflow_dispatch]
 
 jobs:
   run-sonoma:
-    runs-on: macos-12-large
+    runs-on: macos-latest
 
     steps:
     - name: Checkout repository
