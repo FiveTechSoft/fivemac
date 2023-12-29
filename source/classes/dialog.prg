@@ -13,7 +13,7 @@
 CLASS TDialog FROM TWindow
 
    METHOD New( nTop, nLeft, nBottom, nRight, cTitle, lTextured, lPaneled,;
-               nWidth, nHeight ,lflipped )
+               nWidth, nHeight, lflipped, cResName )
 
    METHOD Activate( bLClicked, bValid, lModeless, lCentered, bInit, bRClicked,;
                     bResized )
@@ -22,30 +22,31 @@ ENDCLASS
 
 //----------------------------------------------------------------------------//
 
-METHOD New( nTop, nLeft, nBottom, nRight, cTitle, lTextured, lPaneled ,nWidth, nHeight ,lflipped ) CLASS TDialog
+METHOD New( nTop, nLeft, nBottom, nRight, cTitle, lTextured, lPaneled ,nWidth, nHeight,;
+            lFlipped, cResName ) CLASS TDialog
 
    DEFAULT nTop := 300, nLeft := 300, nBottom := 700, nRight := 800,;
-                 cTitle := "FiveMac", lTextured := .f., lPaneled := .f. ,;
-                 lflipped:= .f.
+           cTitle := "FiveMac", lTextured := .f., lPaneled := .f. ,;
+           lFlipped:= .f.
 
-   ::lflipped:= lflipped
+   ::lFlipped := lFlipped
     
-   ::hWnd = WndCreate( nTop, nLeft, nRight - nLeft, nBottom - nTop,;
-                       nOr( NSTitledWindowMask, NSClosableWindowMask,;
-	                     NSMiniaturizableWindowMask,;
-					             If( lTextured, NSTexturedBackgroundWindowMask, 0 ),;
-					             If( lPaneled, NSUtilityWindowMask, 0 ) ) )
-  
+   if ! Empty( cResName )
+      ::hWnd = WndFromNib( cResName )
+   else   
+      ::hWnd = WndCreate( nTop, nLeft, nRight - nLeft, nBottom - nTop,;
+                          nOr( NSTitledWindowMask, NSClosableWindowMask,;
+	                       NSMiniaturizableWindowMask,;
+				              If( lTextured, NSTexturedBackgroundWindowMask, 0 ),;
+				              If( lPaneled, NSUtilityWindowMask, 0 ) ) )
+   endif                        
  
    if nWidth != nil .or. nHeight!= nil
-        ::SetSize( nWidth, nHeight )
+      ::SetSize( nWidth, nHeight )
    endif   
-
     
    ::aControls = {}
-
    WndSetText( ::hWnd, cTitle )
-
    AAdd( GetAllWin(), Self )
    SetWndDefault( Self )
 

@@ -765,16 +765,14 @@ HB_FUNC( WNDSHOW ) // hWnd
    [ NSApp activateIgnoringOtherApps: YES ];         
 } 
     
-HB_FUNC( WNDENABLE ) // hWnd [, lOnOff ] --> lOnOff
+HB_FUNC( WNDENABLE ) // hWnd [, lOnOff ]
 {
-   /*	
-   NSWindow * window = ( NSWindow * ) hb_parnl( 1 );
+   NSWindow * window = ( NSWindow * ) hb_parnll( 1 );
 
-   if( ISLOG( 2 ) )
-      [ window setEnabled : hb_parl( 2 ) ];
-   
-   hb_retl( [ window enabled ] );
-   */
+   if( hb_parl( 2 ) )
+      [ window setIgnoresMouseEvents: YES ];
+   else   
+      [ window setIgnoresMouseEvents: NO ];
 }   
 
 HB_FUNC( WNDSETMSGBAR )

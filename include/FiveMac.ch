@@ -90,15 +90,16 @@ REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
 
 #xcommand DEFINE DIALOG <oDlg> ;
              [ TITLE <cTitle> ] ;
-		         [ FROM <nTop>, <nLeft> TO <nBottom>, <nRight> ] ;
+		       [ FROM <nTop>, <nLeft> TO <nBottom>, <nRight> ] ;
              [ SIZE <nWidth>, <nHeight> ] ;
              [ <textured: TEXTURED> ] ; 
-		         [ <paneled: PANELED> ] ;  
+		       [ <paneled: PANELED> ] ;  
              [ <flipped: FLIPPED> ] ; 
+             [ RESOURCE <cResName> ] ;
           => ;
-	           <oDlg> := TDialog():New( <nTop>, <nLeft>, <nBottom>, <nRight>,;
+	          <oDlg> := TDialog():New( <nTop>, <nLeft>, <nBottom>, <nRight>,;
              <cTitle>, [<.textured.>], [<.paneled.>], [<nWidth>], [<nHeight>],;
-             [<.flipped.>] )
+             [<.flipped.>], [<cResName>] )
 
 #xcommand ACTIVATE DIALOG <oDlg> ;
              [ ON [ LEFT ] CLICK <uLClicked> ] ;

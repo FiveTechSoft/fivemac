@@ -12,7 +12,8 @@ function Main()
 
    DEFINE WINDOW oWnd 
 
-   @ 20, 20 BUTTON "Dialog from resource" SIZE 180, 20 ACTION Test()
+   @ 20, 20 BUTTON "Dialog from resource" SIZE 180, 20 ;
+      ACTION Test()
 
    ACTIVATE WINDOW oWnd
 
@@ -57,7 +58,7 @@ function Test()
    local onode1,onode2,onode3,onode4
    local osay 
    
-   DEFINE WINDOW oWnd RESOURCE "hola"
+   DEFINE DIALOG oWnd RESOURCE "hola"
 
    REDEFINE GET oGet VAR cText ID 10 OF oWnd
 
@@ -113,7 +114,7 @@ function Test()
    oGEt:bChanged := { | ele | osay:SetText(ele:GetText() ),.t.  }
    */
 
-   ACTIVATE WINDOW oWnd ;
+   ACTIVATE DIALOG oWnd ;
       ON CLICK oWnd:SetText( Time() )
 
 return nil   

@@ -137,7 +137,9 @@ CLASS TWindow
 
    METHOD FindControl( hWnd )
 
-   METHOD Enable( lOnOff ) INLINE WndEnable( ::hWnd, lOnOff )
+   METHOD Disable() INLINE WndEnable( ::hWnd, .F. )
+
+   METHOD Enable() INLINE WndEnable( ::hWnd, .T. )
    
    METHOD FullScreen() INLINE WndfullScreen( ::hWnd )
    
@@ -359,6 +361,7 @@ METHOD End() CLASS TWindow
 return nil
 
 //----------------------------------------------------------------------------//
+
 METHOD CursorChange() CLASS TWindow
 
 //msginfo("yo")
@@ -366,6 +369,7 @@ METHOD CursorChange() CLASS TWindow
 Return nil
 
 //----------------------------------------------------------------------------//
+
 METHOD AnimaShake( nShakes, nTime, nVigourOfShake ) CLASS TWindow
 
    DEFAULT nShakes := 10, nTime := 0.8, nVigourOfShake := 1 
