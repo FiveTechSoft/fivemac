@@ -1,35 +1,12 @@
 #include <fivemac.h>
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
-   @interface View : NSView <NSWindowDelegate>
-#else
-   @interface View : NSView
-#endif
-{
- //  @public NSWindow * hWnd;	
-}
-- ( BOOL ) windowShouldClose : ( NSNotification * ) notification;
-- ( void ) windowWillClose: ( NSNotification * ) notification;
-- ( void ) mouseDown : ( NSEvent *  ) theEvent;
-- ( void ) mouseMoved : ( NSEvent *  ) theEvent;
-- ( void ) keyDown : ( NSEvent *  ) theEvent;
-- ( void ) MenuItem : ( id ) sender;
-- ( void ) BtnClick : ( id ) sender;
-- ( void ) CbxChange : ( id ) sender;
-- ( void ) ChkClick : ( id ) sender;
-- ( void ) RadClick : ( id ) sender;
-- ( void ) TbrClick : ( id ) sender;
-- ( void ) OnTimerEvent : ( NSTimer * ) timer;
-- ( void ) SliderChanged : (id) sender;
-@end
-
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
    @interface Get : NSTextField <NSTextFieldDelegate>
 #else
    @interface Get : NSTextField
 #endif
 {
- //  @public NSWindow * hWnd;	
+   @public NSWindow * hWnd;	
 }
 - ( BOOL ) textShouldEndEditing : ( NSText * ) text;
 - ( void ) controlTextDidChange : ( NSNotification * ) aNotification;	
@@ -40,24 +17,24 @@ HB_FUNC( WNDFROMNIB )
    NSString * string = hb_NSSTRING_par( 1 ) ;
    NSWindowController * wndController = [ [ NSWindowController alloc ] initWithWindowNibName : string ];
    NSWindow * window = [ wndController window ];
-      
    NSArray * controls = [ [ window contentView ] subviews ];
+   int i;
    View * view = [ [ View alloc ] init ];
 
-  
-   [ window setContentView : view ];
+   // [ window setContentView : view ];
+   // [ window setDelegate : view ];
+   view->hWnd = window;
+   
    [ window setDelegate : view ];
-  //  view->hWnd = window ;
 
-   while( [ controls count ] > 0 )
+   for( i = 0; i < [ controls count ]; i++ )
    {
-      NSControl * control = [ controls objectAtIndex : 0 ];
+      NSControl * control = [ controls objectAtIndex : i ];
       NSString * className = [ control className ];
        
-      // NSRunAlertPanel( [ control className ] ,@"yo", @"view", [ control className ], NULL );             
+      NSRunAlertPanel( [ control className ], NULL, NULL, NULL, NULL );             
    
-       [ view addSubview : control ];
-      
+      [ view addSubview : control ];
             
     //  if( [ className isEqual : @"NSButton" ] )
     //  {
@@ -73,18 +50,15 @@ HB_FUNC( WNDFROMNIB )
     //     get->hWnd = window;
     //     [ get setDelegate : get ];
     //  }  
-     
-          
-        
        
-       if( [ className isEqual : @"TextView" ] )
-       {
-           Get * get = ( Get * ) control;
-         //  get->hWnd = window;
-           [ get setDelegate : get ];
-       }  
-       
-          
+      /* 
+      if( [ className isEqual : @"TextView" ] )
+      {
+         Get * get = ( Get * ) control;
+      //  get->hWnd = window;
+         [ get setDelegate : get ];
+      } 
+      */ 
        
      //  if( [ className isEqual : @"NSSlider" ] )
      //  {
@@ -92,7 +66,6 @@ HB_FUNC( WNDFROMNIB )
      //      
      //      [ control setAction : @selector( SliderChanged: ) ];
      //  }  
-     
      
      //  if( [ className isEqual : @"NSScrollView" ] )
      //  {
@@ -104,12 +77,9 @@ HB_FUNC( WNDFROMNIB )
      // 			  NSRunAlertPanel( @"outline" ,@"yo", @"view", NULL , NULL );  
      //		 	 }
      //	 }  
-            
    }           	
 
- // NSRunAlertPanel( @"pausa" ,@"yo", @"view", NULL, NULL ); 
-    
-   hb_retnl( ( HB_LONG ) window );	
+   hb_retnll( ( HB_LONG ) window );	
 }
 
 
@@ -140,4 +110,3 @@ HB_FUNC( WNDGETIDENTFROMNIB )
    return hb_retnl( ( HB_LONG ) -1 );	
    #endif
 }
-
