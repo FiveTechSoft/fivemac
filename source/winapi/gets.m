@@ -4,22 +4,6 @@ static PHB_SYMB symFMH = NULL;
 
 void MsgAlert( NSString *, NSString * messageText );
 
-
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1060	
-   @interface Get : NSTextField
-#else
-   @interface Get : NSTextField <NSTextFieldDelegate>
-#endif
-{
-}
-- ( BOOL ) textShouldEndEditing : ( NSText * ) text;
-- ( void ) controlTextDidChange : ( NSNotification * ) aNotification;
-- ( void ) controlTextDidEndEditing:(NSNotification *) aNotification;
-- (BOOL)   acceptsFirstResponder;
-- ( void ) keyUp : ( NSEvent * ) theEvent;
-- (BOOL) performKeyEquivalent: (NSEvent*) theEvent ;
-@end
-
 @implementation Get
 - ( BOOL ) textShouldEndEditing : ( NSText * ) text
 {
