@@ -4,14 +4,15 @@
 
 #include "FiveMac.ch"
 
+//----------------------------------------------------------------------------//
+
 function Main()
 
-   local oWnd,obtn
+   local oWnd
 
    DEFINE WINDOW oWnd 
 
- //  REDEFINE BUTTON obtn ID 10 OF oWnd ACTION primer()
-@ 20, 20 BUTTON "Another" ACTION primer()
+   @ 20, 20 BUTTON "Dialog from resource" SIZE 180, 20 ACTION Test()
 
    ACTIVATE WINDOW oWnd
 
@@ -42,76 +43,79 @@ function Another()
    
 return nil  
 
-
 //----------------------------------------------------------------------------//
 
-function primer()
+function Test()
 
-local oWnd 
-local oGet, cText := "Hello world", oBtn
-local oChk, lTest := .T.
-local oCbx, cVar  := "One"
-local oSlide3,oseg ,Obrw
-local oNode ,out
-local ldisclo:= .f.
- local onode1,onode2,onode3,onode4
-local osay 
- 
-DEFINE WINDOW oWnd RESOURCE "hola"
-
-REDEFINE BUTTON oBtn ID 10 OF oWnd ACTION oWnd:end()
-
+   local oWnd 
+   local oGet, cText := "Hello world", oBtn
+   local oChk, lTest := .T.
+   local oCbx, cVar  := "One"
+   local oSlide3,oseg ,Obrw
+   local oNode ,out
+   local ldisclo:= .f.
+   local onode1,onode2,onode3,onode4
+   local osay 
    
-    REDEFINE SLIDER oSlide3 ID 22 VALUE 100 OF oWnd 
+   DEFINE WINDOW oWnd RESOURCE "hola"
+
+   REDEFINE GET oGet VAR cText ID 10 OF oWnd
+
+   REDEFINE CHECKBOX oCbx VAR lTest ID 20 OF oWnd
+
+   REDEFINE BUTTON oBtn ID 30 OF oWnd ACTION MsgInfo( lTest )
+
+   /*
+      REDEFINE SLIDER oSlide3 ID 22 VALUE 100 OF oWnd 
+
+      oSlide3:bChange := {||   msginfo(str(oSlide3:GetValue())) } 
+
+      REDEFINE SEGMENTBTN oSeg  ID 18 OF oWnd
+      oseg:bAction :=   {|ele| msginfo("Boton"+str(ele)) } 
+
+      REDEFINE CHECKBOX oChk VAR lTest  ID 16 ;
+      OF oWnd ;
+      ON CHANGE (ldisclo:= !ldisclo, Out:Setdisclo(ldisclo),out:refresh() )
+      
+      DEFINE ROOTNODE oNode
+      
+         DEFINE NODE oNode1 PROMPT "Casa" OF oNode  GROUP
+         DEFINE NODE oNode2 PROMPT "Coche" OF oNode GROUP
+         
+         DEFINE NODE oNode3 PROMPT "cocina" OF oNode1 
+         DEFINE NODE oNode4 PROMPT "rueda"  OF oNode2 
+      
+      ACTIVATE ROOTNODE oNode  
+      
+      REDEFINE OUTLINE Out ID 77 OF oWnd ;
+      NODE oNode ;
+      
+      out:bAction:=  {||  msginfo(out:GetSelectName()) }
+
+      // USE ./test
+
+      REDEFINE BROWSE oBrw ID 44 ;
+      FIELDS If( Int( RecNo() % 2 ) == 0, "./../bitmaps/ok.png", "./../bitmaps/alert.png" ), Test->Last, Test->First ;
+      HEADERS "Image", "Last", "First" ;
+      OF oWnd ALIAS Alias()
 
 
-    oSlide3:bChange := {||   msginfo(str(oSlide3:GetValue())) } 
+   //oBrw:SetColBmp( 1 ) // Column 3 will display images
 
-    REDEFINE SEGMENTBTN oSeg  ID 18 OF oWnd
-    oseg:bAction :=   {|ele| msginfo("Boton"+str(ele)) } 
+   oBrw:bHeadClick:= { | obj , nindex| if(nindex== 1, msginfo("clickada cabecera"+str(nindex)),)  } 
 
-    REDEFINE CHECKBOX oChk VAR lTest  ID 16 ;
-    OF oWnd ;
-    ON CHANGE (ldisclo:= !ldisclo, Out:Setdisclo(ldisclo),out:refresh() )
+   oBrw:bChange := { | obj , nindex|   msginfo("cambio a reg:"+str(obj:nRowPos()) ) } 
 
-    
-    DEFINE ROOTNODE oNode
-   
-       DEFINE NODE oNode1 PROMPT "Casa" OF oNode  GROUP
-       DEFINE NODE oNode2 PROMPT "Coche" OF oNode GROUP
-       
-       DEFINE NODE oNode3 PROMPT "cocina" OF oNode1 
-       DEFINE NODE oNode4 PROMPT "rueda"  OF oNode2 
-   
-   ACTIVATE ROOTNODE oNode  
-    
-   REDEFINE OUTLINE Out ID 77 OF oWnd ;
-   NODE oNode ;
-    
-   out:bAction:=  {||  msginfo(out:GetSelectName()) }
+   REDEFINE SAY osay  ID 19  OF oWnd  
 
-   USE ./Test
+   REDEFINE GET oGet VAR cText ID 29 OF oWnd  
 
-   REDEFINE BROWSE oBrw ID 44 ;
-   FIELDS If( Int( RecNo() % 2 ) == 0, "./../bitmaps/ok.png", "./../bitmaps/alert.png" ), Test->Last, Test->First ;
-   HEADERS "Image", "Last", "First" ;
-    OF oWnd ALIAS Alias()
+   oGEt:bChanged := { | ele | osay:SetText(ele:GetText() ),.t.  }
+   */
 
-
- //oBrw:SetColBmp( 1 ) // Column 3 will display images
-
-oBrw:bHeadClick:= { | obj , nindex| if(nindex== 1, msginfo("clickada cabecera"+str(nindex)),)  } 
-
-oBrw:bChange := { | obj , nindex|   msginfo("cambio a reg:"+str(obj:nRowPos()) ) } 
-
-REDEFINE SAY osay  ID 19  OF oWnd  
-
-REDEFINE GET oGet VAR cText ID 29 OF oWnd  
-
-oGEt:bChanged := { | ele | osay:SetText(ele:GetText() ),.t.  }
-
-
-ACTIVATE WINDOW oWnd ;
-ON CLICK oWnd:SetText( Time() )
+   ACTIVATE WINDOW oWnd ;
+      ON CLICK oWnd:SetText( Time() )
 
 return nil   
+
+//----------------------------------------------------------------------------//
