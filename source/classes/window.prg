@@ -174,6 +174,8 @@ CLASS TWindow
    METHOD SetAutoresizesSubViews( lOnOff ) INLINE SetAutoresizesSubviews( ::hWnd, lOnOff )
    
    METHOD SetEventCode( cCode )
+
+   METHOD BringToTop() INLINE WndBringToTop( ::hWnd )   
    
    METHOD SetPos( nRow, nCol ) INLINE WndSetPos( ::hWnd, nRow, nCol )
   
@@ -316,7 +318,7 @@ return If( nAt != 0, ::aControls[ nAt ],)
 
 //----------------------------------------------------------------------------//
 
-METHOD DefControl( oCtrl ) CLASS TWindow
+METHOD DefControl( oCtrl, nId ) CLASS TWindow
 
    // DEFAULT oCtrl:nId := oCtrl:GetNewId()
 
@@ -327,7 +329,7 @@ METHOD DefControl( oCtrl ) CLASS TWindow
       //                     "No: " + Str( oCtrl:nId, 6 ) ) )
    else
       AAdd( ::aControls, oCtrl )
-      oCtrl:hWnd = 0
+      oCtrl:hWnd = WndGetControl( ::hWnd, nId )
    endif
 
 return nil 

@@ -2,8 +2,6 @@
 
 static PHB_SYMB symFMH = NULL;
 
-void MsgAlert( NSString *, NSString * messageText );
-
 @implementation Get
 - ( BOOL ) textShouldEndEditing : ( NSText * ) text
 {

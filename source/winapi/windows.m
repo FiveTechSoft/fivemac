@@ -1032,3 +1032,9 @@ HB_FUNC( WINDOWPRINT )
    [ [ window contentView ] print: window ] ;
     
 } 
+
+HB_FUNC( WNDBRINGTOTOP )
+{
+   NSWindow * window = ( NSWindow * ) hb_parnll( 1 );
+   [ window setLevel: NSFloatingWindowLevel ];   
+}

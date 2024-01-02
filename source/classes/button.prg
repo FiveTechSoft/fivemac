@@ -149,7 +149,7 @@ METHOD Redefine( nId, oWnd, bAction ) CLASS TButton
    ::oWnd    = oWnd
    ::bAction = bAction
 
-   oWnd:DefControl( Self )
+   oWnd:DefControl( Self, nId )
 
 return Self
 
