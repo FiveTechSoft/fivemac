@@ -21,37 +21,30 @@ static PHB_SYMB symFMH = NULL;
 }
 
 - ( void ) controlTextDidEndEditing : ( NSNotification * ) aNotification
-    {
-        if( symFMH == NULL )
-        symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMO" ) );
-        
-        hb_vmPushSymbol( symFMH );
-        hb_vmPushNil();
-        hb_vmPushLong( ( HB_LONG ) [ self window ] );
-        hb_vmPushLong( WM_GETLOSTFOCUS );
-        hb_vmPushLong( ( HB_LONG ) self );
-        hb_vmDo( 3 );
-        
-        //NSLog( @"The contents of the text field end" );
-        
-        TRUE ;
-    }
+{
+   if( symFMH == NULL )
+      symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMO" ) );
+    
+   hb_vmPushSymbol( symFMH );
+   hb_vmPushNil();
+   hb_vmPushLong( ( HB_LONG ) [ self window ] );
+   hb_vmPushLong( WM_GETLOSTFOCUS );
+   hb_vmPushLong( ( HB_LONG ) self );
+   hb_vmDo( 3 );
+}
     
 - ( void ) controlTextDidChange : ( NSNotification * ) aNotification
 {
    if( symFMH == NULL )
       symFMH = hb_dynsymSymbol( hb_dynsymFindName( "_FMO" ) );
-   
+
    hb_vmPushSymbol( symFMH );
    hb_vmPushNil();
    hb_vmPushLong( ( HB_LONG ) [ self window ] );
    hb_vmPushLong( WM_GETCHANGED );
    hb_vmPushLong( ( HB_LONG ) self );
    hb_vmDo( 3 );
-   
-   // NSLog( @"The contents of the text field changed" );
 }
-
 
 - (BOOL) performKeyEquivalent: (NSEvent*) theEvent
 {
@@ -156,7 +149,7 @@ HB_FUNC( GETRESCREATE )
     
    [ edit setDelegate: edit ];
     
- 	 hb_retnll( ( HB_LONG ) edit );	 			
+   hb_retnll( ( HB_LONG ) edit );	 			
 }  
 
 HB_FUNC( GETSETTEXT )

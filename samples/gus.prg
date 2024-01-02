@@ -19,12 +19,12 @@ return nil
 
 function Login()
 
-   local oDlg, oGetName, cName := "username", oBtnOK, oBtnCancel
-   local oGetPasswd, cPasswd := "1234"
+   local oDlg, oGetName, cName := Space( 20 ), oBtnOK, oBtnCancel
+   local oGetPasswd, cPasswd := Space( 20 )
 
    DEFINE DIALOG oDlg RESOURCE "hola"
 
-   REDEFINE GET cName ID 10 OF oDlg
+   REDEFINE GET oGetName VAR cName ID 10 OF oDlg VALID ! Empty( cName )
 
    REDEFINE GET cPasswd ID 20 OF oDlg PASSWORD
 
@@ -32,7 +32,7 @@ function Login()
 
    REDEFINE BUTTON oBtnCancel ID 40 of oDlg ACTION oDlg:End()
 
-   ACTIVATE DIALOG oDlg ON CLICK oDlg:SetText( Time() ) CENTERED
+   ACTIVATE DIALOG oDlg CENTERED
 
 return nil
 

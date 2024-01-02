@@ -26,6 +26,8 @@ void ImgResize( NSImage * image , int nWidth, int nHeight  ) ;
 
 NSImage * ImgTemplate( NSString * );
 
+void MsgAlert( NSString *, NSString * messageText );
+
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 1060	
    @interface View : NSView <NSWindowDelegate>
 #else

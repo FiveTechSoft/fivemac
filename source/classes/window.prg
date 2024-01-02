@@ -553,165 +553,167 @@ METHOD HandleEvent( nMsg, nSender, uParam1, uParam2, uParam3, uParam4 ) CLASS TW
       endif
    endif
 
-      do case
-        case nMsg == WM_PAINT
-             return ::Paint()
+   do case
+      case nMsg == WM_PAINT
+         return ::Paint()
 
-        case nMsg == WM_KEYDOWN
-             if oControl != nil
-		      return oControl:KeyDown( uParam1 )
-             else
-                return ::KeyDown( uParam1 ) 
-		   endif
+      case nMsg == WM_KEYDOWN
+         if oControl != nil
+            return oControl:KeyDown( uParam1 )
+         else
+            return ::KeyDown( uParam1 ) 
+         endif
 
-        case nMsg == WM_MOUSEDOWN
-             if oControl != nil
-                oControl:MouseDown( uParam1, uParam2 )
-             endif 
+      case nMsg == WM_MOUSEDOWN
+         if oControl != nil
+            oControl:MouseDown( uParam1, uParam2 )
+         endif 
 
-        case nMsg == WM_WNDSETCURSOR
-                 ::CursorChange()
-        case nMsg == WM_MOUSEMOVED
-             return ::MouseMove( uParam1, uParam2 )
+      case nMsg == WM_WNDSETCURSOR
+         ::CursorChange()
 
-        case nMsg == WM_LBUTTONDOWN
-             if oControl != nil
-                return oControl:LButtonDown( uParam1, uParam2 )
-             else
-                return ::LButtonDown( uParam1, uParam2 ) 
-		     endif
+      case nMsg == WM_MOUSEMOVED
+         return ::MouseMove( uParam1, uParam2 )
 
-        case nMsg == WM_LBUTTONUP
-             if oControl != nil
-                return oControl:LButtonUp( uParam1, uParam2 )
-             else
-                return ::LButtonUp( uParam1, uParam2 ) 
-             endif
+      case nMsg == WM_LBUTTONDOWN
+         if oControl != nil
+            return oControl:LButtonDown( uParam1, uParam2 )
+         else
+            return ::LButtonDown( uParam1, uParam2 ) 
+         endif
 
-        case nMsg == WM_RBUTTONDOWN
-             if oControl != nil
+      case nMsg == WM_LBUTTONUP
+         if oControl != nil
+            return oControl:LButtonUp( uParam1, uParam2 )
+         else
+            return ::LButtonUp( uParam1, uParam2 ) 
+         endif
 
-                 oControl:RButtonDown( uParam1, uParam2, uParam3, uParam4 )
-             else
-                ::RButtonDown( uParam1, uParam2 )
-             endif
+      case nMsg == WM_RBUTTONDOWN
+         if oControl != nil
+            oControl:RButtonDown( uParam1, uParam2, uParam3, uParam4 )
+         else
+            ::RButtonDown( uParam1, uParam2 )
+         endif
 
-        case nMsg == WM_RESIZE
-             return ::Resize()
-             
-        case nMsg == WM_WNDVALID
-             return ::lValid()
-             
-        case nMsg == WM_WHEN
-              return ::lWhen()
-        
-        case nMsg == WM_BTNCLICK
-	           if oControl != nil
-	              oControl:Click()
-             endif
+      case nMsg == WM_RESIZE
+         return ::Resize()
+            
+      case nMsg == WM_WNDVALID
+         return ::lValid()
+            
+      case nMsg == WM_WHEN
+         return ::lWhen()
+      
+      case nMsg == WM_BTNCLICK
+         if oControl != nil
+            oControl:Click()
+         endif
 
-        case nMsg == WM_CHKCLICK
-	           if oControl != nil
-	              oControl:Click()
-	           endif
-               
-        case nMsg == WM_FLIPPED
-             if oControl != nil
-                return oControl:lFlipped
-             else   
-	              return ::lFlipped
-	           endif   
-	           
-       case nMsg == WM_CBXCHANGE
-	          if oControl != nil
-	             oControl:Change()
-	          endif
-	
-       case nMsg == WM_MENUITEM
-           ::MenuItemClick( nSender )
+      case nMsg == WM_CHKCLICK
+         if oControl != nil
+            oControl:Click()
+         endif
+            
+      case nMsg == WM_FLIPPED
+         if oControl != nil
+            return oControl:lFlipped
+         else   
+            return ::lFlipped
+         endif   
+            
+      case nMsg == WM_CBXCHANGE
+         if oControl != nil
+            oControl:Change()
+         endif
 
-	    case nMsg == WM_BRWROWS
-	         if oControl != nil
-		          return oControl:Rows()
-		       endif
+      case nMsg == WM_MENUITEM
+         ::MenuItemClick( nSender )
+
+      case nMsg == WM_BRWROWS
+         if oControl != nil
+            return oControl:Rows()
+         endif
 		
-	    case nMsg == WM_BRWVALUE
-	         if oControl != nil
-		          return oControl:GetValue( uParam1, uParam2 )
-		       else
-		          MsgInfo( "oControl is nil" )
-		       endif
+      case nMsg == WM_BRWVALUE
+         if oControl != nil
+            return oControl:GetValue( uParam1, uParam2 )
+         else
+            MsgInfo( "oControl is nil" )
+         endif
 
       case nMsg == WM_BRWSETVALUE
-           if oControl != nil
-              return oControl:SetValue( uParam1, uParam2, uParam3 )
+         if oControl != nil
+            return oControl:SetValue( uParam1, uParam2, uParam3 )
 	      else
-		   MsgInfo( "oControl is nil" )
-		endif	
+  		      MsgInfo( "oControl is nil" )
+		   endif	
   
       case nMsg == WM_BRWCLRTEXT
-           if oControl != nil
-              return oControl:GetTextColor( uParam1, uParam2 )
-           endif  
+         if oControl != nil
+            return oControl:GetTextColor( uParam1, uParam2 )
+         endif  
 
       case nMsg == WM_TBRCLICK
-	         if ::oBar != nil
-		          ::oBar:Click( nSender )
-           endif
+         if ::oBar != nil
+               ::oBar:Click( nSender )
+         endif
 
       case nMsg == WM_TIMER
-           ::Timer( nSender )
+         ::Timer( nSender )
 
       case nMsg == WM_SLIDERCHANGE
-           if oControl != nil
-	            oControl:Change()
-	         endif
+         if oControl != nil
+            oControl:Change()
+         endif
            
       case nMsg == WM_BRWDBLCLICK
-	         if oControl != nil
-	            oControl:Click()
-           endif  
+         if oControl != nil
+            oControl:Click()
+         endif  
       
       case nMsg == WM_BRWCHANGED
-	         if oControl != nil
-	            oControl:Change()
-	         endif
+         if oControl != nil
+            oControl:Change()
+         endif
+
       case nMsg == WM_BRWDRAWRECT
          if oControl != nil 
-               oControl:drawrect( uParam1 )
-	         endif
-	    case nMsg == WM_HEADCLICK
-	         if oControl != nil
-              oControl:HeadClick( uParam1 + 1 ) 					
-	        endif
+            oControl:drawrect( uParam1 )
+         endif
+
+      case nMsg == WM_HEADCLICK
+         if oControl != nil
+            oControl:HeadClick( uParam1 + 1 ) 					
+	      endif
 
       case nMsg == WM_SHEETOK
-           if oControl != nil
-              oControl:Click( uParam1, uParam2 ) 					
-	         endif
+         if oControl != nil
+            oControl:Click( uParam1, uParam2 ) 					
+         endif
 
       case nMsg == WM_SCINOTIFY
-           if oControl != nil
-              oControl:Notify( uParam1, uParam2 )
-           else
-              MsgInfo( GetClassName( nSender ) )   
-           endif   
+         if oControl != nil
+            oControl:Notify( uParam1, uParam2 )
+         else
+            MsgInfo( GetClassName( nSender ) )   
+         endif   
            
       case nMsg == WM_CLRCHANGE
-           if oControl != nil
-              oControl:Change()
-           endif    
+         if oControl != nil
+            oControl:Change()
+         endif    
            
       case nMsg == WM_TABITEMSEL
-           if oControl != nil
-              oControl:Change( uParam1 )
-           endif   
+         if oControl != nil
+            oControl:Change( uParam1 )
+         endif   
 
       case nMsg == WM_GETFOCUS
-            ::GetFocus()
+         ::GetFocus()
        
       case nMsg == WM_LOSTFOCUS
-            ::LostFocus()
+         ::LostFocus()
    endcase
 
 return nil
@@ -719,9 +721,10 @@ return nil
 //----------------------------------------------------------------------------//
 
 METHOD GetFocus() CLASS TWindow
-if ! Empty( ::bGetFocus )
-     return Eval( ::bGetFocus, Self )
-endif
+
+   if ! Empty( ::bGetFocus )
+      return Eval( ::bGetFocus, Self )
+   endif
 
 return nil
 
@@ -729,9 +732,10 @@ return nil
 
 
 METHOD lostFocus() CLASS TWindow
-if ! Empty( ::blostFocus )
-     return Eval( ::bLostFocus, Self )
-endif
+
+   if ! Empty( ::blostFocus )
+      return Eval( ::bLostFocus, Self )
+   endif
 
 return nil
 
@@ -765,10 +769,12 @@ function _FMO( hWnd, nMsg, hSender, uParam1, uParam2 )
 
    local oControl, nAt := AScan( aWindows, { | o | o:hWnd == hWnd } )
 
-  if nAt != 0
+   if nAt != 0
       oControl := aWindows[ nAt ]:FindControl( hSender )
       if oControl != nil
          return oControl:HandleEvent( nMsg, uParam1, uParam2 )
+      else
+         MsgInfo( "oControl is nil", "_FMO" )   
       endif
    else
       MsgInfo( "nAt is zero in FMO" )

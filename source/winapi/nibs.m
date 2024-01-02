@@ -18,8 +18,6 @@ HB_FUNC( WNDFROMNIB )
       NSControl * control = [ controls objectAtIndex : i ];
       NSString * className = [ control className ];
        
-      // NSRunAlertPanel( [ control className ], @"ok", NULL, NULL, NULL );             
-   
       [ view addSubview : control ];
             
       if( [ className isEqual : @"NSButton" ] )
@@ -41,13 +39,21 @@ HB_FUNC( WNDFROMNIB )
          Get * get = ( Get * ) control;
          get->hWnd = window;
          [ get setDelegate : get ];
+         MsgAlert( @"TextView", @"ok" );
       } 
-       
+
+      if( [ className isEqual : @"NSTextField" ] )
+      {
+         Get * get = ( Get * ) control;
+         get->hWnd = window;
+         [ control setDelegate : control ];
+      } 
+
       if( [ className isEqual : @"NSSlider" ] )
       {
          NSSlider * slider = ( NSSlider * ) control;
            
-         [ control setAction : @selector( SliderChanged: ) ];
+         [ slider setAction : @selector( SliderChanged: ) ];
       }  
      
       if( [ className isEqual : @"NSScrollView" ] )
@@ -57,7 +63,7 @@ HB_FUNC( WNDFROMNIB )
          className = [ mycontrol className ] ;
          if ( [className  isEqual :@"MOutlineView"  ] )
          {   
-     		   NSRunAlertPanel( @"outline" ,@"yo", @"view", NULL , NULL );  
+     		   MsgAlert( @"nibs.m" ,@"ok" );  
          }
       }   
    }           	

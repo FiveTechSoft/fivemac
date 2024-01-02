@@ -26,7 +26,7 @@ CLASS TGet FROM TControl
                cVarName, cPicture, cCueText, lUtf )
 
    METHOD Redefine( nId, oWnd, bSetGet, lUpdate, lPassword, lSearch, bChanged,;
-                    cPicture )
+                    cPicture, cVarName )
 
    METHOD Assign()
 
@@ -153,10 +153,8 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
 
    ::cCaption = If( cPicture == nil, cValToChar( Eval( bSetGet ) ), ;
            Transform( Eval( bSetGet ), cPicture ) )
-           
-
+ 
    ::oGet      = FWGetNew( 20, 20, bSetGet, cVarName, cPicture )
-
    ::lSearch   = lSearch
    ::lPassword = lPassword
    ::cCueText  = cCueText
@@ -172,7 +170,6 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
    ::oGet:SetFocus()
    ::cCaption = ::oGet:Buffer
 
-
    ::oGet:KillFocus()
 
    if Empty( lUtf )
@@ -182,7 +179,6 @@ METHOD New( nTop, nLeft, nWidth, nHeight, oWnd, bSetGet, bValid, lUpdate,;
    ::SetText( ::cCaption , lUtf )
    
    // ::SetText( cValToChar( Eval( bSetGet ) ) )
-
 
    if ! Empty( cToolTip )
       ::SetToolTip( cToolTip )
@@ -207,7 +203,7 @@ return Self
 //----------------------------------------------------------------------------//
 
 METHOD Redefine( nId, oWnd, bSetGet, lUpdate, lPassword, lSearch, bChanged,;
-                 cPicture ) CLASS TGet
+                 cPicture, bValid, cVarName ) CLASS TGet
 
    local cText := Space( 20 )
 
@@ -221,20 +217,22 @@ METHOD Redefine( nId, oWnd, bSetGet, lUpdate, lPassword, lSearch, bChanged,;
    ::bSetGet   = bSetGet
    ::lUpdate   = lUpdate
    ::bChanged  = bChanged
+   ::bValid    = bValid
+   ::oGet      = FWGetNew( 20, 20, bSetGet, cVarName, cPicture )   
 
    oWnd:DefControl( Self, nId )
 
    ::SetText( Eval( bSetGet ) )
 
    if ! Empty( cPicture )
-     // ::SetPicture( cPicture )
+      // ::SetPicture( cPicture )
    endif
 
 return Self
 
 //----------------------------------------------------------------------------//
 
-METHOD Change(nkey) CLASS TGet
+METHOD Change( nkey ) CLASS TGet
 
    ::Assign()
    if ! Empty( ::bChanged )
@@ -404,13 +402,13 @@ return Super:HandleEvent( nMsg, uParam1, uParam2, uParam3 )
 
 METHOD GotFocus( hCtlLost ) CLASS TGet
 
- ::lFocused = .T.
-if ! Empty( ::cPicture ) .and. ::oGet:Type == "N"
-    ::oGet:Picture := StrTran( ::cPicture, ",", "" )
-endif
+    ::lFocused = .T.
 
-::SetCurPos( 1 )
+    if ! Empty( ::cPicture ) .and. ::oGet:Type == "N"
+        ::oGet:Picture := StrTran( ::cPicture, ",", "" )
+    endif
 
+    ::SetCurPos( 1 )
 
 return 0
 
@@ -866,63 +864,60 @@ return Day( dDate )
 
 METHOD GoHome() CLASS TGet
 
-::oGet:Home()
-if ::oGet:Type == "N"
-   ::oGet:Clear := .t.
-endif
+    ::oGet:Home()
+    if ::oGet:Type == "N"
+    ::oGet:Clear := .t.
+    endif
 
-::SetCurPos( 1 )
+    ::SetCurPos( 1 )
 
 return Self
 
-
 //----------------------------------------------------------------------------//
 
-Function MsgGet( cTitle, cSay , cline  )
+function MsgGet( cTitle, cSay , cline  )
 
-local oDlg, oGet
-local lYes:= .f.
-local backcLine
-local cTipo:= "C"
+    local oDlg, oGet
+    local lYes := .F.
+    local backcLine
+    local cTipo:= "C"
 
-DEFAULT cLine := ""
+    DEFAULT cLine := ""
 
-backcline:= cLine
+    backcline := cLine
 
-cTipo:= valtype ( cLine )
+    cTipo := valtype ( cLine )
 
-if cTipo  == "C"
-   cLine:= cLine+space(40)
-endif
-
-DEFINE DIALOG oDlg TITLE cTitle ;
-FROM 220, 350 TO 340, 680
-
-@ 88, 50 SAY cSay OF oDlg SIZE 250, 17
-
-@ 62, 50 GET oGet VAR cLine OF oDlg SIZE 250, 22
-
-@ 20, 218 BUTTON "OK" OF oDlg ACTION ( lYes:= .t., oDlg:End() )
-@ 20, 118 BUTTON "Cancel" OF oDlg ACTION  oDlg:End()
-
-ACTIVATE DIALOG oDlg CENTERED
-
-
-if lYes
-  cLine := oget:getText()
-  if cTipo == "N"
-      cline:=val(cline)
-   else
-      cline:= alltrim( cLine )
+    if cTipo  == "C"
+       cLine := cLine + Space( 40 )
     endif
-    Return .t.
-else
-    cline:= backcLine
-    return .f.
-endif
 
+    DEFINE DIALOG oDlg TITLE cTitle ;
+       FROM 220, 350 TO 340, 680
 
-return .t.
+    @ 88, 50 SAY cSay OF oDlg SIZE 250, 17
+
+    @ 62, 50 GET oGet VAR cLine OF oDlg SIZE 250, 22
+
+    @ 20, 218 BUTTON "OK" OF oDlg ACTION ( lYes:= .t., oDlg:End() )
+    @ 20, 118 BUTTON "Cancel" OF oDlg ACTION  oDlg:End()
+
+    ACTIVATE DIALOG oDlg CENTERED
+
+    if lYes
+       cLine := oGet:getText()
+       if cTipo == "N"
+          cline:=val(cline)
+       else
+          cline:= alltrim( cLine )
+       endif
+       return .T.
+    else
+        cline:= backcLine
+        return .F.
+    endif
+
+return .T.
 
 //----------------------------------------------------------------------------//
 

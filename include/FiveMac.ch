@@ -231,33 +231,34 @@ REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
 			                                      [<oWnd>], bSETGET( <uVar> ), <.update.> )			       
         
 //----------------------------------------------------------------------------//
+
 #xcommand @ <nRow>, <nCol> TEXTBOX [ <oGet> VAR ] <uVar> ;
-[ OF <oWnd> ] ;
-[ SIZE <nWidth>, <nHeight> ] ;
-[ VALID <uValid> ] ;
-[ <update: UPDATE> ] ;
-[ <password: PASSWORD> ] ;
-[ <lsearch: SEARCH> ] ;
-[ <lrounded: ROUNDED> ] ;
-[ ON CHANGE <uChange> ] ;
-[ TOOLTIP <cToolTip> ] ;
-[ AUTORESIZE <nAutoResize> ] ;
-[ PICTURE <cPicture> ] ;
-[ PIXEL ] ;
+   [ OF <oWnd> ] ;
+   [ SIZE <nWidth>, <nHeight> ] ;
+   [ VALID <uValid> ] ;
+   [ <update: UPDATE> ] ;
+   [ <password: PASSWORD> ] ;
+   [ <lsearch: SEARCH> ] ;
+   [ <lrounded: ROUNDED> ] ;
+   [ ON CHANGE <uChange> ] ;
+   [ TOOLTIP <cToolTip> ] ;
+   [ AUTORESIZE <nAutoResize> ] ;
+   [ PICTURE <cPicture> ] ;
+   [ PIXEL ] ;
 => ;
-[ <oGet> := ] TTextBox():New( <nRow>, <nCol>, <nWidth>, <nHeight>,;
-<oWnd>, bSETGET(<uVar>), [\{||(<uValid>)\}],;
-<.update.>, <.password.> ,<.lsearch.>, [{|Self|<uChange>}],;
-<.lrounded.>, [<cToolTip>], [<nAutoResize>], [<(oGet)>], [<cPicture>] )
+   [ <oGet> := ] TTextBox():New( <nRow>, <nCol>, <nWidth>, <nHeight>,;
+   <oWnd>, bSETGET(<uVar>), [\{||(<uValid>)\}],;
+   <.update.>, <.password.> ,<.lsearch.>, [{|Self|<uChange>}],;
+   <.lrounded.>, [<cToolTip>], [<nAutoResize>], [<(oGet)>], [<cPicture>] )
 
-
+//----------------------------------------------------------------------------//
 
 #xcommand @ <nRow>, <nCol> GET [ <oGet> VAR ] <uVar> ;
            [ OF <oWnd> ] ;
            [ SIZE <nWidth>, <nHeight> ] ;
-		       [ VALID <uValid> ] ;
+		     [ VALID <uValid> ] ;
            [ <update: UPDATE> ] ;
-		       [ <password: PASSWORD> ] ;  
+		     [ <password: PASSWORD> ] ;  
            [ <lsearch: SEARCH> ] ;  
            [ <lrounded: ROUNDED> ] ; 
            [ ON CHANGE <uChange> ] ; 
@@ -279,9 +280,10 @@ REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
              [ <password: PASSWORD> ] ; 
              [ <lsearch: SEARCH> ] ;  
              [ PICTURE <cPicture> ] ;
+             [ VALID <uValid> ] ;
           => ;
              [ <oGet> := ] TGet():Redefine( <nId>, <oWnd>, bSETGET( <uVar> ),;
-             <.update.>, <.password.>, <.lsearch.>, [<cPicture>] )     		                                   
+             <.update.>, <.password.>, <.lsearch.>, [<cPicture>], [\{||(<uValid>)\}], <(uVar)> )     		                                   
 
 //----------------------------------------------------------------------------//		 								   
 
@@ -292,7 +294,7 @@ REQUEST HB_GT_NUL_DEFAULT, ErrorLink, MsgBeep
              [ STYLE <nStyle> ] ;  
              [ AUTORESIZE <nAutoResize> ] ;	
              [ <flipped: FLIPPED> ] ;
-         => ;
+          => ;
              [ <oGroup> := ] TGroup():New( <nTop>, <nLeft>, <nWidth>, <nHeight>,;
              <oWnd>, <cLabel>, <nStyle>, [<nAutoResize>], [<(oGroup)>],[<.flipped.>] )
  

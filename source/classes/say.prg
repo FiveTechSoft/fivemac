@@ -103,7 +103,6 @@ METHOD Redefine( nId, oWnd ) CLASS TSay
   
    ::oWnd = oWnd
    ::nId  = nId
-   ::oWnd = oWnd
         
    oWnd:DefControl( Self, nId ) 
 
