@@ -222,7 +222,9 @@ METHOD Redefine( nId, oWnd, bSetGet, lUpdate, lPassword, lSearch, bChanged,;
    ::lUpdate   = lUpdate
    ::bChanged  = bChanged
 
-   oWnd:DefControl( Self )
+   oWnd:DefControl( Self, nId )
+
+   ::SetText( Eval( bSetGet ) )
 
    if ! Empty( cPicture )
      // ::SetPicture( cPicture )
