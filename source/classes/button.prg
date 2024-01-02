@@ -181,21 +181,14 @@ return cCode
 
 METHOD Click() CLASS TButton
 
- //  if ! Empty( ::GetEventCode( "OnClick" ) )
- //     Eval( ::GetEventBlock( "OnClick" ),  Self )
- //  else
- 
-     IF ::bAction != nil
-       if  valtype(::bAction)== "C"
-          MsgInfo( ::bAction )
-          Eval( &( "{ | sender | " + ::bAction + " }" ), Self )
-       else
-          Eval( ::bAction, Self )
-       endif
-     ENDIF
+   if ::bAction != nil
+      if ValType( ::bAction ) == "C"
+         Eval( &( "{ | sender | " + ::bAction + " }" ), Self )
+      else
+         Eval( ::bAction, Self )
+      endif
+   endif
      
- //  endif 
-       
 return nil  
 
 //----------------------------------------------------------------------------//
