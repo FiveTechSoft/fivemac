@@ -40,14 +40,14 @@ METHOD New( nTop, nLeft, nBottom, nRight, cTitle, lTextured, lPaneled ,nWidth, n
 				              If( lTextured, NSTexturedBackgroundWindowMask, 0 ),;
 				              If( lPaneled, NSUtilityWindowMask, 0 ) ) )
    endif                        
- 
+   
    if nWidth != nil .or. nHeight!= nil
       ::SetSize( nWidth, nHeight )
    endif   
     
    ::aControls = {}
-   WndSetText( ::hWnd, cTitle )
    AAdd( GetAllWin(), Self )
+   WndSetText( ::hWnd, cTitle )
    SetWndDefault( Self )
 
 return Self
@@ -90,27 +90,29 @@ METHOD Activate( bLClicked, bValid, lModeless, lCentered, bInit, bRClicked,;
       DlgModal( ::hWnd )
       ::UnLink()
    endif
-
  
 return nil
 
 //----------------------------------------------------------------------------//
 
-Function RoundMsg(cMensa,nTimer)
-local oWnd
-STATIC oMsgRWT
-if !Empty(nTimer)
-    oWnd := GetWndDefault()  
-    oWnd:bOnTimer = { | nTimerId, oWnd |  RoundMsg()   } 
-    TimerCreate( nTimer, oWnd:hWnd )
-endif
-if Empty(cMensa)
-  MsgRoundClose(oMsgRWT)
- else
- oMsgRWT:= MsgRoundCreate( cMensa )
-endif
+function RoundMsg( cMensa, nTimer )
 
-Return nil
+   local oWnd
+
+   static oMsgRWT
+
+   if ! Empty( nTimer )
+      oWnd = GetWndDefault()  
+      oWnd:bOnTimer = { | nTimerId, oWnd | RoundMsg() } 
+      TimerCreate( nTimer, oWnd:hWnd )
+   endif
+   if Empty(cMensa)
+      MsgRoundClose(oMsgRWT)
+   else
+      oMsgRWT = MsgRoundCreate( cMensa )
+   endif
+
+return nil
 
 //----------------------------------------------------------------------------//
 

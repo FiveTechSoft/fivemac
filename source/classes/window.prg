@@ -321,6 +321,9 @@ return If( nAt != 0, ::aControls[ nAt ],)
 METHOD DefControl( oCtrl, nId ) CLASS TWindow
 
    // DEFAULT oCtrl:nId := oCtrl:GetNewId()
+   if AScan( aWindows, { | oWnd | oWnd:hWnd == oCtrl:oWnd:hWnd } ) == 0
+      AAdd( aWindows, oCtrl:oWnd )
+   endif   
 
    if AScan( ::aControls, { | o | o:nId == oCtrl:nId } ) > 0
       MsgAlert( "Duplicated control ID " + Str( oCtrl:nId ) )
@@ -777,7 +780,7 @@ function _FMO( hWnd, nMsg, hSender, uParam1, uParam2 )
          MsgInfo( "oControl is nil", "_FMO" )   
       endif
    else
-      MsgInfo( "nAt is zero in FMO" )
+      // MsgInfo( "nAt is zero in FMO", nMsg )
    endif
 
 return nil

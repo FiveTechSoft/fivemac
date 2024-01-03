@@ -38,9 +38,9 @@ void MsgAlert( NSString *, NSString * messageText );
    @public NSWindow * hWnd;
    @public BOOL isFlipped;
 }
-- ( BOOL ) windowShouldClose : ( NSNotification * ) notification;
-- ( void ) windowWillClose : ( NSNotification * ) notification;
-- ( BOOL ) acceptsFirstResponder ;
+- ( BOOL ) windowShouldClose: ( NSNotification * ) notification;
+- ( void ) windowWillClose: ( NSNotification * ) notification;
+- ( BOOL ) acceptsFirstResponder;
 
 - (void) windowDidResignKey:(NSNotification *)notification;
 - (void) windowDidBecomeKey:(NSNotification *)notification;
@@ -78,7 +78,7 @@ void MsgAlert( NSString *, NSString * messageText );
 - ( BOOL ) textShouldEndEditing : ( NSText * ) text;
 - ( void ) controlTextDidChange : ( NSNotification * ) aNotification;
 - ( void ) controlTextDidEndEditing:(NSNotification *) aNotification;
-- (BOOL)   acceptsFirstResponder;
+- ( BOOL ) acceptsFirstResponder;
 - ( void ) keyUp : ( NSEvent * ) theEvent;
 - (BOOL) performKeyEquivalent: (NSEvent*) theEvent ;
 @end

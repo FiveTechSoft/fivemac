@@ -22,7 +22,7 @@ function Login()
    local oDlg, oGetName, cName := Space( 20 ), oBtnOK, oBtnCancel
    local oGetPasswd, cPasswd := Space( 20 )
 
-   DEFINE DIALOG oDlg RESOURCE "hola"
+   DEFINE DIALOG oDlg RESOURCE "hola" TITLE "Login"
 
    REDEFINE GET oGetName VAR cName ID 10 OF oDlg VALID ! Empty( cName )
 
