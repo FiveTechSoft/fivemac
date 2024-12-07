@@ -1,4 +1,21 @@
-# ./build.sh - (c) FiveTech Software 2007-2023
+# ./build.sh - (c) FiveTech Software 2007-2024
+
+if [ "$(uname -m)" = "arm64" ]; then
+    HB_BIN="./../../harbour/bin/darwin/clang-arm64/harbour"
+    HB_LIB="./../../harbour/lib/darwin/clang-arm64"
+    HB_INC="./../../harbour/include"
+    HB_ARCH="-arch arm64"
+else
+    HB_BIN="./../../harbour/bin/darwin/clang/harbour"
+    HB_LIB="./../../harbour/lib/darwin/clang"
+    HB_INC="./../../harbour/include"
+    HB_ARCH=""
+fi
+
+# Export variables if needed
+export HB_BIN
+export HB_LIB
+export HB_INC
 
 clear
 
@@ -8,7 +25,7 @@ if [ $# = 0 ]; then
 fi
 
 echo compiling...
-./../../harbour/bin/darwin/clang/harbour $1 -n -w -I./../include:./../../harbour/include $2
+$HB_BIN $1 -n -w -I./../include:$HB_INC $2
 if [ $? = 1 ]; then
    exit
 fi   
@@ -17,9 +34,9 @@ echo compiling C module...
 #  add -arch ppc -arch i386 for universal binaries
 if [ -d /Applications/Xcode.app ]; then
    SDKPATH=$(xcrun --sdk macosx --show-sdk-path)
-   gcc -ObjC $1.c -c -I$SDKPATH -I./../include -I./../../harbour/include 
+   gcc -ObjC $1.c -c -I$SDKPATH -I./../include -I$HB_INC
 else
-   gcc -ObjC $1.c -c -I./../include -I./../../harbour/include
+   gcc -ObjC $1.c -c -I./../include -I$HB_INC
 fi   
 
 if [ ! -d $1.app ]; then
@@ -66,9 +83,9 @@ WINNH3DLIB='-L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault
 
 #  add -arch ppc -arch i386 for universal binaries
 # -framework Scintilla
-#gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib/darwin/clang $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB
+#gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L$HB_LIB $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $WINNH3DLIB
 
-gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L./../../harbour/lib/darwin/clang $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $CRTLIB/libz.tbd $CRTLIB/libpcre.tbd
+gcc $1.o -o ./$1.app/Contents/MacOS/$1 -L$CRTLIB -L./../lib -lfive -lfivec -L$HB_LIB $HRBLIBS $FRAMEWORKS  -F./../frameworks -framework Scintilla $CRTLIB/libz.tbd $CRTLIB/libpcre.tbd $HB_ARCH
 
 #rm $1.c
 rm $1.o
