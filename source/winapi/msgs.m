@@ -539,17 +539,19 @@ HB_FUNC( PASTEPASTEBOARDSTRING )
 
 HB_FUNC( SCREENTOPASTEBOARD )
 {
-  NSPasteboard * pasteBoard = hb_parptr( 1 );
-  NSRect screenRect = [[NSScreen mainScreen] frame];
-  CGImageRef cgImage = CGWindowListCreateImage(screenRect, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
+/*
+   // deprecated
+   NSPasteboard * pasteBoard = hb_parptr( 1 );
+   NSRect screenRect = [[NSScreen mainScreen] frame];
+   CGImageRef cgImage = CGWindowListCreateImage(screenRect, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
 
-NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithCGImage: cgImage] autorelease];
-NSDictionary * dict = [NSDictionary dictionaryWithObject: [NSNumber numberWithFloat:0.5] forKey:NSImageCompressionFactor];
-NSData *data = [rep representationUsingType: NSPNGFileType properties: dict];
-bool lResult =  [pasteBoard setData:data forType:NSPasteboardTypePNG];
+   NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithCGImage: cgImage] autorelease];
+   NSDictionary * dict = [NSDictionary dictionaryWithObject: [NSNumber numberWithFloat:0.5] forKey:NSImageCompressionFactor];
+   NSData *data = [rep representationUsingType: NSPNGFileType properties: dict];
+   bool lResult =  [pasteBoard setData:data forType:NSPasteboardTypePNG];
 
-hb_retl( lResult );
-
+   hb_retl( lResult );
+*/
 }
 
 

@@ -944,3 +944,5 @@ return nil
 function FWString( cString )
 return cString
 */
+
+function TScintilla ; return nil
