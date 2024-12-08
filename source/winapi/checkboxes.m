@@ -8,7 +8,7 @@ HB_FUNC( CHKCREATE )
 
    NSWindow * window = ( NSWindow * ) hb_parnl( 6 );
 
-   [ checkbox setButtonType: NSSwitchButton ];
+   [ checkbox setButtonType: NSButtonTypeSwitch ];
    [ checkbox setTitle : string ];
    [ GetView( window ) addSubview : checkbox ];
    [ checkbox setAction : @selector( ChkClick: ) ];
