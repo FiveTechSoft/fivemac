@@ -875,7 +875,16 @@ HB_FUNC( BRWSSETCROLLVGRAFITE )
    NSScrollView * sv = [ browse enclosingScrollView ];
    NSScroller * scrol = [ sv verticalScroller ];
    
-   [ scrol setControlTint: NSGraphiteControlTint ];
+   #pragma clang diagnostic push
+   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+   if (@available(macOS 10.7, *)) {
+    // Do nothing, as setControlTint has no effect on macOS 10.7 and later
+   } else {
+    [scrol setControlTint: NSGraphiteControlTint]; // Only executed on older macOS
+   }
+
+   #pragma clang diagnostic pop
 }
 
 HB_FUNC( BRWSETBKCOLOR )
@@ -920,5 +929,14 @@ HB_FUNC( BRWSSETCROLLHGRAFITE )
    NSScrollView * sv = [ browse enclosingScrollView ];
    NSScroller * scrol = [ sv horizontalScroller ];
    
-   [ scrol setControlTint: NSGraphiteControlTint ];
+   #pragma clang diagnostic push
+   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+   if (@available(macOS 10.7, *)) {
+    // Do nothing, as setControlTint has no effect on macOS 10.7 and later
+   } else {
+    [scrol setControlTint: NSGraphiteControlTint]; // Only executed on older macOS
+   }
+
+   #pragma clang diagnostic pop   
 }
