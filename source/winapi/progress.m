@@ -49,14 +49,14 @@ HB_FUNC( PROGRESSSETSPIN )
 {
    NSProgressIndicator * progressIndicator = ( NSProgressIndicator * ) hb_parnl( 1 );
 	
-   [ progressIndicator setStyle: NSProgressIndicatorSpinningStyle ];
+   [ progressIndicator setStyle: NSProgressIndicatorStyleSpinning ];
 }
 
 HB_FUNC( PROGRESSSETBAR )
 {
 	 NSProgressIndicator * progressIndicator = ( NSProgressIndicator * ) hb_parnl( 1 );
 	
-   [ progressIndicator setStyle:  NSProgressIndicatorBarStyle ];
+   [ progressIndicator setStyle:  NSProgressIndicatorStyleBar ];
 }
 
 HB_FUNC( PROGRESSSETINDETERMINATE )

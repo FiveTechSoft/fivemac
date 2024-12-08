@@ -543,6 +543,7 @@ HB_FUNC( PASTEPASTEBOARDSTRING )
 
 HB_FUNC( SCREENTOPASTEBOARD )
 {
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < 150000
    NSPasteboard * pasteBoard = hb_parptr( 1 );
    NSRect screenRect = [[NSScreen mainScreen] frame];
    CGImageRef cgImage = CGWindowListCreateImage(screenRect, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
@@ -553,10 +554,7 @@ HB_FUNC( SCREENTOPASTEBOARD )
    bool lResult =  [pasteBoard setData:data forType:NSPasteboardTypePNG];
 
    hb_retl( lResult );
+#else
+   hb_retl( HB_FALSE );
+#endif
 }
-
-
-
-
-
-

@@ -223,7 +223,7 @@ HB_FUNC( NEWRESIZEIMAGE )
          if  ([extension isEqualToString:@"JPG"] )
                      {
                          
-                         imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+                         imageData = [imageRep representationUsingType:NSBitmapImageFileTypeJPEG properties:imageProps];
                          [imageData writeToFile:fileName atomically:NO];
                      }
         else
@@ -350,36 +350,36 @@ HB_FUNC( SAVETEXTINIMAGE ) // fileini,filefin,ctexto, fuente, ntop, nleft
     
     if  ([extension isEqualToString:@"JPG"] )
     {
-        imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+        imageData = [imageRep representationUsingType:NSBitmapImageFileTypeJPEG properties:imageProps];
         [imageData writeToFile:fileFin atomically:NO];
     }
     
     if  ([extension isEqualToString:@"PNG"] )        {
-        imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+        imageData = [imageRep representationUsingType:NSBitmapImageFileTypePNG properties:imageProps];
         [imageData writeToFile:fileFin atomically:NO];
     }
     
     if  ([extension isEqualToString:@"BMP"] )
     {
-        imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
+        imageData = [imageRep representationUsingType:NSBitmapImageFileTypeBMP properties:imageProps];
         [imageData writeToFile:fileFin atomically:NO];
     }
     
     if ([extension isEqualToString:@"GIF"] )
     {
-        imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
+        imageData = [imageRep representationUsingType:NSBitmapImageFileTypeGIF properties:imageProps];
         [imageData writeToFile:fileFin atomically:NO];
     }
     
     if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
     {
-        imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
+        imageData = [imageRep representationUsingType:NSBitmapImageFileTypeTIFF properties:imageProps];
         [imageData writeToFile:fileFin atomically:NO];
     }
     
     
     
-    //NSData *data = [rep representationUsingType:NSPNGFileType properties:nil];
+    //NSData *data = [rep representationUsingType:NSBitmapImageFileTypePNG properties:nil];
     //[data writeToFile: finFile atomically:YES];
     
 }
@@ -529,30 +529,30 @@ HB_FUNC( SAVEIMAGEFROMIMAGE )
         
         if  ([extension isEqualToString:@"JPG"] )
         {
-            imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+            imageData = [imageRep representationUsingType:NSBitmapImageFileTypeJPEG properties:imageProps];
             [imageData writeToFile:fileFin atomically:NO];
         }
         
         if  ([extension isEqualToString:@"PNG"] )        {
-            imageData = [imageRep representationUsingType:NSPNGFileType properties:imageProps];
+            imageData = [imageRep representationUsingType:NSBitmapImageFileTypePNG properties:imageProps];
             [imageData writeToFile:fileFin atomically:NO];
         }
         
         if  ([extension isEqualToString:@"BMP"] )
         {
-            imageData = [imageRep representationUsingType:NSBMPFileType properties:imageProps];
+            imageData = [imageRep representationUsingType:NSBitmapImageFileTypeBMP properties:imageProps];
             [imageData writeToFile:fileFin atomically:NO];
         }
         
         if ([extension isEqualToString:@"GIF"] )
         {
-            imageData = [imageRep representationUsingType:NSGIFFileType properties:imageProps];
+            imageData = [imageRep representationUsingType:NSBitmapImageFileTypeGIF properties:imageProps];
             [imageData writeToFile:fileFin atomically:NO];
         }
         
         if ([extension isEqualToString:@"TIF"] || [extension isEqualToString:@"IFF"])
          {
-            imageData = [imageRep representationUsingType:NSTIFFFileType properties:imageProps];
+            imageData = [imageRep representationUsingType:NSBitmapImageFileTypeTIFF properties:imageProps];
 
             [imageData writeToFile:fileFin atomically:NO];
         }

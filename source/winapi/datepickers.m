@@ -9,8 +9,8 @@ HB_FUNC( DATEPICKCREATE )
    [ GetView( window ) addSubview : datePicker ];
    
    [ datePicker setDateValue : [ NSDate date ] ];
-   [ datePicker setDatePickerElements : NSYearMonthDatePickerElementFlag ];
-   [ datePicker setDatePickerStyle : NSClockAndCalendarDatePickerStyle ];
+   [ datePicker setDatePickerElements : NSDatePickerElementFlagYearMonth ];
+   [ datePicker setDatePickerStyle : NSDatePickerStyleClockAndCalendar ];
              
    hb_retnl( ( HB_LONG ) datePicker );
 }

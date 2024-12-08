@@ -136,21 +136,21 @@ HB_FUNC( MNUITEMSETON )
 {
    NSMenuItem * item = ( NSMenuItem * ) hb_parnl( 1 );
    
-   [ item setState: NSOnState ] ; 
+   [ item setState: NSControlStateValueOn ] ;
 }
 
 HB_FUNC( MNUITEMSETOFF )
 {
    NSMenuItem * item = ( NSMenuItem * ) hb_parnl( 1 );
    
-   [ item setState: NSOffState ]; 
+   [ item setState: NSControlStateValueOff ];
 }
 
 HB_FUNC( MNUITEMSETMIXED )
 {
    NSMenuItem * item = ( NSMenuItem * ) hb_parnl( 1 );
    
-   [ item setState: NSMixedState ] ; 
+   [ item setState: NSControlStateValueMixed ] ;
 }
 
 HB_FUNC( POPMNUCONTEXT ) 

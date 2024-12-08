@@ -80,9 +80,9 @@ HB_FUNC( SAYSETBEZELED )
      if ( hb_parl( 2 ) ) 
     {
         if ( hb_parl( 3 ) ) 
-          [ [ say cell ] setBezelStyle: NSRoundedBezelStyle ];
+          [ [ say cell ] setBezelStyle: NSBezelStylePush ];
         else
-          [ [ say cell ] setBezelStyle: NSRegularSquareBezelStyle  ];
+          [ [ say cell ] setBezelStyle: NSBezelStyleFlexiblePush  ];
      }
 }
 
@@ -90,13 +90,13 @@ HB_FUNC( SAYSETBEZELED )
 HB_FUNC( SAYSETBEZELSQUARE )
 {
     NSTextField * say = ( NSTextField * ) hb_parnl( 1 );
-    [ [ say cell ] setBezelStyle: NSRegularSquareBezelStyle  ];
+    [ [ say cell ] setBezelStyle: NSBezelStyleFlexiblePush  ];
 }
 
 HB_FUNC( SAYSETBEZELROUNDED )
 {
     NSTextField * say = ( NSTextField * ) hb_parnl( 1 );
-    [ [ say cell ] setBezelStyle: NSRoundedBezelStyle ];
+    [ [ say cell ] setBezelStyle: NSBezelStylePush ];
 }
 
 
@@ -140,7 +140,7 @@ HB_FUNC( TXTSETDISABLED ) // hGet --> cText
 {
 	NSTextField * get = ( NSTextField * ) hb_parnl( 1 );
 	[get setEnabled: NO  ];
-    [get setTextColor: [NSColor secondarySelectedControlColor]];
+    [get setTextColor: [NSColor unemphasizedSelectedContentBackgroundColor]];
 } 
 
 

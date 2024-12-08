@@ -119,7 +119,8 @@ HB_FUNC( NSSTRINGCANCONVERENCODE )
 HB_FUNC( GETSERIALNUMBER )
 {
     NSString *serial = nil;
-    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+
+    io_service_t platformExpert = IOServiceGetMatchingService(kIOMainPortDefault,
                                                               IOServiceMatching("IOPlatformExpertDevice"));
     if (platformExpert) {
         CFTypeRef serialNumberAsCFString =

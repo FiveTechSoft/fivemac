@@ -228,4 +228,4 @@ SWIFT_OBJS =
 clean:
 	rm ./obj/*
 	rm ./objc/*
-	rm ./lib/*.a
+	rm ./lib/*

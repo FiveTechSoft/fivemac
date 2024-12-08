@@ -209,8 +209,8 @@ HB_FUNC( PRNINFOAUTOPAGE)
 {
  NSPrintInfo * pi = ( NSPrintInfo *   ) hb_parnl( 1 );
 
- [ pi setHorizontalPagination:NSAutoPagination];
- [ pi setVerticalPagination:NSAutoPagination];
+ [ pi setHorizontalPagination:NSPrintingPaginationModeAutomatic];
+ [ pi setVerticalPagination:NSPrintingPaginationModeAutomatic];
  [ pi setVerticallyCentered:NO];
 }
 

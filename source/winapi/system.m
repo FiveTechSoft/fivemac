@@ -668,7 +668,7 @@ HB_FUNC( DOCKADDPROGRESS )
   NSProgressIndicator * progressIndicator = [[NSProgressIndicator alloc]
              initWithFrame:NSMakeRect(0.0f, 0.0f , docTile.size.width, 10. ) ];
              
-  [progressIndicator setStyle:NSProgressIndicatorBarStyle];
+  [progressIndicator setStyle:NSProgressIndicatorStyleBar];
   [progressIndicator setIndeterminate:NO];
   [iv addSubview:progressIndicator];
   [progressIndicator setBezeled:YES];
