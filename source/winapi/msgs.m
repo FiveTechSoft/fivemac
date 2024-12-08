@@ -1,4 +1,5 @@
 #include <fivemac.h>
+#import <UniformTypeIdentifiers/UTType.h>
 #import "Quartz/Quartz.h"
 
 NSAutoreleasePool * pool;
@@ -286,7 +287,8 @@ HB_FUNC( CHOOSEFILE )
       else
          fileTypes = [ [ NSMutableArray alloc ] initWithObjects: types, [ types uppercaseString ], nil ];
      
-      [ op setAllowedFileTypes: fileTypes ];
+      // [ op setAllowedFileTypes: fileTypes ];
+      op.allowedContentTypes = fileTypes;
    }
         
     if( [ op runModal ] == NSModalResponseOK  )
@@ -326,7 +328,8 @@ HB_FUNC( CHOOSEFOLDER )
       else
          fileTypes = [ [ NSMutableArray alloc ] initWithObjects: types, [ types uppercaseString ], nil ];
      
-      [ op setAllowedFileTypes: fileTypes ];
+      // [ op setAllowedFileTypes: fileTypes ];
+      op.allowedContentTypes = fileTypes;
    }
         
     if( [ op runModal ] == NSModalResponseOK  )
@@ -390,7 +393,8 @@ HB_FUNC( CHOOSEIMAGEFILE )
         
    [ op setPrompt: @"Ok" ];
    [ op setMessage: @"Please select a file" ];
-   [ op setAllowedFileTypes:imageTypes];
+   // [ op setAllowedFileTypes:imageTypes];
+   op.allowedContentTypes = imageTypes;
         
    if( [ op runModal ] == NSModalResponseOK )
    {
@@ -475,7 +479,7 @@ HB_FUNC( CLIPBOARDCOPYPNG )
     CGImageRef CGImage = [image CGImageForProposedRect:nil context:nil hints:nil];
     NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithCGImage:CGImage] autorelease];
     NSDictionary * dict = [NSDictionary dictionaryWithObject: [NSNumber numberWithFloat:0.5] forKey:NSImageCompressionFactor];
-    NSData *data = [rep representationUsingType: NSPNGFileType properties: dict];
+    NSData *data = [rep representationUsingType: NSBitmapImageFileTypePNG properties: dict];
     bool lResult =  [pasteBoard setData:data forType:NSPasteboardTypePNG];
     
       hb_retl( lResult );
@@ -487,7 +491,7 @@ HB_FUNC( CLIPBOARDCOPYSTRING )
     NSString * string = hb_NSSTRING_par( 2 );
     
     [pasteBoard declareTypes:[ NSArray arrayWithObject:NSPasteboardTypeString ] owner:nil ];
-    bool lResult =  [pasteBoard setString:string forType:NSStringPboardType];
+    bool lResult =  [pasteBoard setString:string forType:NSPasteboardTypeString];
     hb_retl( lResult );
 }
 
@@ -496,7 +500,7 @@ HB_FUNC( CLIPBOARDPASTESTRING )
     NSPasteboard * pasteBoard = hb_parptr( 1 );
     NSString * string;
     
-    string = [ pasteBoard stringForType: NSStringPboardType ];
+    string = [ pasteBoard stringForType: NSPasteboardTypeString ];
     hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
  }
 
@@ -522,7 +526,7 @@ HB_FUNC( COPYPASTEBOARDSTRING )
     NSPasteboard * pasteBoard = [ NSPasteboard generalPasteboard ];
     
    [pasteBoard declareTypes:[ NSArray arrayWithObject:NSPasteboardTypeString ] owner:nil ];
-   [pasteBoard setString:string forType:NSStringPboardType];
+   [pasteBoard setString:string forType:NSPasteboardTypeString];
     
   }
  
@@ -532,26 +536,23 @@ HB_FUNC( PASTEPASTEBOARDSTRING )
    NSString * string;
 
    [ pasteBoard declareTypes: [  NSArray arrayWithObjects:
-                                NSStringPboardType, nil ] owner: nil ];
+                                NSPasteboardTypeString, nil ] owner: nil ];
    string = [ pasteBoard stringForType: NSPasteboardTypeString ];
    hb_retc( [ string cStringUsingEncoding : NSWindowsCP1252StringEncoding ] ); 
 }
 
 HB_FUNC( SCREENTOPASTEBOARD )
 {
-/*
-   // deprecated
    NSPasteboard * pasteBoard = hb_parptr( 1 );
    NSRect screenRect = [[NSScreen mainScreen] frame];
    CGImageRef cgImage = CGWindowListCreateImage(screenRect, kCGWindowListOptionOnScreenOnly, kCGNullWindowID, kCGWindowImageDefault);
 
    NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithCGImage: cgImage] autorelease];
    NSDictionary * dict = [NSDictionary dictionaryWithObject: [NSNumber numberWithFloat:0.5] forKey:NSImageCompressionFactor];
-   NSData *data = [rep representationUsingType: NSPNGFileType properties: dict];
+   NSData *data = [rep representationUsingType: NSBitmapImageFileTypePNG properties: dict];
    bool lResult =  [pasteBoard setData:data forType:NSPasteboardTypePNG];
 
    hb_retl( lResult );
-*/
 }
 
 
