@@ -1,5 +1,4 @@
 #include <fivemac.h>
-#import <UniformTypeIdentifiers/UTType.h>
 #import "Quartz/Quartz.h"
 
 NSAutoreleasePool * pool;
@@ -266,14 +265,14 @@ HB_FUNC( CHOOSEFILE )
 {
    NSString * types = hb_NSSTRING_par( 2 );     
    NSOpenPanel * op =  [NSOpenPanel openPanel];  //[ [ NSOpenPanel alloc ] init ];
-    
+
    [ op setPrompt: @"Ok" ];
 
    if( ! HB_ISCHAR( 1 ) )	
       [ op setTitle: @"Please select a filename" ];
    else
       [ op setTitle: hb_NSSTRING_par( 1 ) ];
-    
+
    if( ! [ types isEqualToString : @"" ] )
    {
       NSMutableArray * fileTypes;
@@ -286,15 +285,14 @@ HB_FUNC( CHOOSEFILE )
       }   
       else
          fileTypes = [ [ NSMutableArray alloc ] initWithObjects: types, [ types uppercaseString ], nil ];
-     
-      // [ op setAllowedFileTypes: fileTypes ];
-      op.allowedContentTypes = fileTypes;
+
+      [ op setAllowedFileTypes: fileTypes ];
    }
-        
+
     if( [ op runModal ] == NSModalResponseOK  )
     {
        NSString * source = [ [ [ [ op URLs ] objectAtIndex: 0 ] path ] stringByRemovingPercentEncoding ];
-    
+
        hb_retc( [ source cStringUsingEncoding : NSWindowsCP1252StringEncoding ] );
     }  
     else
